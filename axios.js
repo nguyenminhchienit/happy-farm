@@ -7,14 +7,16 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    let localStorageData = window.localStorage.getItem("persist:shop/user");
-    if (localStorageData && typeof localStorageData === "string") {
-      localStorageData = JSON.parse(localStorageData);
-      const access_token = JSON.parse(localStorageData?.token);
-      config.headers = {
-        Authorization: `Bearer ${access_token}`,
-      };
-    }
+    // let localStorageData = window.localStorage.getItem(
+    //   "persist:happy_farm/user"
+    // );
+    // if (localStorageData && typeof localStorageData === "string") {
+    //   localStorageData = JSON.parse(localStorageData);
+    //   const access_token = JSON.parse(localStorageData?.token);
+    //   config.headers = {
+    //     Authorization: `Bearer ${access_token}`,
+    //   };
+    // }
     return config;
   },
   function (error) {

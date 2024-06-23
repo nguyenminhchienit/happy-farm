@@ -14,6 +14,13 @@ import Listing from "./pages/public/Listing";
 import Cart from "./pages/public/cart";
 import AdminLayout from "./pages/admin/AdminLayout";
 import { TablePrice } from "./components/TablePrice/TablePrice";
+import { ManageProduct } from "./components/Admin/Product/ManageProduct";
+import CreateProduct from "./components/Admin/Product/CreateProduct";
+import { ManageUser } from "./components/Admin/User/ManageUser";
+import CreateUser from "./components/Admin/User/CreateUser";
+import { ManageVoucher } from "./components/Admin/Voucher/ManageVoucher";
+import CreateVoucher from "./components/Admin/Voucher/CreateVoucher";
+import { ManageOrder } from "./components/Admin/Order/ManageOrder";
 
 function App() {
   return (
@@ -45,6 +52,29 @@ function App() {
 
           <Route path="/admin" element={<AdminLayout />}>
             <Route exact={true} path="dash" element={<Dashboard />} />
+            <Route exact={true} path="manage-order" element={<ManageOrder />} />
+            <Route
+              exact={true}
+              path="manage-product"
+              element={<ManageProduct />}
+            />
+            <Route
+              exact={true}
+              path="add-product"
+              element={<CreateProduct />}
+            />
+            <Route exact={true} path="manage-users" element={<ManageUser />} />
+            <Route exact={true} path="add-user" element={<CreateUser />} />
+            <Route
+              exact={true}
+              path="manage-voucher"
+              element={<ManageVoucher />}
+            />
+            <Route
+              exact={true}
+              path="add-voucher"
+              element={<CreateVoucher />}
+            />
           </Route>
 
           {/* <Route exact={true} path="/admin/dash" element={<Dashboard />} /> */}

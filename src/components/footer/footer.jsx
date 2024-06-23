@@ -39,8 +39,8 @@ const Footer = () => {
                     <img alt="" src={Icon1} />
                   </span>
                   <div className="info">
-                    <h4>Best prices</h4>
-                    <p>Orders $50 or more</p>
+                    <h4>Giá tốt nhất</h4>
+                    <p>Khi mua hơn 50 đơn hàng</p>
                   </div>
                 </div>
               </div>
@@ -51,8 +51,8 @@ const Footer = () => {
                     <img alt="" src={Icon2} />
                   </span>
                   <div className="info">
-                    <h4>Free delivery</h4>
-                    <p>Orders $50 or more</p>
+                    <h4>Miễn phí vận chuyển</h4>
+                    <p>Khi mua hơn 10 đơn hàng</p>
                   </div>
                 </div>
               </div>
@@ -63,8 +63,8 @@ const Footer = () => {
                     <img alt="" src={Icon3} />
                   </span>
                   <div className="info">
-                    <h4>Great daily deal</h4>
-                    <p>Orders $50 or more</p>
+                    <h4>Khuyễn mãi mỗi ngày</h4>
+                    <p>Sản phẩm nổi bật</p>
                   </div>
                 </div>
               </div>
@@ -75,8 +75,8 @@ const Footer = () => {
                     <img alt="" src={Icon5} />
                   </span>
                   <div className="info">
-                    <h4>Easy returns</h4>
-                    <p>Orders $50 or more</p>
+                    <h4>Chính sách hoàn trả</h4>
+                    <p>Dễ dàng tiện lợi cho khách hàng</p>
                   </div>
                 </div>
               </div>
@@ -100,20 +100,20 @@ const Footer = () => {
                 <br />
 
                 <p>
-                  <LocationOnOutlinedIcon /> <strong>Address</strong>: Hutech
-                  University
+                  <LocationOnOutlinedIcon /> <strong>Địa chỉ</strong>: Trường
+                  đại học công nghệ TPHCM
                 </p>
                 <p>
-                  <HeadphonesOutlinedIcon /> <strong>Call Us:</strong> (+91) -
-                  0392845906{" "}
+                  <HeadphonesOutlinedIcon /> <strong>Số điện thoại:</strong>{" "}
+                  (+91) - 0392845906{" "}
                 </p>
                 <p>
                   <EmailOutlinedIcon /> <strong>Email:</strong>{" "}
                   sale@happyfarm.com
                 </p>
                 <p>
-                  <WatchLaterOutlinedIcon /> <strong>Hours:</strong> 10:00 -
-                  18:00, Mon - Sat
+                  <WatchLaterOutlinedIcon /> <strong>Hoạt động:</strong> 10:00 -
+                  18:00, T2 - CN
                 </p>
               </div>
 

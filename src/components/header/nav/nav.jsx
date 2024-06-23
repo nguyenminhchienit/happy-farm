@@ -36,7 +36,7 @@ const Nav = (props) => {
           <div className="row position-relative">
             <div className="col-sm-2 part1 d-flex align-items-center">
               <Button className="bg-g text-white catTab res-hide">
-                <GridViewIcon /> &nbsp;All Categories <KeyboardArrowDownIcon />
+                <GridViewIcon /> &nbsp;Danh mục <KeyboardArrowDownIcon />
               </Button>
             </div>
 

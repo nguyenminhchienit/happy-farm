@@ -26,6 +26,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Select from "../selectDrop/select";
+import axios from "axios";
 
 const Header = (props) => {
   const [isOpenDropDown, setisOpenDropDown] = useState(false);
@@ -57,27 +58,27 @@ const Header = (props) => {
 
   const countryList = [];
 
-  // useEffect(() => {
-  //   getCountry("https://countriesnow.space/api/v0.1/countries/");
-  // }, []);
+  useEffect(() => {
+    getCountry("https://open.oapi.vn/location/provinces?page=0&size=30");
+  }, []);
 
-  // const getCountry = async (url) => {
-  //   try {
-  //     await axios.get(url).then((res) => {
-  //       if (res !== null) {
-  //         //console.log(res.data.data);
-  //         res.data.data.map((item, index) => {
-  //           countryList.push(item.country);
-  //           //console.log(item.country)
-  //         });
+  const getCountry = async (url) => {
+    try {
+      await axios.get(url).then((res) => {
+        if (res !== null) {
+          //console.log(res.data.data);
+          res.data.data.map((item, index) => {
+            countryList.push(item.name);
+            //console.log(item.country)
+          });
 
-  //         //console.log(res.data.data[0].country)
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // };
+          //console.log(res.data.data[0].country)
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -141,7 +142,7 @@ const Header = (props) => {
                   )}
                   <Select
                     data={categories}
-                    placeholder={"All Categories"}
+                    placeholder={"Danh mục"}
                     icon={false}
                   />
 
@@ -162,7 +163,7 @@ const Header = (props) => {
                   <div className="countryWrapper">
                     <Select
                       data={countryList}
-                      placeholder={"Your Location"}
+                      placeholder={"Vị trí của bạn"}
                       icon={
                         <LocationOnOutlinedIcon style={{ opacity: "0.5" }} />
                       }
@@ -178,7 +179,7 @@ const Header = (props) => {
                           <span className="badge bg-success rounded-circle">
                             3
                           </span>
-                          Compare
+                          {/* So sánh */}
                         </span>
                       </li>
                       <li className="list-inline-item">
@@ -187,7 +188,7 @@ const Header = (props) => {
                           <span className="badge bg-success rounded-circle">
                             3
                           </span>
-                          Wishlist
+                          {/* Yêu thích */}
                         </span>
                       </li>
                       <li className="list-inline-item">
@@ -198,7 +199,7 @@ const Header = (props) => {
                             <span className="badge bg-success rounded-circle">
                               0
                             </span>
-                            Cart
+                            {/* Giỏ hàng */}
                           </a>
                         </span>
                       </li>
@@ -209,34 +210,34 @@ const Header = (props) => {
                             onClick={() => setisOpenDropDown(!isOpenDropDown)}
                           >
                             <img src={IconUser} alt="" />
-                            Account
+                            {/* Tài khoản */}
                           </span>
 
                           {isOpenDropDown !== false && (
                             <ul className="dropdownMenu">
                               <li>
                                 <Button className="align-items-center">
-                                  <Person2OutlinedIcon /> My Account
+                                  <Person2OutlinedIcon /> Tài khoản
                                 </Button>
                               </li>
                               <li>
                                 <Button>
-                                  <LocationOnOutlinedIcon /> Order Tracking
+                                  <LocationOnOutlinedIcon /> Đơn hàng
                                 </Button>
                               </li>
                               <li>
                                 <Button>
-                                  <FavoriteBorderOutlinedIcon /> My Wishlist
+                                  <FavoriteBorderOutlinedIcon /> Yêu thích
                                 </Button>
                               </li>
                               <li>
                                 <Button>
-                                  <SettingsOutlinedIcon /> Setting
+                                  <SettingsOutlinedIcon /> Cài đặt
                                 </Button>
                               </li>
                               <li>
                                 <Button>
-                                  <LogoutOutlinedIcon /> Sign out
+                                  <LogoutOutlinedIcon /> Đăng xuất
                                 </Button>
                               </li>
                             </ul>
@@ -259,69 +260,6 @@ const Header = (props) => {
 
         <Nav data={props.data} openNav={isOpenNav} />
       </div>
-
-      {/* <div className="afterHeader"></div> */}
-
-      {/* {isOpenAccDropDown !== false && (
-        <>
-          <div className="navbarOverlay" onClick={closeNav}></div>
-          <ul className="dropdownMenu dropdownMenuAcc" onClick={closeNav}>
-            <li>
-              <Button className="align-items-center">
-                <Link to="">
-                  <Person2OutlinedIcon /> My Account
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button className="align-items-center">
-                <Link to="">
-                  {" "}
-                  <img src={IconCompare} alt="" />
-                  Compare
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button className="align-items-center">
-                <Link to="">
-                  {" "}
-                  <img src={IconCart} alt="" />
-                  Cart
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button>
-                <Link to="">
-                  <LocationOnOutlinedIcon /> Order Tracking
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button>
-                <Link to="">
-                  <FavoriteBorderOutlinedIcon /> My Wishlist
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button>
-                <Link to="">
-                  <SettingsOutlinedIcon /> Setting
-                </Link>
-              </Button>
-            </li>
-            <li>
-              <Button onClick={signOut}>
-                <Link to="">
-                  <LogoutOutlinedIcon /> Sign out
-                </Link>
-              </Button>
-            </li>
-          </ul>
-        </>
-      )} */}
     </>
   );
 };
