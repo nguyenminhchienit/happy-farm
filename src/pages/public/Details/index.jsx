@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-
 import { Link, useParams } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import InnerImageZoom from "react-inner-image-zoom";
@@ -16,7 +15,7 @@ import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlin
 import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 
 import Product from "../../../components/product";
-import axios from "axios";
+import { getById } from "../../../api/Fertilizer";
 
 const DetailsPage = (props) => {
   const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
@@ -56,6 +55,7 @@ const DetailsPage = (props) => {
   const zoomSlider = useRef();
 
   let { id } = useParams();
+  console.log("day la tac dung cua useParams ", id) 
 
   var settings = {
     dots: false,
@@ -86,26 +86,16 @@ const DetailsPage = (props) => {
     }
   };
 
+
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    props.data.length !== 0 &&
-      props.data.map((item) => {
-        item.items.length !== 0 &&
-          item.items.map((item_) => {
-            item_.products.length !== 0 &&
-              item_.products.map((product) => {
-                if (parseInt(product.id) === parseInt(id)) {
-                  setCurrentProduct(product);
-                }
-              });
-          });
-      });
-
-    //related products code
-
-    setRelatedProducts(props.data[0]?.items[0]?.products);
-
+    getById(id)
+    .then((response)=>{
+      console.log("detail", response)
+    })
+    .catch((err)=>{
+      console.error("loi ",err)
+    })
     //showReviews();
   }, [id]);
 
@@ -121,6 +111,12 @@ const DetailsPage = (props) => {
     }));
   };
 
+    // add to cart
+ const handleAddtoCart = () =>{
+
+ }
+
+ 
   const reviews_Arr = [];
 
   const submitReview = async (e) => {
@@ -169,6 +165,7 @@ const DetailsPage = (props) => {
       {false && (
         <Button
           className={`btn-g btn-lg w-100 filterBtn {isAlreadyAddedInCart===true && 'no-click'}`}
+          onClick={handleAddtoCart}
         >
           <ShoppingCartOutlinedIcon />
           {isAdded === true || isAlreadyAddedInCart === true

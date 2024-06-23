@@ -1015,6 +1015,14 @@ const data = {
       ],
     },
   ],
+
+
+
+
+
+
+  
+
   productReviews: [
     {
       review: "nice ",
@@ -1099,6 +1107,13 @@ const data = {
       id: 10,
     },
   ],
+
+
+
+
+
+
+
   cartItems: [
     {
       productName: "Moong Dal 2 kg",
@@ -1285,6 +1300,14 @@ const data = {
       quantity: 1,
     },
   ],
+
+
+
+
+
+
+
+
 };
 
 export default data;

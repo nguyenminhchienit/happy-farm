@@ -20,7 +20,12 @@ const Nav = (props) => {
 
   const closeNav = () => {
     props.closeNav();
+    console.log("fdjalkfdaljfldsaj")
   };
+
+  const callapi = ()=>{
+    console.log("1231231231231")
+  }
 
   return (
     <>
