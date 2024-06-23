@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CatSlider from "../../../components/catSlider";
 import "./Home.css";
 import SliderBanner from "./slider/index";
@@ -8,8 +8,28 @@ import Banners from "../../../components/banners";
 import Product from "../../../components/product";
 import TopProducts from "./TopProducts";
 
+
+
+// call api 
+import { getAll , getById } from "../../../api/Fertilizer";
+
 const Home = (props) => {
-  const [prodData, setprodData] = useState(props.data);
+  const [prodData, setProdData] = useState(props.data);
+
+  useEffect( () => {
+      // Gọi API để lấy dữ liệu khi component được mount
+      getAll()
+          .then((response) => {
+              // Xử lý dữ liệu trả về từ API
+              console.log("All fertilizers:", response.data);
+              setProdData(response.data); // Cập nhật state với dữ liệu từ API
+          })
+          .catch((error) => {
+              console.error("Error fetching all fertilizers:", error);
+          });
+  }, []); // Dependency array rỗng đảm bảo useEffect chỉ gọi một lần sau khi mount
+
+ 
   return (
     <div style={{ display: "block" }}>
       <SliderBanner />
@@ -24,10 +44,11 @@ const Home = (props) => {
           </div>
 
           <div className={`productRow`}>
-            {prodData[0]?.items[0]?.products?.map((item, index) => {
+            {prodData.map((item, index) => {
+              console.log("item:", item);
               return (
                 <div className="item" key={index}>
-                  <Product item={item} />
+                  <Product item={item} brand={item.brandName?.nameBrand}/>
                 </div>
               );
             })}

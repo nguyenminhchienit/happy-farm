@@ -27,6 +27,9 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Select from "../selectDrop/select";
 
+// bien taon cuc
+//const [cart, setcart] = useState(0);
+
 const Header = (props) => {
   const [isOpenDropDown, setisOpenDropDown] = useState(false);
   const [isOpenAccDropDown, setisOpenAccDropDown] = useState(false);

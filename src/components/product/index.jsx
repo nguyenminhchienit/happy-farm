@@ -13,10 +13,25 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 const Product = (props) => {
   const [productData, setProductData] = useState();
   const [isAdded, setIsadded] = useState(false);
+  const [thuonghieu, setThuonghieu] = useState("");
 
   useEffect(() => {
-    setProductData(props.item);
-  }, [props.item]);
+    if (props.item) {
+      setProductData(props.item);
+      console.log("day la props ", props.item);
+
+      
+
+      if (props.brand) {
+        console.log("day la props brand ", props.brand);
+        setThuonghieu(props.brand);
+      } else {
+        console.log("props.brand is undefined");
+      }
+
+
+    }
+  }, [props.item, props.brand]);
 
   const addToCart = () => {
     setIsadded(true);
@@ -30,11 +45,11 @@ const Product = (props) => {
 
       {productData !== undefined && (
         <>
-          <Link to={`/product/${productData.id}`}>
+          <Link to={`/product/${productData.idFertilizer}`}>
             <div className="imgWrapper">
               <div className="p-4 wrapper mb-3">
                 <img
-                  src={productData.catImg + "?im=Resize=(420,420)"}
+                  src={productData.imageRepresent + "?im=Resize=(420,420)"}
                   className="w-100"
                   alt=""
                 />
@@ -63,9 +78,9 @@ const Product = (props) => {
           </Link>
 
           <div className="info">
-            <span className="d-block catName">{productData.brand}</span>
+            <span className="d-block catName">{productData.brandName?.nameBrand}</span>
             <h4 className="title">
-              <Link>{productData.productName}</Link>
+              <Link>{productData.nameFertilizer}</Link>
             </h4>
             <Rating
               name="half-rating-read"
@@ -74,7 +89,7 @@ const Product = (props) => {
               readOnly
             />
             <span className="brand d-block text-g">
-              By <Link className="text-g">{productData.brand}</Link>
+              By <Link className="text-g">{thuonghieu}</Link>
             </span>
 
             <div className="d-flex align-items-center mt-3">
@@ -83,7 +98,7 @@ const Product = (props) => {
                   Rs {productData.price}
                 </span>{" "}
                 <span className="oldPrice ml-auto">
-                  Rs {productData.oldPrice}
+                  Rs {127}
                 </span>
               </div>
             </div>
