@@ -7,8 +7,10 @@ import {
   CardBody,
   CardFooter,
 } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
+import { getAllUsers } from "../../../api/User";
 
-const TABLE_HEAD = ["Tên loại", "Phân bón", "Giá", "Thương hiệu", "Hành động"];
+const TABLE_HEAD = ["Tên", "họ và tên", "email", "quyền","Hành động"];
 
 const TABLE_ROWS = [
   {
@@ -49,6 +51,28 @@ const TABLE_ROWS = [
 ];
 
 export function ManageUser() {
+
+const [users,setUsers] = useState([]);
+
+useEffect(() =>{
+ 
+  const fetchData = async () =>{
+    try{
+      const response = await getAllUsers();
+      console.log("day la du lieu fetch đc ", response.data)
+      setUsers(response.data)
+    }catch(error){
+      console.error("error fetch data ",error)
+    }
+  }
+
+
+  fetchData()
+
+},[])
+
+
+
   return (
     <Card className="m-10 ">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -88,14 +112,14 @@ export function ManageUser() {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ name, job, online, date }, index) => {
+            {users.map(({ username, fullName, email, roles  }, index) => {
               const isLast = index === TABLE_ROWS.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={name}>
+                <tr key={username}>
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
@@ -104,7 +128,7 @@ export function ManageUser() {
                           color=""
                           className="font-normal text-2xl text-black"
                         >
-                          {name}
+                          {username}
                         </Typography>
                       </div>
                     </div>
@@ -116,7 +140,7 @@ export function ManageUser() {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {job}
+                        {fullName}
                       </Typography>
                     </div>
                   </td>
@@ -127,7 +151,7 @@ export function ManageUser() {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {online}
+                        {email}
                       </Typography>
                     </div>
                   </td>
@@ -137,7 +161,7 @@ export function ManageUser() {
                       color="red"
                       className="font-normal text-2xl text-red-700"
                     >
-                      {date}
+                      {roles.nameRoles}
                     </Typography>
                   </td>
                   <td className={`${classes} flex gap-2`}>

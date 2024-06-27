@@ -8,13 +8,17 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-const TABLE_HEAD = ["Tên loại", "Phân bón", "Giá", "Thương hiệu", "Hành động"];
+import { getAll } from "../../../api/Fertilizer"
+import { useEffect, useState } from "react";
+  
+const TABLE_HEAD = ["Tên loại", "Giá" , "nguồn gốc xuất xứ" ,"Thương hiệu", "Hành động"];
 
-const TABLE_ROWS = [
+const TABLE_ROWS = 
+[
   {
     name: "Cà phê",
     job: "Gia Lai",
-    online: 112000,
+    online: 112000, 
     date: "Carbon",
     actions: "Sell, Export",
   },
@@ -49,6 +53,22 @@ const TABLE_ROWS = [
 ];
 
 export function ManageProduct() {
+
+  const [fertilizers, setFertilizers] = useState([]);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAll();
+        console.log("dữ liệu gọi đc " , response.data)
+        setFertilizers(response.data); // Giả sử response.data chứa danh sách phân bón
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <Card className="m-10 ">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -88,14 +108,14 @@ export function ManageProduct() {
             </tr>
           </thead>
           <tbody>
-            {TABLE_ROWS.map(({ name, job, online, date }, index) => {
+            {fertilizers.map((item, index) => {
               const isLast = index === TABLE_ROWS.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={name}>
+                <tr key={item.nameFertilizer}>
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
@@ -104,7 +124,7 @@ export function ManageProduct() {
                           color=""
                           className="font-normal text-2xl text-black"
                         >
-                          {name}
+                          {item.nameFertilizer}
                         </Typography>
                       </div>
                     </div>
@@ -116,7 +136,8 @@ export function ManageProduct() {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {job}
+                      {/* giá  */}
+                        {item.price }
                       </Typography>
                     </div>
                   </td>
@@ -127,7 +148,8 @@ export function ManageProduct() {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {online}
+                      {/* nguồn gốc xuất xứ */}
+                        {item.originFer.nameOrigin}
                       </Typography>
                     </div>
                   </td>
@@ -137,7 +159,7 @@ export function ManageProduct() {
                       color="red"
                       className="font-normal text-2xl text-red-700"
                     >
-                      {date}
+                      {item.brandName.nameBrand}
                     </Typography>
                   </td>
                   <td className={`${classes} flex gap-2`}>

@@ -12,12 +12,6 @@ const findByName = (nameOriginFertilizer) => {
   return axios.get(`/api/origin/find/${nameOriginFertilizer}`);
 };
 
-/*
-{
-    "nameOrigin":"nhan ban",
-    "isDelete": "false"
-}
-*/
 const createOriginFertilizer = (data) => {
   return axios.post(`/api/origin/addnew`, data);
 };

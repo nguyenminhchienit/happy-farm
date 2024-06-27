@@ -3,9 +3,8 @@ import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
 import { useEffect, useState } from "react";
-import { getCartUser } from "../../../api/user";
+import { getCartUser } from "../../../api/User";
 import { formatPrice } from "../../../utils/formatPrice";
-import { Input } from "@material-tailwind/react";
 import { apiCheckCode } from "../../../api/voucher";
 
 const Checkout = () => {

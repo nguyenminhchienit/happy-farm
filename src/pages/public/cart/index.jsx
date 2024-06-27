@@ -7,7 +7,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { Button } from "@mui/material";
 import QuantityBox from "../../../components/quantityBox";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import { deleteCartUser, getCartUser } from "../../../api/user";
+import { deleteCartUser, getCartUser } from "../../../api/User";
 import { formatPrice } from "../../../utils/formatPrice";
 
 const Cart = () => {

@@ -1,5 +1,19 @@
 import axios from "../../axios";
 
+const getAll = () => {
+  return axios.get("/api/user/getListUsers");
+};
+
+const createUser = (formData) => {
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
+
+  return axios.post("/api/user/addNew", formData, config);
+};
+
 const apiLogin = (username, password) => {
   return axios({
     url: `/api/user/login?username=${username}&password=${password}`,
@@ -21,4 +35,10 @@ const deleteCartUser = (idUser, idProduct) => {
   });
 };
 
-export { apiLogin, getCartUser, deleteCartUser };
+export {
+  getAll as getAllUsers,
+  createUser,
+  apiLogin,
+  deleteCartUser,
+  getCartUser,
+};
