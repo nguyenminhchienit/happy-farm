@@ -1,143 +1,158 @@
+import moment from "moment/moment";
+import { useState } from "react";
+import {createUser} from "../../../api/User"
+
 const CreateUser = () => {
+ 
+
+  const [myformData,setMyFormData] = useState({
+    username: "",
+    password: "",
+    fullName: "",
+    dob: "",
+    email: "",
+  })
+
+  const handleInputChange = (event)=>{
+    const { id, value } = event.target;
+    setMyFormData({
+      ...myformData,
+      [id]: value,
+    });
+  }
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formattedFormData = {
+      ...myformData,
+      dob: moment(myformData.dob).format("DD/MM/YYYY"),
+    };
+    console.log("Form Data Submitted:", formattedFormData);
+
+    const formData = new FormData();
+    for (const key in formattedFormData) {
+      formData.append(key, formattedFormData[key]);
+    }
+
+    console.log("day la formData ", formData.forEach(item =>{
+      console.log(item)
+    }))
+    try {
+      const response = await createUser(formData); // Await here if you need to wait for the promise to resolve
+      console.log(response);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
-    <div className=" flex flex-col align-items-center">
+    <div className="flex flex-col align-items-center">
       <h2 className="my-10 title font-bold text-3xl">Thêm người dùng</h2>
-      <form className="w-full max-w-screen-xl flex flex-col gap-3">
+      <form className="w-full max-w-screen-xl flex flex-col gap-3" onSubmit={handleSubmit}>
         <div className="flex flex-wrap -mx-3 mb-6">
+          {/* Tên */}
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
+              htmlFor="username"
             >
-              Tên sản phẩm
+              Tên
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name"
+              id="username"
+              name="username"
               type="text"
               placeholder="Jane"
+              value={myformData.username}
+              onChange={handleInputChange}
             />
-            {/* <p className="text-red-500 text-xs italic">
-              Please fill out this field.
-            </p> */}
           </div>
+
+          {/* Họ và tên */}
           <div className="w-full md:w-1/2 px-3">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-last-name"
+              htmlFor="fullName"
             >
-              Nguồn gốc
+              Họ và Tên
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-last-name"
+              id="fullName"
+              name="fullName"
               type="text"
               placeholder="Doe"
+              value={myformData.fullName}
+              onChange={handleInputChange}
             />
           </div>
         </div>
+
+        {/* Mật khẩu */}
         <div className="flex flex-wrap -mx-3 mb-6">
           <div className="w-full px-3">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-password"
+              htmlFor="password"
             >
-              Mô tả
+              Mật Khẩu
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-password"
-              type="text"
+              id="password"
+              name="password"
+              type="password"
               placeholder="Hồ Chí Minh"
+              value={myformData.password}
+              onChange={handleInputChange}
             />
           </div>
         </div>
-        <div className="flex flex-wrap -mx-3 mb-2">
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Giá
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-city"
-              type="text"
-              placeholder="Albuquerque"
-            />
-          </div>
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-state"
-            >
-              Thương Hiệu
-            </label>
-            <div className="relative">
-              <select
-                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-state"
-              >
-                <option>New Mexico</option>
-                <option>Missouri</option>
-                <option>Texas</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
-            >
-              Số lượng
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-zip"
-              type="text"
-              placeholder="90210"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap -mx-3 mt-6">
+
+        <div className="flex flex-wrap -mx-3 mb-6">
+          {/* Ngày sinh */}
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
+              htmlFor="dob"
             >
-              Ảnh đại diện
+              Ngày Sinh
             </label>
             <input
-              className="relative h-[60px] align-items-center m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal leading-[2.15] text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3  file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white  file:dark:text-white"
-              id="formFileLg"
-              type="file"
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              id="dob"
+              name="dob"
+              type="date"
+              placeholder="Albuquerque"
+              value={myformData.dob}
+              onChange={handleInputChange}
             />
           </div>
-          <div className="w-full md:w-1/2 px-3">
+
+          {/* Email */}
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
+              htmlFor="email"
             >
-              Hình ảnh
+              Email
             </label>
-            <input
-              className="relative h-[60px] align-items-center m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal leading-[2.15] text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3  file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white  file:dark:text-white"
-              id="formFileLg"
-              type="file"
-              multiple
-            />
+            <div className="relative">
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Albuquerque"
+                value={myformData.email}
+                onChange={handleInputChange}
+              />
+            </div>
           </div>
         </div>
+
         <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Thêm
         </button>
@@ -145,5 +160,6 @@ const CreateUser = () => {
     </div>
   );
 };
+
 
 export default CreateUser;

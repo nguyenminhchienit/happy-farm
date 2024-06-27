@@ -1,6 +1,6 @@
 import axios from "../../axios";
 
-const getAll = () =>{
+const getAllOriginFertilizer = () =>{
     return axios.get("/api/origin/getlistorigin")
 }
 
@@ -32,7 +32,7 @@ const deleteOriginFertilizer = (idOriginFertilizer) =>{
 }
 
 export {
-    getAll ,
+    getAllOriginFertilizer,
     getById ,
     findByName ,
     createOriginFertilizer ,
