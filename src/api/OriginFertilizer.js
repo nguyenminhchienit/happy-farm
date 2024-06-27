@@ -1,17 +1,16 @@
 import axios from "../../axios";
 
-const getAll = () =>{
-    return axios.get("/api/origin/getlistorigin")
-}
+const getAllOrigin = () => {
+  return axios.get("/api/origin/getlistorigin");
+};
 
-const getById = (idOriginFertilizer) =>{
-    return axios.get(`/api/origin/getorigin/${idOriginFertilizer}`)
-}
+const getById = (idOriginFertilizer) => {
+  return axios.get(`/api/origin/getorigin/${idOriginFertilizer}`);
+};
 
-const findByName = (nameOriginFertilizer) =>{
-    return axios.get(`/api/origin/find/${nameOriginFertilizer}`)
-} 
-
+const findByName = (nameOriginFertilizer) => {
+  return axios.get(`/api/origin/find/${nameOriginFertilizer}`);
+};
 
 /*
 {
@@ -19,24 +18,23 @@ const findByName = (nameOriginFertilizer) =>{
     "isDelete": "false"
 }
 */
-const createOriginFertilizer = (data) =>{
-    return axios.post(`/api/origin/addnew`,data)
-}
+const createOriginFertilizer = (data) => {
+  return axios.post(`/api/origin/addnew`, data);
+};
 
-const updateOriginFertilizer = (idOriginFertilizer , data) =>{
-    return axios.put(`/api/origin/editorigin/${idOriginFertilizer}`,data)
-}
+const updateOriginFertilizer = (idOriginFertilizer, data) => {
+  return axios.put(`/api/origin/editorigin/${idOriginFertilizer}`, data);
+};
 
-const deleteOriginFertilizer = (idOriginFertilizer) =>{
-    return axios.delete(`/api/brand/deleteorigin/${idOriginFertilizer}`)
-}
+const deleteOriginFertilizer = (idOriginFertilizer) => {
+  return axios.delete(`/api/brand/deleteorigin/${idOriginFertilizer}`);
+};
 
 export {
-    getAll ,
-    getById ,
-    findByName ,
-    createOriginFertilizer ,
-    updateOriginFertilizer ,
-    deleteOriginFertilizer
-
-}
+  getAllOrigin,
+  getById,
+  findByName,
+  createOriginFertilizer,
+  updateOriginFertilizer,
+  deleteOriginFertilizer,
+};

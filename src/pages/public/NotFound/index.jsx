@@ -7,20 +7,17 @@ const NotFound = () => {
   return (
     <section className="notFound" style={{ marginTop: "150px" }}>
       <div className="container-fluid">
-        <div className="box">
+        <div className="box flex justify-center items-center flex-col">
           <img src={NotFoundImg} />
           <br />
           <br />
-          <h1>Page Not Found</h1>
-          <p>
-            The link you clicked may be broken or the page may have been
-            removed. visit the Homepage or Contact us about the problem
-          </p>
+          <h2>Trang không tìm thấy</h2>
+
           <br />
 
-          <div className="d-flex">
+          <div className="d-flex mt-3">
             <Button className="btn-g btn-lg m-auto">
-              <Link to={"/"}>Back to Home Page</Link>
+              <Link to={"/"}>Trang chủ</Link>
             </Button>
           </div>
         </div>

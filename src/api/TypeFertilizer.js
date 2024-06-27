@@ -1,11 +1,7 @@
-import axios from "../../axios"
+import axios from "../../axios";
 
-const getAll = () =>{
-    return axios.get("/api/typefertilizer/getlisttype")
-}
+const getAllTypeProduct = () => {
+  return axios.get("/api/typefertilizer/getListType");
+};
 
-
-export {
-    getAll ,
-
-}
+export { getAllTypeProduct };

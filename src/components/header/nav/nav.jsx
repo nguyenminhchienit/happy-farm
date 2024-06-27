@@ -1,120 +1,89 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useEffect, useContext } from "react";
-import "./nav.css";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import GridViewIcon from "@mui/icons-material/GridView";
 import HeadphonesOutlinedIcon from "@mui/icons-material/HeadphonesOutlined";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Nav = (props) => {
-  const [isOpenNav, setIsOpenNav] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+const Nav = () => {
+  const [navOpen, setNavOpen] = useState(false);
 
-  useEffect(() => {
-    setIsOpenNav(props.openNav);
-  }, [props.openNav]);
-
-  const closeNav = () => {
-    props.closeNav();
-    console.log("fdjalkfdaljfldsaj")
+  const toggleNav = () => {
+    setNavOpen(!navOpen);
   };
 
-  const callapi = ()=>{
-    console.log("1231231231231")
-  }
-
   return (
-    <>
-      {isOpenNav === true && (
-        <div className="navbarOverlay" onClick={props.closeNav}></div>
-      )}
-      <div
-        className={`nav d-flex align-items-center ${
-          isOpenNav === true && "click"
-        }`}
-      >
-        <div className="container-fluid">
-          <div className="row position-relative">
-            <div className="col-sm-2 part1 d-flex align-items-center">
-              <Button className="bg-g text-white catTab res-hide">
-                <GridViewIcon /> &nbsp;Danh mục <KeyboardArrowDownIcon />
+    <div className="mx-5">
+      <div className="mx-auto">
+        <div className="flex items-center justify-between py-4">
+          <div className="">
+            <nav
+              className={`md:flex md:justify-end ${
+                navOpen ? "block" : "hidden"
+              }`}
+            >
+              <ul className="flex justify-center md:justify-end space-x-4">
+                <li>
+                  <Button onClick={toggleNav}>
+                    <Link to={"/"} className="text-gray-800">
+                      Trang chủ
+                    </Link>
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={toggleNav}>
+                    <Link to={"/phan-bon"} className="text-gray-800">
+                      Phân bón
+                    </Link>
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={toggleNav}>
+                    <Link to={"/bai-viet"} className="text-gray-800">
+                      Bài viết
+                    </Link>
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={toggleNav}>
+                    <Link to={"/lien-he"} className="text-gray-800">
+                      Liên hệ
+                    </Link>
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={toggleNav}>
+                    <Link to={"/gia-nong-san"} className="text-gray-800">
+                      Giá nông sản
+                    </Link>
+                  </Button>
+                </li>
+              </ul>
+            </nav>
+
+            <div className="md:hidden text-center mt-4">
+              <Button onClick={toggleNav} className="bg-green-500 text-white">
+                <GridViewIcon />
               </Button>
             </div>
+          </div>
 
-            <div className="col-sm-8 part2 position-static">
-              <nav className={isOpenNav === true ? "open" : ""}>
-                <ul className="list list-inline mb-0">
-                  <li className="list-inline-item">
-                    <Button>
-                      <a onClick={props.closeNav}>Trang chủ</a>
-                    </Button>
-                  </li>
-
-                  <li className="list-inline-item">
-                    <Button onClick={props.closeNav}>
-                      <a>Phân bón</a>
-                    </Button>
-                  </li>
-
-                  <li className="list-inline-item">
-                    <Button>
-                      <a>Bài viết</a>
-                    </Button>
-                  </li>
-
-                  <li className="list-inline-item">
-                    <Button>
-                      <a>Liên hệ</a>
-                    </Button>
-                  </li>
-                  <li className="list-inline-item">
-                    <Link to={"/gia-nong-san"}>
-                      <Button>
-                        <a>Giá nông sản</a>
-                      </Button>
-                    </Link>
-                  </li>
-                </ul>
-
-                {windowWidth < 992 && (
-                  <>
-                    {true !== "true" && (
-                      <div className="pl-3 pr-3">
-                        <br />
-                        <div>
-                          <Button
-                            className="btn btn-g btn-lg w-100"
-                            onClick={closeNav}
-                          >
-                            Sign In
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </nav>
-            </div>
-
-            <div className="col-sm-2 part3 d-flex align-items-center">
-              <div className="phNo d-flex align-items-center ml-auto">
-                <span>
-                  <HeadphonesOutlinedIcon />
-                </span>
-                <div className="info ms-3">
-                  <h3 className="text-g mb-0">0392845906</h3>
-                  <p className="mb-0">24/7 Support Center</p>
-                </div>
+          <div className="flex items-center">
+            <div className="flex items-center ml-auto">
+              <span className="mr-2">
+                <HeadphonesOutlinedIcon />
+              </span>
+              <div className="info">
+                <h3 className="text-green-500 mb-0">0392845906</h3>
+                <p className="mb-0 text-sm">24/7 Support Center</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -15,20 +15,10 @@ import paymentImage from "../../assets/images/payment-method.png";
 
 import appStore from "../../assets/images/app-store.jpg";
 import googlePlay from "../../assets/images/google-play.jpg";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import YouTubeIcon from "@mui/icons-material/YouTube";
 
 const Footer = () => {
   return (
     <>
-      <section className="newsLetterSection">
-        <div className="container-fluid">
-          <div className="box d-flex align-items-center"></div>
-        </div>
-      </section>
-
       <div className="footerWrapper">
         <div className="footerBoxes">
           <div className="container-fluid">
@@ -84,229 +74,221 @@ const Footer = () => {
           </div>
         </div>
 
-        <footer>
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-3 part1">
-                <a to="/">
-                  <img alt="" src={Logo} />
+        <footer className=" py-10">
+          <div className=" mx-auto px-4">
+            <div className="flex flex-wrap">
+              <div className="w-full md:w-3/12 mb-8 md:mb-0">
+                <a href="/" className="block mb-4">
+                  <img alt="" src={Logo} className="w-100" />
                 </a>
-                <br />
-                <br />
-                <p>
-                  Trụ sở chính: 475A (số cũ:144/24) Điện Biên Phủ, Phường 25,
-                  Quận Bình Thạnh, TP. HCM.
-                </p>
-                <br />
 
-                <p>
-                  <LocationOnOutlinedIcon /> <strong>Địa chỉ</strong>: Trường
-                  đại học công nghệ TPHCM
+                <p className="mt-4 flex items-start">
+                  <LocationOnOutlinedIcon className="mr-2 mt-1" />
+                  <span>
+                    <strong>Địa chỉ:</strong> Trường đại học công nghệ TPHCM
+                  </span>
                 </p>
-                <p>
-                  <HeadphonesOutlinedIcon /> <strong>Số điện thoại:</strong>{" "}
-                  (+91) - 0392845906{" "}
+                <p className="mt-2 flex items-start">
+                  <HeadphonesOutlinedIcon className="mr-2 mt-1" />
+                  <span>
+                    <strong>Số điện thoại:</strong> (+91) - 0392845906
+                  </span>
                 </p>
-                <p>
-                  <EmailOutlinedIcon /> <strong>Email:</strong>{" "}
-                  sale@happyfarm.com
+                <p className="mt-2 flex items-start">
+                  <EmailOutlinedIcon className="mr-2 mt-1" />
+                  <span>
+                    <strong>Email:</strong> sale@happyfarm.com
+                  </span>
                 </p>
-                <p>
-                  <WatchLaterOutlinedIcon /> <strong>Hoạt động:</strong> 10:00 -
-                  18:00, T2 - CN
+                <p className="mt-2 flex items-start">
+                  <WatchLaterOutlinedIcon className="mr-2 mt-1" />
+                  <span>
+                    <strong>Hoạt động:</strong> 10:00 - 18:00, T2 - CN
+                  </span>
                 </p>
               </div>
 
-              <div className="col-md-6 part2">
-                <div className="row">
-                  <div className="col">
-                    <h3>Company</h3>
-                    <ul className="footer-list mb-sm-5 mb-md-0">
+              <div className="w-full md:w-6/12 mb-8 md:mb-0">
+                <div className="flex flex-wrap">
+                  <div className="w-1/2 md:w-3/12">
+                    <h3 className="font-bold mb-4">Company</h3>
+                    <ul className="space-y-2 text-black">
                       <li>
-                        <a to="#">About Us</a>
+                        <a href="#" className="hover:underline text-black">
+                          About Us
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Delivery Information</a>
+                        <a href="#" className="hover:underline text-black">
+                          Delivery Information
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Privacy Policy</a>
+                        <a href="#" className="hover:underline text-black">
+                          Privacy Policy
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Terms &amp; Conditions</a>
+                        <a href="#" className="hover:underline text-black">
+                          Terms & Conditions
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Contact Us</a>
+                        <a href="#" className="hover:underline text-black">
+                          Contact Us
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Support Center</a>
+                        <a href="#" className="hover:underline text-black">
+                          Support Center
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Careers</a>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="col">
-                    <h3>Company</h3>
-                    <ul className="footer-list mb-sm-5 mb-md-0">
-                      <li>
-                        <a to="#">Account</a>
-                      </li>
-                      <li>
-                        <a to="#">Delivery Information</a>
-                      </li>
-                      <li>
-                        <a to="#">Privacy Policy</a>
-                      </li>
-                      <li>
-                        <a to="#">Terms &amp; Conditions</a>
-                      </li>
-                      <li>
-                        <a to="#">Contact Us</a>
-                      </li>
-                      <li>
-                        <a to="#">Support Center</a>
-                      </li>
-                      <li>
-                        <a to="#">Careers</a>
+                        <a href="#" className="hover:underline text-black">
+                          Careers
+                        </a>
                       </li>
                     </ul>
                   </div>
 
-                  <div className="col">
-                    <h3>Corporate</h3>
-                    <ul className="footer-list mb-sm-5 mb-md-0">
+                  <div className="w-1/2 md:w-3/12">
+                    <h3 className="font-bold mb-4">Company</h3>
+                    <ul className="space-y-2">
                       <li>
-                        <a to="#">About Us</a>
+                        <a href="#" className="hover:underline text-black">
+                          Account
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Delivery Information</a>
+                        <a href="#" className="hover:underline text-black">
+                          Delivery Information
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Privacy Policy</a>
+                        <a href="#" className="hover:underline text-black">
+                          Privacy Policy
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Terms &amp; Conditions</a>
+                        <a href="#" className="hover:underline text-black">
+                          Terms & Conditions
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Contact Us</a>
+                        <a href="#" className="hover:underline text-black">
+                          Contact Us
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Support Center</a>
+                        <a href="#" className="hover:underline text-black">
+                          Support Center
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Careers</a>
+                        <a href="#" className="hover:underline text-black">
+                          Careers
+                        </a>
                       </li>
                     </ul>
                   </div>
 
-                  <div className="col">
-                    <h3>Popular</h3>
-                    <ul className="footer-list mb-sm-5 mb-md-0">
+                  <div className="w-1/2 md:w-3/12">
+                    <h3 className="font-bold mb-4">Corporate</h3>
+                    <ul className="space-y-2">
                       <li>
-                        <a to="#">About Us</a>
+                        <a href="#" className="hover:underline text-black">
+                          About Us
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Delivery Information</a>
+                        <a href="#" className="hover:underline text-black">
+                          Delivery Information
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Privacy Policy</a>
+                        <a href="#" className="hover:underline text-black">
+                          Privacy Policy
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Terms &amp; Conditions</a>
+                        <a href="#" className="hover:underline text-black">
+                          Terms & Conditions
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Contact Us</a>
+                        <a href="#" className="hover:underline text-black">
+                          Contact Us
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Support Center</a>
+                        <a href="#" className="hover:underline text-black">
+                          Support Center
+                        </a>
                       </li>
                       <li>
-                        <a to="#">Careers</a>
+                        <a href="#" className="hover:underline text-black">
+                          Careers
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="w-1/2 md:w-3/12">
+                    <h3 className="font-bold mb-4">Popular</h3>
+                    <ul className="space-y-2">
+                      <li>
+                        <a href="#" className="hover:underline text-black">
+                          About Us
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:underline text-black">
+                          Delivery Information
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:underline text-black">
+                          Privacy Policy
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:underline text-black">
+                          Terms & Conditions
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:underline text-black">
+                          Contact Us
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:underline text-black">
+                          Support Center
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" className="hover:underline text-black">
+                          Careers
+                        </a>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
 
-              <div className="col-md-3 part3">
-                <h3>Install App</h3>
-                <br className="res-hide" />
+              <div className="w-full md:w-3/12">
+                <h3 className="font-bold mb-4">Install App</h3>
                 <p>From App Store or Google Play</p>
-
-                <div className="d-flex">
-                  <a to={""}>
+                <div className="flex mt-4">
+                  <a href="#" className="block mr-2">
                     <img alt="" src={appStore} width={150} />
                   </a>
-                  <a to={""}>
-                    <img alt="" src={googlePlay} className="mx-2" width={150} />
+                  <a href="#" className="block">
+                    <img alt="" src={googlePlay} width={150} />
                   </a>
                 </div>
-
-                <br />
-
-                <p>Secured Payment Gateways</p>
-                <img alt="" src={paymentImage} />
-              </div>
-            </div>
-
-            <hr />
-
-            <div className="row lastStrip">
-              <div className="col-md-3 part_1">
-                <p>© 2024, HappyFarm - Nguyen Minh Chien</p>
-              </div>
-
-              <div className="col-md-6 d-flex part_2">
-                <div className="m-auto d-flex align-items-center phWrap">
-                  <div className="phNo d-flex align-items-center mx-5">
-                    <span>
-                      <HeadphonesOutlinedIcon />
-                    </span>
-                    <div className="info ml-3">
-                      <h3 className="text-g mb-0">1900 - 8888</h3>
-                      <p className="mb-0">24/7 Support Center</p>
-                    </div>
-                  </div>
-
-                  <div className="phNo d-flex align-items-center  mx-5">
-                    <span>
-                      <HeadphonesOutlinedIcon />
-                    </span>
-                    <div className="info ml-3">
-                      <h3 className="text-g mb-0">0392845906</h3>
-                      <p className="mb-0">24/7 Support Center</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-md-3 part3  part_3">
-                <div className="d-flex align-items-center">
-                  <h5>Follow Us</h5>
-                  <ul className="list list-inline">
-                    <li className="list-inline-item">
-                      <a to={""}>
-                        <FacebookOutlinedIcon />
-                      </a>
-                    </li>
-                    <li className="list-inline-item">
-                      <a to={""}>
-                        <TwitterIcon />
-                      </a>
-                    </li>
-                    <li className="list-inline-item">
-                      <a to={""}>
-                        <InstagramIcon />
-                      </a>
-                    </li>
-                    <li className="list-inline-item">
-                      <a to={""}>
-                        <YouTubeIcon />
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                <p className="mt-4">Secured Payment Gateways</p>
+                <img alt="" src={paymentImage} className="mt-2" />
               </div>
             </div>
           </div>

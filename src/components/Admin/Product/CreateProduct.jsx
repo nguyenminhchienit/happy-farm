@@ -1,147 +1,332 @@
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import InputForm from "../Input/InputForm";
+import SelectForm from "../Input/SelectForm";
+
+import Button from "../../Admin/Product/Button";
+import { convertFileToBase64 } from "../../../utils/helpers";
+import { apiCreateProduct } from "../../../api/Fertilizer";
+import { getAllBrand } from "../../../api/Brand";
+import { getAllOrigin } from "../../../api/OriginFertilizer";
+import { getAllTypeProduct } from "../../../api/TypeFertilizer";
+
 const CreateProduct = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
+
+  const [preview, setPreview] = useState({
+    thumb: "",
+    images: [],
+  });
+
+  const [brand, setBrand] = useState([]);
+  const [origin, setOrigin] = useState([]);
+  const [type, setType] = useState([]);
+
+  // const [payload, setPayload] = useState({
+  //   description: "",
+  // });
+
+  // const [inValidField, setInValidField] = useState([]);
+
+  // const handleChangeValue = useCallback(
+  //   (e) => {
+  //     setPayload(e);
+  //   },
+  //   [payload]
+  // );
+
+  const handlePreviewThumb = async (file) => {
+    const base64Thumb = await convertFileToBase64(file);
+    setPreview((prev) => ({ ...prev, thumb: base64Thumb }));
+  };
+
+  const handlePreviewImages = async (files) => {
+    const images = [];
+    console.log(files);
+    for (let file of files) {
+      // if (file.type !== "image/png" && file.type !== "image/jpg") {
+      //   toast.warning("File not supported");
+      //   return;
+      // }
+      const base64 = await convertFileToBase64(file);
+      images.push(base64);
+    }
+    setPreview((prev) => ({ ...prev, images: images }));
+  };
+
+  useEffect(() => {
+    if (watch("thumb").length > 0) {
+      handlePreviewThumb(watch("thumb")[0]);
+    }
+  }, [watch("thumb")]);
+
+  useEffect(() => {
+    if (watch("image").length > 0) {
+      handlePreviewImages(watch("image"));
+    }
+  }, [watch("image")]);
+
+  const handleAddProduct = async (data) => {
+    const finalPayload = { ...data };
+    console.log(finalPayload);
+    const formData = new FormData();
+    for (let i of Object.entries(finalPayload)) {
+      formData.append(i[0], i[1]);
+    }
+    if (finalPayload.thumb) {
+      formData.append("fileImageRepresent", finalPayload.thumb[0]);
+    }
+    if (finalPayload.image) {
+      for (let item of finalPayload.image) {
+        formData.append("fileImageOptional", item);
+      }
+    }
+
+    for (const p of formData) {
+      const name = p[0];
+      const value = p[1];
+
+      console.log(name, value);
+    }
+
+    apiCreateProduct(formData).then((response) => {
+      console.log("res: ", response);
+    });
+  };
+
+  useEffect(() => {
+    getAllBrand().then((response) => {
+      setBrand(response.data);
+    });
+    getAllOrigin().then((res) => {
+      setOrigin(res.data);
+    });
+    getAllTypeProduct().then((res) => {
+      setType(res.data);
+    });
+  }, []);
+
+  console.log(brand, origin, type);
+
   return (
-    <div className=" flex flex-col align-items-center">
-      <h2 className="my-10 title font-bold text-3xl">Thêm sản phẩm</h2>
-      <form className="w-full max-w-screen-xl flex flex-col gap-3">
-        <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-first-name"
-            >
-              Tên sản phẩm
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name"
-              type="text"
-              placeholder="Jane"
+    <div className="mx-5">
+      <h1 className="h-[75px] flex items-center justify-between text-3xl font-bold border-b pl-4 text-gray-600">
+        <span>Thêm phân bón</span>
+      </h1>
+      <div className="p-4">
+        <form
+          className="flex flex-col gap-3"
+          onSubmit={handleSubmit(handleAddProduct)}
+        >
+          <InputForm
+            label={"Tên sản phẩm"}
+            register={register}
+            id={"nameFertilizer"}
+            fw
+            placeholder={"Tên sản phẩm"}
+            errors={errors}
+            validate={{ required: "Require" }}
+          />
+          <div className="flex gap-3">
+            <InputForm
+              label={"Giá"}
+              register={register}
+              id={"price"}
+              fw
+              style={"mt-2 flex-auto"}
+              placeholder={"Giá"}
+              errors={errors}
+              validate={{ required: "Require" }}
             />
-            {/* <p className="text-red-500 text-xs italic">
-              Please fill out this field.
-            </p> */}
-          </div>
-          <div className="w-full md:w-1/2 px-3">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-last-name"
-            >
-              Nguồn gốc
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-last-name"
-              type="text"
-              placeholder="Doe"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full px-3">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-password"
-            >
-              Mô tả
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-password"
-              type="text"
-              placeholder="Hồ Chí Minh"
+
+            <InputForm
+              label={"Số lượng"}
+              register={register}
+              id={"nums"}
+              fw
+              style={"mt-2 flex-auto"}
+              placeholder={"Số lượng"}
+              errors={errors}
+              validate={{ required: "Require" }}
             />
           </div>
-        </div>
-        <div className="flex flex-wrap -mx-3 mb-2">
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-city"
-            >
-              Giá
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-city"
-              type="text"
-              placeholder="Albuquerque"
+
+          <InputForm
+            label={"Mô tả"}
+            register={register}
+            id={"description"}
+            fw
+            style={"mt-2 flex-auto"}
+            placeholder={"Mô tả sản phẩm"}
+            errors={errors}
+            validate={{ required: "Require" }}
+          />
+
+          <InputForm
+            label={"Chi tiết"}
+            register={register}
+            id={"details"}
+            fw
+            placeholder={"Chi tiết sản phẩm"}
+            errors={errors}
+            validate={{ required: "Require" }}
+          />
+
+          <div className="flex gap-3">
+            <SelectForm
+              label={"Nguồn gốc"}
+              register={register}
+              id={"originFer"}
+              fw
+              style={"mt-2 flex-auto"}
+              errors={errors}
+              options={origin?.map((item) => {
+                return {
+                  text: item.nameOrigin,
+                  value: item.idOrigin,
+                };
+              })}
+            />
+
+            <SelectForm
+              label={"Loại phân bón"}
+              register={register}
+              id={"type"}
+              fw
+              style={"mt-2 flex-auto"}
+              errors={errors}
+              options={type?.map((item) => {
+                return {
+                  text: item.nameTypeFertilizer,
+                  value: item.idTypeFertilizer,
+                };
+              })}
+            />
+
+            <SelectForm
+              label={"Thương hiệu"}
+              register={register}
+              id={"brandName"}
+              fw
+              style={"mt-2 flex-auto"}
+              errors={errors}
+              options={brand?.map((item) => {
+                return {
+                  text: item.nameBrand,
+                  value: item.idBrand,
+                };
+              })}
             />
           </div>
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-state"
-            >
-              Thương Hiệu
-            </label>
-            <div className="relative">
-              <select
-                className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-state"
-              >
-                <option>New Mexico</option>
-                <option>Missouri</option>
-                <option>Texas</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg
-                  className="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                </svg>
-              </div>
+
+          {/* <div className="flex gap-3">
+           
+            <InputForm
+              label={"Quantity"}
+              register={register}
+              id={"quantity"}
+              fw
+              style={"mt-2 flex-auto"}
+              placeholder={"Quantity of new product"}
+              errors={errors}
+              validate={{ required: "Require" }}
+            />
+
+          </div>
+          <div className="flex gap-3">
+            <SelectForm
+              label={"Category"}
+              register={register}
+              id={"category"}
+              fw
+              style={"flex-auto"}
+              errors={errors}
+              options={categories?.map((item) => {
+                return {
+                  text: item.title,
+                  value: item._id,
+                };
+              })}
+            />
+            <SelectForm
+              label={"Brand"}
+              register={register}
+              id={"brand"}
+              fw
+              style={"flex-auto"}
+              errors={errors}
+              options={categories
+                ?.find((cate) => cate._id === watch("category"))
+                ?.brand?.map((item) => {
+                  return {
+                    text: item,
+                    value: item,
+                  };
+                })}
+            />
+          </div>
+          */}
+          <div className="flex gap-1 flex-col">
+            <label htmlFor="thumb">Tải hình ảnh đại diện của sản phẩm</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="thumb"
+              {...register("thumb", { required: "Require" })}
+            />
+            {errors["thumb"] && (
+              <small className="text-red-500 pt-1">
+                {errors["thumb"]?.message}
+              </small>
+            )}
+          </div>
+          {preview.thumb && (
+            <div>
+              <img
+                src={preview.thumb}
+                alt="thumb"
+                className="my-4 w-[100px] object-cover"
+              />
             </div>
-          </div>
-          <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
-            >
-              Số lượng
-            </label>
+          )}
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="thumb">Tải hình ảnh sản phẩm</label>
             <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="grid-zip"
-              type="text"
-              placeholder="90210"
-            />
-          </div>
-        </div>
-        <div className="flex flex-wrap -mx-3 mt-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
-            >
-              Ảnh đại diện
-            </label>
-            <input
-              className="relative h-[60px] align-items-center m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal leading-[2.15] text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3  file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white  file:dark:text-white"
-              id="formFileLg"
               type="file"
-            />
-          </div>
-          <div className="w-full md:w-1/2 px-3">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="grid-zip"
-            >
-              Hình ảnh
-            </label>
-            <input
-              className="relative h-[60px] align-items-center m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal leading-[2.15] text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3  file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white  file:dark:text-white"
-              id="formFileLg"
-              type="file"
+              accept="image/*"
+              id="image"
+              {...register("image", { required: "Require" })}
               multiple
             />
+            {errors["image"] && (
+              <small className="text-red-500 pt-1">
+                {errors["image"]?.message}
+              </small>
+            )}
           </div>
-        </div>
-        <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Thêm
-        </button>
-      </form>
+          {preview.images.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {preview.images.map((item, index) => {
+                return (
+                  <img
+                    key={index}
+                    src={item}
+                    alt="images"
+                    className="my-4 w-[100px] object-cover"
+                  />
+                );
+              })}
+            </div>
+          )}
+          <Button name={"Thêm sản phẩm"} type="submit" />
+        </form>
+      </div>
     </div>
   );
 };

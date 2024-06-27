@@ -27,9 +27,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Select from "../selectDrop/select";
 import axios from "axios";
-
-// bien taon cuc
-//const [cart, setcart] = useState(0);
+import { Link } from "react-router-dom";
 
 const Header = (props) => {
   const [isOpenDropDown, setisOpenDropDown] = useState(false);
@@ -69,13 +67,9 @@ const Header = (props) => {
     try {
       await axios.get(url).then((res) => {
         if (res !== null) {
-          //console.log(res.data.data);
           res.data.data.map((item, index) => {
             countryList.push(item.name);
-            //console.log(item.country)
           });
-
-          //console.log(res.data.data[0].country)
         }
       });
     } catch (error) {
@@ -94,7 +88,13 @@ const Header = (props) => {
     });
   }, []);
 
-  console.log(props);
+  const storedData = localStorage.getItem("user");
+  const dataObject = storedData ? JSON.parse(storedData) : null;
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
 
   return (
     <>
@@ -103,9 +103,9 @@ const Header = (props) => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-sm-2 part1 d-flex align-items-center">
-                {/* <Link to="/"> */}
-                <img src={Logo} className="logo" alt="" />
-                {/* </Link> */}
+                <Link to="/">
+                  <img src={Logo} className="logo" alt="" />
+                </Link>
                 {windowWidth < 992 && (
                   <div className="ml-auto d-flex align-items-center">
                     <div className="navbarToggle mr-0">
@@ -175,7 +175,7 @@ const Header = (props) => {
                   <ClickAwayListener
                     onClickAway={() => setisOpenDropDown(false)}
                   >
-                    <ul className="list list-inline mb-0 headerTabs">
+                    <ul className="list list-inline mb-0 headerTabs flex align-items-center">
                       <li className="list-inline-item">
                         <span>
                           <img src={IconCompare} alt="" />
@@ -207,8 +207,8 @@ const Header = (props) => {
                         </span>
                       </li>
 
-                      {1 === 1 ? (
-                        <li className="list-inline-item">
+                      {dataObject ? (
+                        <li className="list-inline-item ">
                           <span
                             onClick={() => setisOpenDropDown(!isOpenDropDown)}
                           >
@@ -216,8 +216,8 @@ const Header = (props) => {
                             {/* Tài khoản */}
                           </span>
 
-                          {isOpenDropDown !== false && (
-                            <ul className="dropdownMenu">
+                          {!isOpenDropDown === false && (
+                            <ul className="dropdownMenu ">
                               <li>
                                 <Button className="align-items-center">
                                   <Person2OutlinedIcon /> Tài khoản
@@ -238,7 +238,7 @@ const Header = (props) => {
                                   <SettingsOutlinedIcon /> Cài đặt
                                 </Button>
                               </li>
-                              <li>
+                              <li onClick={handleLogout}>
                                 <Button>
                                   <LogoutOutlinedIcon /> Đăng xuất
                                 </Button>

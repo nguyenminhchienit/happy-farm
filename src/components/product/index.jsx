@@ -9,27 +9,15 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import { formatPrice } from "../../utils/formatPrice";
 
 const Product = (props) => {
   const [productData, setProductData] = useState();
   const [isAdded, setIsadded] = useState(false);
-  const [thuonghieu, setThuonghieu] = useState("");
 
   useEffect(() => {
     if (props.item) {
       setProductData(props.item);
-      console.log("day la props ", props.item);
-
-      
-
-      if (props.brand) {
-        console.log("day la props brand ", props.brand);
-        setThuonghieu(props.brand);
-      } else {
-        console.log("props.brand is undefined");
-      }
-
-
     }
   }, [props.item, props.brand]);
 
@@ -78,7 +66,9 @@ const Product = (props) => {
           </Link>
 
           <div className="info">
-            <span className="d-block catName">{productData.brandName?.nameBrand}</span>
+            <span className="d-block catName">
+              {productData?.type?.nameTypeFertilizer}
+            </span>
             <h4 className="title">
               <Link>{productData.nameFertilizer}</Link>
             </h4>
@@ -89,16 +79,19 @@ const Product = (props) => {
               readOnly
             />
             <span className="brand d-block text-g">
-              By <Link className="text-g">{thuonghieu}</Link>
+              By{" "}
+              <Link className="text-g">
+                {productData?.brandName?.nameBrand}
+              </Link>
             </span>
 
             <div className="d-flex align-items-center mt-3">
               <div className="d-flex align-items-center w-100">
                 <span className="price text-g font-weight-bold">
-                  Rs {productData.price}
+                  {formatPrice(productData.price) + " VND"}
                 </span>{" "}
                 <span className="oldPrice ml-auto">
-                  Rs {127}
+                  {formatPrice(productData.price) + " VND"}
                 </span>
               </div>
             </div>

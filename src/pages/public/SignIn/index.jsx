@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
 import TextField from "@mui/material/TextField";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GoogleImg from "../../../assets/images/google.png";
 
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import { apiLogin } from "../../../api/user";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,9 +18,11 @@ const SignIn = () => {
   const [showLoader, setShowLoader] = useState(false);
 
   const [formFields, setFormFields] = useState({
-    email: "",
+    username: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const onChangeField = (e) => {
     const name = e.target.name;
@@ -31,12 +34,20 @@ const SignIn = () => {
     }));
   };
 
-  const signIn = () => {};
-
-  const signInWithGoogle = () => {};
+  const signIn = () => {
+    apiLogin(formFields.username, formFields.password).then((response) => {
+      localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.status) {
+        navigate("/");
+        window.location.reload();
+      } else {
+        navigate("/signIn");
+      }
+    });
+  };
 
   return (
-    <div style={{ marginTop: "45px" }}>
+    <div style={{ marginTop: "70px" }}>
       <section className="signIn mb-5">
         <div className="breadcrumbWrapper">
           <div className="container-fluid">
@@ -63,13 +74,13 @@ const SignIn = () => {
             <form className="mt-4">
               <div className="form-group mb-4 w-100">
                 <TextField
-                  id="email"
-                  type="email"
-                  name="email"
-                  label="Email"
+                  id="username"
+                  type="username"
+                  name="username"
+                  label="Username"
                   className="w-100"
                   onChange={onChangeField}
-                  value={formFields.email}
+                  value={formFields.username}
                 />
               </div>
               <div className="form-group mb-4 w-100">
@@ -104,11 +115,7 @@ const SignIn = () => {
 
               <div className="form-group mt-5 mb-4 w-100 signInOr">
                 <p className="text-center">OR</p>
-                <Button
-                  className="w-100"
-                  variant="outlined"
-                  onClick={signInWithGoogle}
-                >
+                <Button className="w-100" variant="outlined">
                   <img src={GoogleImg} />
                   Sign In with Google
                 </Button>

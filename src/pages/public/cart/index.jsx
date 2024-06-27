@@ -1,18 +1,37 @@
 /* eslint-disable no-undef */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./style.css";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import Rating from "@mui/material/Rating";
+
 import { Button } from "@mui/material";
 import QuantityBox from "../../../components/quantityBox";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { deleteCartUser, getCartUser } from "../../../api/user";
+import { formatPrice } from "../../../utils/formatPrice";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [update, setUpdate] = useState(false);
 
-  const updateCart = (items) => {
-    setCartItems(items);
+  const storedData = localStorage.getItem("user");
+  const dataObject = storedData ? JSON.parse(storedData) : null;
+
+  useEffect(() => {
+    getCartUser(dataObject?.idUser).then((response) => {
+      setCartItems(response.data);
+    });
+  }, [update]);
+
+  const handleDeleteCart = (item) => {
+    if (dataObject) {
+      deleteCartUser(dataObject?.idUser, item?.idFertilizer?.idFertilizer).then(
+        (response) => {
+          setUpdate(!update);
+          console.log(response);
+        }
+      );
+    }
   };
 
   return (
@@ -37,10 +56,10 @@ const Cart = () => {
             <div className="col-md-8">
               <div className="d-flex align-items-center w-100">
                 <div className="left">
-                  <h1 className="hd mb-0">Your Cart</h1>
+                  <h1 className="hd mb-0">Giỏ hàng của bạn</h1>
                   <p>
-                    There are <span className="text-g">3</span> products in your
-                    cart
+                    Có <span className="text-g">{cartItems?.length}</span> sản
+                    phẩm trong giỏ hàng của bạn
                   </p>
                 </div>
               </div>
@@ -50,11 +69,11 @@ const Cart = () => {
                   <table className="table">
                     <thead>
                       <tr>
-                        <th>Product</th>
-                        <th>Unit Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
-                        <th>Remove</th>
+                        <th>Sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>Số lượng</th>
+                        <th>Tổng</th>
+                        <th>Xóa</th>
                       </tr>
                     </thead>
 
@@ -63,14 +82,17 @@ const Cart = () => {
                         cartItems.map((item, index) => {
                           return (
                             <tr key={index}>
-                              <td width={"50%"}>
+                              <td width={"40%"}>
                                 <div className="d-flex align-items-center">
                                   <div className="img">
-                                    <Link to={`/product/${item.id}`}>
+                                    <Link
+                                      to={`/product/${item?.idFertilizer?.idFertilizer}`}
+                                    >
                                       <img
                                         alt=""
                                         src={
-                                          item.catImg + "?im=Resize=(100,100)"
+                                          item?.idFertilizer?.imageRepresent +
+                                          "?im=Resize=(100,100)"
                                         }
                                         className="w-100"
                                       />
@@ -79,24 +101,18 @@ const Cart = () => {
 
                                   <div className="info pl-4">
                                     <Link to={`/product/${item.id}`}>
-                                      <h4>{item.productName}</h4>
+                                      <h4>
+                                        {item?.idFertilizer?.nameFertilizer}
+                                      </h4>
                                     </Link>
-                                    <Rating
-                                      name="half-rating-read"
-                                      value={parseFloat(item.rating)}
-                                      precision={0.5}
-                                      readOnly
-                                    />{" "}
-                                    <span className="text-light">
-                                      ({parseFloat(item.rating)})
-                                    </span>
                                   </div>
                                 </div>
                               </td>
 
                               <td width="20%">
                                 <span>
-                                  Rs: {parseInt(item.price.split(",").join(""))}
+                                  {formatPrice(item?.idFertilizer?.price) +
+                                    " VND"}
                                 </span>
                               </td>
 
@@ -105,24 +121,23 @@ const Cart = () => {
                                   item={item}
                                   cartItems={cartItems}
                                   index={index}
-                                  updateCart={updateCart}
+                                  quantity={item?.quantity}
                                 />
                               </td>
 
                               <td>
-                                <span className="text-g">
-                                  Rs.{" "}
-                                  {parseInt(item.price.split(",").join("")) *
-                                    parseInt(item.quantity)}
+                                <span className="text-g text-sx">
+                                  {formatPrice(
+                                    parseInt(item?.idFertilizer?.price) *
+                                      parseInt(item.quantity)
+                                  ) + " VND"}
                                 </span>
                               </td>
 
                               <td align="center">
                                 <span
                                   className="cursor"
-                                  onClick={() =>
-                                    context.removeItemsFromCart(item.id)
-                                  }
+                                  onClick={() => handleDeleteCart(item)}
                                 >
                                   <DeleteOutlineOutlinedIcon />
                                 </span>
@@ -140,7 +155,7 @@ const Cart = () => {
               <div className="d-flex align-items-center">
                 <Link to="/">
                   <Button className="btn-g">
-                    <KeyboardBackspaceIcon /> Continue Shopping
+                    <KeyboardBackspaceIcon /> Tiếp tục mua sắp
                   </Button>
                 </Link>
               </div>
@@ -149,32 +164,34 @@ const Cart = () => {
             <div className="col-md-4 cartRightBox">
               <div className="card p-4 ">
                 <div className="d-flex align-items-center mb-4">
-                  <h5 className="mb-0 text-light">Subtotal</h5>
+                  <h5 className="mb-0 text-light">Tổng tiền</h5>
                   <h3 className="ml-auto mb-0 font-weight-bold">
                     <span className="text-g">
                       {cartItems.length !== 0 &&
-                        cartItems
-                          .map(
-                            (item) =>
-                              parseInt(item.price.split(",").join("")) *
-                              item.quantity
-                          )
-                          .reduce((total, value) => total + value, 0)}
+                        formatPrice(
+                          cartItems
+                            .map(
+                              (item) =>
+                                parseInt(item?.idFertilizer?.price) *
+                                item.quantity
+                            )
+                            .reduce((total, value) => total + value, 0)
+                        ) + " VND"}
                     </span>
                   </h3>
                 </div>
 
                 <div className="d-flex align-items-center mb-4">
-                  <h5 className="mb-0 text-light">Shipping</h5>
+                  <h5 className="mb-0 text-light">Giao hàng</h5>
                   <h3 className="ml-auto mb-0 font-weight-bold">
-                    <span>Free</span>
+                    <span>Miễn phí</span>
                   </h3>
                 </div>
 
                 <div className="d-flex align-items-center mb-4">
-                  <h5 className="mb-0 text-light">Estimate for</h5>
+                  <h5 className="mb-0 text-light">Địa chỉ</h5>
                   <h3 className="ml-auto mb-0 font-weight-bold">
-                    United Kingdom
+                    Dĩ An, Bình Dương
                   </h3>
                 </div>
 
@@ -183,13 +200,15 @@ const Cart = () => {
                   <h3 className="ml-auto mb-0 font-weight-bold">
                     <span className="text-g">
                       {cartItems.length !== 0 &&
-                        cartItems
-                          .map(
-                            (item) =>
-                              parseInt(item.price.split(",").join("")) *
-                              item.quantity
-                          )
-                          .reduce((total, value) => total + value, 0)}
+                        formatPrice(
+                          cartItems
+                            .map(
+                              (item) =>
+                                parseInt(item?.idFertilizer?.price) *
+                                item.quantity
+                            )
+                            .reduce((total, value) => total + value, 0)
+                        ) + " VND"}
                     </span>
                   </h3>
                 </div>
@@ -198,18 +217,18 @@ const Cart = () => {
                 <Link to={"/checkout"}>
                   <Button
                     className="btn-g btn-lg"
-                    onClick={() => {
-                      context.setCartTotalAmount(
-                        cartItems.length !== 0 &&
-                          cartItems
-                            .map(
-                              (item) =>
-                                parseInt(item.price.split(",").join("")) *
-                                item.quantity
-                            )
-                            .reduce((total, value) => total + value, 0)
-                      );
-                    }}
+                    // onClick={() => {
+                    //   context.setCartTotalAmount(
+                    //     cartItems.length !== 0 &&
+                    //       cartItems
+                    //         .map(
+                    //           (item) =>
+                    //             parseInt(item.price.split(",").join("")) *
+                    //             item.quantity
+                    //         )
+                    //         .reduce((total, value) => total + value, 0)
+                    //   );
+                    // }}
                   >
                     Proceed To CheckOut
                   </Button>

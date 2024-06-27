@@ -21,6 +21,9 @@ import CreateUser from "./components/Admin/User/CreateUser";
 import { ManageVoucher } from "./components/Admin/Voucher/ManageVoucher";
 import CreateVoucher from "./components/Admin/Voucher/CreateVoucher";
 import { ManageOrder } from "./components/Admin/Order/ManageOrder";
+import Contact from "./components/contact/Contact";
+import Topic from "./components/topic/Topic";
+import Checkout from "./pages/public/checkout";
 
 function App() {
   return (
@@ -40,11 +43,19 @@ function App() {
             />
             <Route
               exact={true}
-              path="/cat/:id"
+              path="/phan-bon/:id"
+              element={<Listing data={data.productData} single={false} />}
+            />
+            <Route
+              exact={true}
+              path="/phan-bon"
               element={<Listing data={data.productData} single={false} />}
             />
             <Route exact={true} path="/gia-nong-san" element={<TablePrice />} />
+            <Route exact={true} path="/lien-he" element={<Contact />} />
+            <Route exact={true} path="/bai-viet" element={<Topic />} />
             <Route exact={true} path="/cart" element={<Cart />} />
+            <Route exact={true} path="/checkout" element={<Checkout />} />
             <Route exact={true} path="/signIn" element={<SignIn />} />
             <Route exact={true} path="/signUp" element={<SignUp />} />
             <Route exact={true} path="*" element={<NotFound />} />

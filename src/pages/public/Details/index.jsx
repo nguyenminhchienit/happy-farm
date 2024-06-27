@@ -1,47 +1,33 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Rating from "@mui/material/Rating";
-import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.css";
 import Slider from "react-slick";
-import { useRef } from "react";
 import { useState } from "react";
 
 import { useEffect } from "react";
 import { Button } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
 
 import Product from "../../../components/product";
-import { getById } from "../../../api/Fertilizer";
+import { addToCart, getAll, getById } from "../../../api/Fertilizer";
+import { formatPrice } from "../../../utils/formatPrice";
+import lh from "../../../assets/images/lh.png";
+import QuantityBox from "../../../components/quantityBox";
 
 const DetailsPage = (props) => {
-  const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
-  const [smlImageSize, setSmlImageSize] = useState([150, 150]);
-
   const [activeSize, setActiveSize] = useState(0);
-
-  const [inputValue, setinputValue] = useState(1);
 
   const [activeTabs, setActiveTabs] = useState(0);
 
   const [currentProduct, setCurrentProduct] = useState({});
-  const [isAdded, setIsadded] = useState(false);
-
-  const [prodCat, setProdCat] = useState({
-    parentCat: sessionStorage.getItem("parentCat"),
-    subCatName: sessionStorage.getItem("subCatName"),
-  });
 
   const [relatedProducts, setRelatedProducts] = useState([]);
 
   const [rating, setRating] = useState(0.0);
 
   const [reviewsArr, setReviewsArr] = useState([]);
-
-  const [isAlreadyAddedInCart, setisAlreadyAddedInCart] = useState(false);
 
   const [reviewFields, setReviewFields] = useState({
     review: "",
@@ -51,52 +37,40 @@ const DetailsPage = (props) => {
     date: "",
   });
 
-  const zoomSliderBig = useRef();
-  const zoomSlider = useRef();
+  const [quantity, setQuantity] = useState(1);
 
   let { id } = useParams();
-  console.log("day la tac dung cua useParams ", id) 
+
+  const storedData = localStorage.getItem("user");
+  const dataObject = storedData ? JSON.parse(storedData) : null;
 
   var settings = {
     dots: false,
     infinite: false,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 1,
     fade: false,
     arrows: false,
-  };
-
-  const goto = (index) => {
-    zoomSlider.current.slickGoTo(index);
-    zoomSliderBig.current.slickGoTo(index);
   };
 
   const isActive = (index) => {
     setActiveSize(index);
   };
 
-  const plus = () => {
-    setinputValue(inputValue + 1);
+  const handleQuantity = (data) => {
+    setQuantity(data);
+    console.log(data);
   };
-
-  const minus = () => {
-    if (inputValue !== 1) {
-      setinputValue(inputValue - 1);
-    }
-  };
-
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    getById(id)
-    .then((response)=>{
-      console.log("detail", response)
-    })
-    .catch((err)=>{
-      console.error("loi ",err)
-    })
-    //showReviews();
+    getById(id).then((response) => {
+      setCurrentProduct(response.data);
+    });
+    getAll().then((response) => {
+      setRelatedProducts(response.data);
+    });
   }, [id]);
 
   const changeInput = (name, value) => {
@@ -111,13 +85,22 @@ const DetailsPage = (props) => {
     }));
   };
 
-    // add to cart
- const handleAddtoCart = () =>{
-
- }
-
- 
-  const reviews_Arr = [];
+  const navigate = useNavigate();
+  // add to cart
+  const handleAddtoCart = async () => {
+    if (dataObject) {
+      const res = await addToCart(
+        currentProduct?.idFertilizer,
+        quantity,
+        dataObject?.idUser
+      );
+      if (res.status) {
+        window.location.reload();
+      }
+    } else {
+      navigate("/signIn");
+    }
+  };
 
   const submitReview = async (e) => {
     e.preventDefault();
@@ -137,43 +120,8 @@ const DetailsPage = (props) => {
     console.log("review: ", reviewFields);
   };
 
-  var reviews_Arr2 = [];
-  // const showReviews = async () => {
-  //   try {
-  //     await axios
-  //       .get("http://localhost:5000/productReviews")
-  //       .then((response) => {
-  //         if (response.data.length !== 0) {
-  //           response.data.map((item) => {
-  //             if (parseInt(item.productId) === parseInt(id)) {
-  //               reviews_Arr2.push(item);
-  //             }
-  //           });
-  //         }
-  //       });
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-
-  //   if (reviews_Arr2.length !== 0) {
-  //     setReviewsArr(reviews_Arr2);
-  //   }
-  // };
-
   return (
     <div style={{ marginTop: "200px" }}>
-      {false && (
-        <Button
-          className={`btn-g btn-lg w-100 filterBtn {isAlreadyAddedInCart===true && 'no-click'}`}
-          onClick={handleAddtoCart}
-        >
-          <ShoppingCartOutlinedIcon />
-          {isAdded === true || isAlreadyAddedInCart === true
-            ? "Added"
-            : "Add To Cart"}
-        </Button>
-      )}
-
       <section className="detailsPage mb-5">
         {true && (
           <div className="breadcrumbWrapper mb-4">
@@ -182,7 +130,7 @@ const DetailsPage = (props) => {
                 <li>
                   <Link to={"/"}>Home</Link>{" "}
                 </li>
-                <li>{currentProduct.productName}</li>
+                <li>{currentProduct.nameFertilizer}</li>
               </ul>
             </div>
           </div>
@@ -191,22 +139,34 @@ const DetailsPage = (props) => {
         <div className="container detailsContainer pt-3 pb-3">
           <div className="row">
             {/* productZoom code start here */}
-            <div className="col-md-5">
+            <div className="col-md-5 relative ">
               <div
                 className="productZoom d-flex justify-content-center align-items-center"
                 style={{ height: "400px", objectFit: "cover" }}
               >
                 <img
                   alt=""
-                  src={`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ20TzCWQul2Aar3ou3C6vxfAXfyN5vIiSyKw&s`}
+                  src={currentProduct.imageRepresent}
                   className=""
                   style={{ objectFit: "cover" }}
                 />
               </div>
 
-              <Slider {...settings} className="zoomSlider" ref={zoomSlider}>
-                {currentProduct.productImages !== undefined &&
-                  currentProduct.productImages.map((imgUrl, index) => {
+              <div
+                className="absolute top-[-100px] right-[-60px]"
+                style={{ height: "auto", objectFit: "cover" }}
+              >
+                <img
+                  alt=""
+                  src={lh}
+                  className=""
+                  style={{ objectFit: "cover", height: "260px" }}
+                />
+              </div>
+
+              {/* <Slider {...settings} className="zoomSlider" ref={zoomSlider}>
+                {currentProduct.imageOptional !== undefined &&
+                  currentProduct.imageOptional.map((imgUrl, index) => {
                     return (
                       <div className="item" key={index}>
                         <img
@@ -218,13 +178,13 @@ const DetailsPage = (props) => {
                       </div>
                     );
                   })}
-              </Slider>
+              </Slider> */}
             </div>
             {/* productZoom code ends here */}
 
             {/* product info code start here */}
             <div className="col-md-7 productInfo">
-              <h1>{currentProduct.productName}</h1>
+              <h1>{currentProduct.nameFertilizer}</h1>
               <div className="d-flex align-items-center mb-4 mt-3">
                 <Rating
                   name="half-rating-read"
@@ -237,19 +197,26 @@ const DetailsPage = (props) => {
 
               <div className="priceSec d-flex align-items-center mb-3">
                 <span className="text-g priceLarge">
-                  Rs {currentProduct.price}
+                  {formatPrice(currentProduct?.price) + " VND"}
                 </span>
                 <div className="ml-3 d-flex flex-column">
                   <span className="text-org">
-                    {currentProduct.discount}% Off
+                    {currentProduct?.discount}% Off
                   </span>
                   <span className="text-light oldPrice">
-                    Rs {currentProduct.oldPrice}
+                    Rs {currentProduct?.oldPrice}
                   </span>
                 </div>
               </div>
 
-              <p>{currentProduct.description}</p>
+              <p className="mb-2">{currentProduct?.description}</p>
+
+              <p className="mb-2">
+                By{" "}
+                <span className="text-success">
+                  {currentProduct?.brandName?.nameBrand}
+                </span>
+              </p>
 
               {currentProduct.weight !== undefined &&
                 currentProduct.weight.length !== 0 && (
@@ -324,22 +291,15 @@ const DetailsPage = (props) => {
                 <div className="d-flex align-items-center gap-3">
                   {true && (
                     <Button
-                      className={`btn-g btn-lg addtocartbtn ${
-                        isAlreadyAddedInCart === true && "no-click"
-                      }`}
+                      className={`btn-g w-[200px] btn-lg addtocartbtn`}
+                      onClick={handleAddtoCart}
                     >
                       <ShoppingCartOutlinedIcon />
-                      {isAdded === true || isAlreadyAddedInCart === true
-                        ? "Added"
-                        : "Add To Cart"}
+                      Mua
                     </Button>
                   )}
-                  <Button className=" btn-lg addtocartbtn  ml-3  wishlist btn-border">
-                    <FavoriteBorderOutlinedIcon />{" "}
-                  </Button>
-                  <Button className=" btn-lg addtocartbtn ml-3 btn-border">
-                    <CompareArrowsIcon />
-                  </Button>
+
+                  <QuantityBox handleQuantity={handleQuantity} />
                 </div>
               </div>
             </div>
@@ -374,7 +334,6 @@ const DetailsPage = (props) => {
                     className={`${activeTabs === 2 && "active"}`}
                     onClick={() => {
                       setActiveTabs(2);
-                      //showReviews();
                     }}
                   >
                     Reviews (3)
@@ -602,7 +561,7 @@ const DetailsPage = (props) => {
                       <br />
 
                       <div className="progressBarBox d-flex align-items-center">
-                        <span className="mr-3">5 star</span>
+                        <span className="mr-3">5</span>
                         <div
                           className="progress"
                           style={{ width: "85%", height: "20px" }}
@@ -617,7 +576,7 @@ const DetailsPage = (props) => {
                       </div>
 
                       <div className="progressBarBox d-flex align-items-center">
-                        <span className="mr-3">4 star</span>
+                        <span className="mr-3">4</span>
                         <div
                           className="progress"
                           style={{ width: "85%", height: "20px" }}
@@ -632,7 +591,7 @@ const DetailsPage = (props) => {
                       </div>
 
                       <div className="progressBarBox d-flex align-items-center">
-                        <span className="mr-3">3 star</span>
+                        <span className="mr-3">3</span>
                         <div
                           className="progress"
                           style={{ width: "85%", height: "20px" }}
@@ -647,7 +606,7 @@ const DetailsPage = (props) => {
                       </div>
 
                       <div className="progressBarBox d-flex align-items-center">
-                        <span className="mr-3">2 star</span>
+                        <span className="mr-3">2</span>
                         <div
                           className="progress"
                           style={{ width: "85%", height: "20px" }}
@@ -662,7 +621,7 @@ const DetailsPage = (props) => {
                       </div>
 
                       <div className="progressBarBox d-flex align-items-center">
-                        <span className="mr-3">1 star</span>
+                        <span className="mr-3">1</span>
                         <div
                           className="progress"
                           style={{ width: "85%", height: "20px" }}
@@ -684,15 +643,15 @@ const DetailsPage = (props) => {
 
           <br />
 
-          <div className="relatedProducts homeProductsRow2  pt-5 pb-4">
+          <div className="relatedProducts homeProductsRow2 pt-5 pb-4">
             <h2 className="hd mb-0 mt-0">Related products</h2>
             <br className="res-hide" />
-            <Slider {...settings} className="prodSlider">
-              {relatedProducts.length !== 0 &&
-                relatedProducts.map((product, index) => {
+            <Slider {...settings} className="prodSlider w-full">
+              {relatedProducts?.length !== 0 &&
+                relatedProducts?.map((product, index) => {
                   return (
-                    <div className="item" key={index}>
-                      <Product tag={product.type} item={product} />
+                    <div className="item" key={product}>
+                      <Product item={product} />
                     </div>
                   );
                 })}

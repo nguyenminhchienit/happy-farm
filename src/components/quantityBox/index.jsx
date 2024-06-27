@@ -1,18 +1,27 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-const QuantityBox = () => {
+const QuantityBox = (props) => {
   const [inputValue, setInputValue] = useState(1);
+
+  useEffect(() => {
+    if (props.quantity >= 1) {
+      setInputValue(props.quantity);
+    }
+  }, [props.quantity]);
 
   const plus = () => {
     setInputValue(inputValue + 1);
+    props.handleQuantity(inputValue + 1);
   };
 
   const minus = () => {
     if (inputValue !== 1) {
       setInputValue(inputValue - 1);
+      props.handleQuantity(inputValue - 1);
     }
   };
 

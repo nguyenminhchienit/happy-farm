@@ -19,10 +19,19 @@ const SignUp = () => {
   const [formFields, setFormFields] = useState({
     email: "",
     password: "",
-    conformPassword: "",
+    username: "",
+    fullname: "",
+    dob: "",
   });
 
-  const signUp = () => {};
+  const signUp = () => {
+    console.log("data: ", formFields);
+  };
+
+  const formatDate = (date) => {
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+    return new Date(date).toLocaleDateString("vi-VN", options);
+  };
 
   const onChangeField = (e) => {
     const name = e.target.name;
@@ -35,15 +44,15 @@ const SignUp = () => {
   };
 
   return (
-    <div style={{ marginTop: "80px" }}>
+    <div style={{ marginTop: "76px" }}>
       <section className="signIn mb-5">
         <div className="breadcrumbWrapper res-hide">
           <div className="container-fluid">
             <ul className="breadcrumb breadcrumb2 mb-0">
               <li>
-                <Link to="/">Home</Link>{" "}
+                <Link to="/">Trang chủ</Link>{" "}
               </li>
-              <li>SignUp</li>
+              <li>Đăng ký</li>
             </ul>
           </div>
         </div>
@@ -72,6 +81,40 @@ const SignUp = () => {
                 />
               </div>
               <div className="form-group mb-4 w-100">
+                <TextField
+                  id="username"
+                  type="text"
+                  name="username"
+                  label="Tài khoản"
+                  className="w-100"
+                  onChange={onChangeField}
+                  value={formFields.username}
+                />
+              </div>
+              <div className="form-group mb-4 w-100">
+                <TextField
+                  id="fullname"
+                  type="text"
+                  name="fullname"
+                  label="Tên đầy đủ"
+                  className="w-100"
+                  onChange={onChangeField}
+                  value={formFields.fullname}
+                />
+              </div>
+
+              <div className="form-group mb-4 w-100">
+                <TextField
+                  id="dob"
+                  type="date"
+                  name="dob"
+                  className="w-100"
+                  onChange={onChangeField}
+                  value={formFields.dob}
+                />
+              </div>
+
+              <div className="form-group mb-4 w-100">
                 <div className="position-relative">
                   <TextField
                     id="password"
@@ -95,7 +138,7 @@ const SignUp = () => {
                 </div>
               </div>
 
-              <div className="form-group mb-4 w-100">
+              {/* <div className="form-group mb-4 w-100">
                 <div className="position-relative">
                   <TextField
                     id="conformPassword"
@@ -117,19 +160,19 @@ const SignUp = () => {
                     )}
                   </Button>
                 </div>
-              </div>
+              </div> */}
 
               <div className="form-group mt-5 mb-4 w-100">
                 <Button className="btn btn-g btn-lg w-100" onClick={signUp}>
-                  Sign Up
+                  Đăng ký
                 </Button>
               </div>
 
               <p className="text-center">
-                Already have an account
+                Bạn đã có tài khoản?
                 <b>
                   {" "}
-                  <Link to="/signIn">Sign In</Link>
+                  <Link to="/signIn">Đăng nhập</Link>
                 </b>
               </p>
             </form>
