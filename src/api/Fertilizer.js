@@ -19,6 +19,9 @@ const apiCreateProduct = (data) => {
   return axios({
     url: "/api/fertilizer/addnew",
     method: "post",
+    headers: {
+      'Content-Type': 'application/json',
+      },
     data,
   });
 };

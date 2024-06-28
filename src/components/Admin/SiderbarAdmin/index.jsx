@@ -22,6 +22,17 @@ const SidebarAdmin = () => {
   const toggleDropdown2 = () => {
     setIsOpen2(!isOpen2);
   };
+
+  const [isOpen3, setIsOpen3] = useState(false);
+
+  const toggleDropdown3 = () => {
+    setIsOpen3(!isOpen3);
+  };
+
+
+
+
+
   return (
     <div className="max-w-2xl mx-auto">
       <aside className="w-96 h-full" aria-label="Sidebar">
@@ -50,6 +61,8 @@ const SidebarAdmin = () => {
                 </Link>
               </span>
             </li>
+
+            {/* quản lý phân bón */}
             <li className="flex flex-col gap-3">
               <button
                 type="button"
@@ -97,6 +110,8 @@ const SidebarAdmin = () => {
                 </ul>
               )}
             </li>
+
+
             <li className="flex flex-col gap-3">
               <span
                 onClick={toggleDropdown1}
@@ -137,6 +152,9 @@ const SidebarAdmin = () => {
                 </ul>
               )}
             </li>
+
+
+
             <li>
               <a
                 href="#"
@@ -158,6 +176,61 @@ const SidebarAdmin = () => {
                 </Link>
               </a>
             </li>
+
+
+              {/* quản lý nguồn gốc */}
+            <li className="flex flex-col gap-3">
+              <button
+                type="button"
+                className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                aria-controls="dropdown-example"
+                data-collapse-toggle="dropdown-example"
+                onClick={toggleDropdown3}
+              >
+                <svg
+                  className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                
+                <Link>
+                  <span className="ml-3 text-gray-600 font-bold text-xl">
+                    Nguồn Gốc Xuất Xứ
+                  </span>
+                </Link>
+              </button>
+              {isOpen3 && (
+                <ul className="pl-10 mt-2 space-y-2">
+                  <li>
+                    <Link
+                      to="/admin/manage-origin"
+                      className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-xl"
+                    >
+                      Quản lý Nguồn Gốc Xuất Xứ
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/add-origin"
+                      className="flex items-center p-2 text-xl text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    >
+                      Thêm Nguồn Gốc Xuất Xứ
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
+
+
+
             <li className="flex flex-col gap-3">
               <span
                 onClick={toggleDropdown2}

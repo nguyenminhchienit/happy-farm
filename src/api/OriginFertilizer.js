@@ -12,9 +12,15 @@ const findByName = (nameOriginFertilizer) => {
   return axios.get(`/api/origin/find/${nameOriginFertilizer}`);
 };
 
-const createOriginFertilizer = (data) => {
-  return axios.post(`/api/origin/addnew`, data);
+const createOriginFertilizer = async (data) => {
+  return await axios({
+    url: "/api/origin/addnew",
+    method: "post",
+    data,
+  });
 };
+
+
 
 const updateOriginFertilizer = (idOriginFertilizer, data) => {
   return axios.put(`/api/origin/editorigin/${idOriginFertilizer}`, data);

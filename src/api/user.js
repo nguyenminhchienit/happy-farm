@@ -1,6 +1,6 @@
 import axios from "../../axios";
 
-const getAll = () => {
+const getAllUsers = () => {
   return axios.get("/api/user/getListUsers");
 };
 
@@ -36,7 +36,7 @@ const deleteCartUser = (idUser, idProduct) => {
 };
 
 export {
-  getAll as getAllUsers,
+  getAllUsers,
   createUser,
   apiLogin,
   deleteCartUser,

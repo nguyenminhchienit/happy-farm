@@ -1,6 +1,6 @@
 import moment from "moment/moment";
 import { useState } from "react";
-import {createUser} from "../../../api/User"
+import {createUser} from "../../../api/User.js"
 
 const CreateUser = () => {
  

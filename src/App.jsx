@@ -25,6 +25,10 @@ import Contact from "./components/contact/Contact";
 import Topic from "./components/topic/Topic";
 import Checkout from "./pages/public/checkout";
 
+
+import CreateOrigin from "./components/Admin/Origin/CreateOrigin"
+import ManageOrigin from "./components/Admin/Origin/ManageOrigin"
+
 function App() {
   return (
     <>
@@ -86,6 +90,20 @@ function App() {
               path="add-voucher"
               element={<CreateVoucher />}
             />
+
+
+            <Route
+              exact={true}  
+              path="add-origin"
+              element={<CreateOrigin />}
+            />
+
+            <Route
+              exact={true}
+              path="manage-origin"
+              element={<ManageOrigin />}
+            />
+
           </Route>
 
           {/* <Route exact={true} path="/admin/dash" element={<Dashboard />} /> */}
