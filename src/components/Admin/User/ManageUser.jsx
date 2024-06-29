@@ -59,7 +59,7 @@ useEffect(() =>{
   const fetchData = async () =>{
     try{
       const response = await getAllUsers();
-      console.log("day la du lieu fetch đc ", response.data)
+      console.log("day la du lieu fetch đc ", response)
       setUsers(response.data)
     }catch(error){
       console.error("error fetch data ",error)
@@ -112,7 +112,7 @@ useEffect(() =>{
             </tr>
           </thead>
           <tbody>
-            {users.map(({ username, fullName, email, roles  }, index) => {
+            {users?.map(({ username, fullName, email, roles  }, index) => {
               const isLast = index === TABLE_ROWS.length - 1;
               const classes = isLast
                 ? "p-4"

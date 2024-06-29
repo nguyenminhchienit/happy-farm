@@ -1,6 +1,6 @@
 import moment from "moment/moment";
 import { useState } from "react";
-import {createUser} from "../../../api/User.js"
+import {createUser} from "../../../api/User"
 
 const CreateUser = () => {
  
@@ -34,15 +34,18 @@ const CreateUser = () => {
     for (const key in formattedFormData) {
       formData.append(key, formattedFormData[key]);
     }
+  
+    // Log FormData entries
+    console.log("day la formdata")
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    } 
 
-    console.log("day la formData ", formData.forEach(item =>{
-      console.log(item)
-    }))
     try {
       const response = await createUser(formData); // Await here if you need to wait for the promise to resolve
       console.log(response);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error.response);
     }
   };
 

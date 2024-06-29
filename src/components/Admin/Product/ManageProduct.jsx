@@ -60,8 +60,8 @@ export function ManageProduct() {
     const fetchData = async () => {
       try {
         const response = await getAll();
-        console.log("dữ liệu gọi đc " , response.data)
-        setFertilizers(response.data); // Giả sử response.data chứa danh sách phân bón
+        console.log("dữ liệu gọi đc " , response?.data)
+        setFertilizers(response?.data ?? []); // Giả sử response.data chứa danh sách phân bón
       } catch (error) {
         console.error("Error fetching data: ", error);
       }

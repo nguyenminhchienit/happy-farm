@@ -1,18 +1,35 @@
 import axios from "../../axios";
 
+
+
 const getAllUsers = () => {
   return axios.get("/api/user/getListUsers");
 };
 
-const createUser = (formData) => {
-  const config = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  };
 
-  return axios.post("/api/user/addNew", formData, config);
+
+
+const createUser = (formData) => {
+  // const config = {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //   },
+  // };
+
+  // return axios.post("/api/user/addNew", formData, config);
+
+
+
+
+  return axios({
+    url: "/api/user/addNew",
+    method: "post",
+    formData,
+  });
+
 };
+
+
 
 const apiLogin = (username, password) => {
   return axios({
@@ -20,6 +37,8 @@ const apiLogin = (username, password) => {
     method: "post",
   });
 };
+
+
 
 const getCartUser = (id) => {
   return axios({
