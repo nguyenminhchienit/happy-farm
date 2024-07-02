@@ -8,75 +8,57 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { getAllUsers } from "../../../api/User";
+import { getListUsersNotBanned , updateUser , bannedUser } from "../../../api/User";
+import { useNavigate } from "react-router-dom";
 
-const TABLE_HEAD = ["Tên", "họ và tên", "email", "quyền","Hành động"];
+const TABLE_HEAD = ["Tên", "Họ và Tên", "Email", "Quyền", "Hành động"];
 
-const TABLE_ROWS = [
-  {
-    name: "Cà phê",
-    job: "Gia Lai",
-    online: 112000,
-    date: "Carbon",
-    actions: "Sell, Export",
-  },
-  {
-    name: "Hồ tiêu",
-    job: "Tây Nguyên",
-    online: 203000,
-    date: "Viettel",
-    actions: "Buy, Process",
-  },
-  {
-    name: "Gạo",
-    job: "Đồng Bằng Sông Cửu Long",
-    online: 89500,
-    date: "Vinaphone",
-    actions: "Export",
-  },
-  {
-    name: "Cao su",
-    job: "Tây Nguyên",
-    online: 145000,
-    date: "Nokia",
-    actions: "Sell, Process",
-  },
-  {
-    name: "Điều",
-    job: "Bình Phước",
-    online: 67800,
-    date: "Suzuki",
-    actions: "Buy, Export",
-  },
-];
+export function ManageUser({setSelectedItem}) {
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
 
-export function ManageUser() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getListUsersNotBanned();
+        console.log("Fetched data:", response);
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
-const [users,setUsers] = useState([]);
+  const handleDelete = async (item) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
+      const { roles: { idRoles, ...rolesWithoutId }, ...userWithoutIdRoles } = item;
+      const user = {
+        ...userWithoutIdRoles,
+        nameRoles: rolesWithoutId.nameRoles
+      };
+      console.log("User without idRoles:", user);
+      // Handle deletion logic here
 
-useEffect(() =>{
- 
-  const fetchData = async () =>{
-    try{
-      const response = await getAllUsers();
-      console.log("day la du lieu fetch đc ", response.data)
-      setUsers(response.data)
-    }catch(error){
-      console.error("error fetch data ",error)
+      const response = await bannedUser(user.idUser)
+      if(response){
+        alert("xóa thành công")
+        window.location.reload();
+      }
+      console.log(response)
     }
+  };
+
+  const handleEidt = (item) =>{
+    console.log(item)
+    setSelectedItem(item)
+    navigate("/admin/edit-user/"+item.idUser)
   }
 
-
-  fetchData()
-
-},[])
-
-
-
   return (
-    <Card className="m-10 ">
+    <Card className="m-10">
       <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className=" flex items-center justify-between gap-8">
+        <div className="flex items-center justify-between gap-8">
           <div>
             <Typography
               variant="h5"
@@ -102,7 +84,7 @@ useEffect(() =>{
                     color="black"
                     className="flex items-center text-xl justify-between gap-2 font-bold leading-none"
                   >
-                    {head}{" "}
+                    {head}
                     {index !== TABLE_HEAD.length - 1 && (
                       <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
                     )}
@@ -112,23 +94,22 @@ useEffect(() =>{
             </tr>
           </thead>
           <tbody>
-            {users.map(({ username, fullName, email, roles  }, index) => {
-              const isLast = index === TABLE_ROWS.length - 1;
+            {users.map((item, index) => {
+              const isLast = index === users.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={username}>
+                <tr key={item.username}>
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
                         <Typography
                           variant="small"
-                          color=""
                           className="font-normal text-2xl text-black"
                         >
-                          {username}
+                          {item.username}
                         </Typography>
                       </div>
                     </div>
@@ -137,10 +118,9 @@ useEffect(() =>{
                     <div className="flex flex-col">
                       <Typography
                         variant="small"
-                        color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {fullName}
+                        {item.fullName}
                       </Typography>
                     </div>
                   </td>
@@ -148,27 +128,33 @@ useEffect(() =>{
                     <div className="flex flex-col">
                       <Typography
                         variant="small"
-                        color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {email}
+                        {item.email}
                       </Typography>
                     </div>
                   </td>
                   <td className={classes}>
                     <Typography
                       variant="small"
-                      color="red"
                       className="font-normal text-2xl text-red-700"
                     >
-                      {roles.nameRoles}
+                      {item.roles.nameRoles}
                     </Typography>
                   </td>
                   <td className={`${classes} flex gap-2`}>
-                    <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                    <button 
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    onClick={()=>handleEidt(item)}
+                    
+                    >
+                     
                       Sửa
                     </button>
-                    <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                    <button
+                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                      onClick={() => handleDelete(item)}
+                    >
                       Xóa
                     </button>
                   </td>

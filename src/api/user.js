@@ -1,17 +1,22 @@
 import axios from "../../axios";
 
-const getAll = () => {
+const updateUser = (idUser, data) => {
+  return axios.post(`/api/user/editUser/${idUser}`, data);
+};
+const getAllUsers = () => {
   return axios.get("/api/user/getListUsers");
 };
 
-const createUser = (formData) => {
-  const config = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  };
+const getListUsersNotBanned = () => {
+  return axios.get("/api/user/getListUsersNotBanned");
+};
 
-  return axios.post("/api/user/addNew", formData, config);
+const bannedUser = (idUser) => {
+  return axios.delete(`/api/user/bannedUser/${idUser}`);
+};
+
+const createUser = (formData) => {
+  return axios.post("/api/user/addNew", formData);
 };
 
 const apiLogin = (username, password) => {
@@ -44,10 +49,13 @@ const apiCheckOut = (idUser, data) => {
 };
 
 export {
-  getAll as getAllUsers,
+  getAllUsers,
   createUser,
   apiLogin,
   deleteCartUser,
   getCartUser,
   apiCheckOut,
+  updateUser,
+  bannedUser,
+  getListUsersNotBanned,
 };

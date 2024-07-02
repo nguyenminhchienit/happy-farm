@@ -4,6 +4,10 @@ const getAllBrand = () => {
   return axios.get("/api/brand/getlistbrand");
 };
 
+const getAllBrandNotDetele = () =>{
+  return axios.get("/api/brand/notdeletebrand")
+}
+
 const findByName = (brandName) => {
   return axios.get(`/api/brand/find/${brandName}`);
 };
@@ -25,4 +29,4 @@ const updateBrand = (idBrand, data) => {
   return axios.put(`/api/brand/editbrand/${idBrand}`, data);
 };
 
-export { getAllBrand, findByName, createBrand, deleteBrand, updateBrand };
+export { getAllBrand, findByName, createBrand, deleteBrand, updateBrand , getAllBrandNotDetele };

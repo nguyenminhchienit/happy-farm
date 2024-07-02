@@ -1,11 +1,19 @@
 import axios from "../../axios";
 
+const ListFerNotDelete = () => {
+  return axios.get("/api/fertilizer/listallfer");
+};
+
 const getAll = async () => {
   return await axios.get("/api/fertilizer/listfer");
 };
 
 const getById = (id_Fertilizer) => {
   return axios.get(`/api/fertilizer/getfertilizer/${id_Fertilizer}`);
+};
+
+const deleteFertilizer = (id) => {
+  return axios.delete(`/api/fertilizer/deletefer/${id}`);
 };
 
 const addToCart = (idItems, quantity, idUser) => {
@@ -60,4 +68,6 @@ export {
   apiMostBuy,
   apiExpensive,
   apiRecentAdd,
+  ListFerNotDelete,
+  deleteFertilizer,
 };

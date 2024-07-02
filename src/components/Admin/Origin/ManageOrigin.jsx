@@ -8,62 +8,27 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-import { ListFerNotDelete , deleteFertilizer } from "../../../api/Fertilizer"
+import { getAllOriginNotDelete , updateOriginFertilizer } from "../../../api/OriginFertilizer"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-  
-const TABLE_HEAD = ["Tên loại", "Giá" , "nguồn gốc xuất xứ" ,"Thương hiệu","Hiển Thị" ,"Hành động"];
 
-const TABLE_ROWS = 
-[
-  {
-    name: "Cà phê",
-    job: "Gia Lai",
-    online: 112000, 
-    date: "Carbon",
-    actions: "Sell, Export",
-  },
-  {
-    name: "Hồ tiêu",
-    job: "Tây Nguyên",
-    online: 203000,
-    date: "Viettel",
-    actions: "Buy, Process",
-  },
-  {
-    name: "Gạo",
-    job: "Đồng Bằng Sông Cửu Long",
-    online: 89500,
-    date: "Vinaphone",
-    actions: "Export",
-  },
-  {
-    name: "Cao su",
-    job: "Tây Nguyên",
-    online: 145000,
-    date: "Nokia",
-    actions: "Sell, Process",
-  },
-  {
-    name: "Điều",
-    job: "Bình Phước",
-    online: 67800,
-    date: "Suzuki",
-    actions: "Buy, Export",
-  },
-];
+const TABLE_HEAD = ["Id", "Tên Nguồn Gốc", "Trạng Thái Ẩn Hiện", "Hành Động"];
 
-export function ManageProduct({setSelectedItem}) {
-
-  const [fertilizers, setFertilizers] = useState([]);
+const ManageOrigin = ({setSelectedItem}) => {
   const navigate = useNavigate();
-  
+  const [origins, setOrigins] = useState([]);
+  const [originUpdate , setOriginUpdate] = useState({
+    idOrigin: "",
+    nameOrigin: "",
+    delete : "",
+  })
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ListFerNotDelete();
-        console.log("dữ liệu gọi đc " , response?.data)
-        setFertilizers(response?.data ?? []); // Giả sử response.data chứa danh sách phân bón
+        const response = await getAllOriginNotDelete();
+        console.log("dữ liệu gọi đc ", response.data)
+        setOrigins(response.data); // Giả sử response.data chứa danh sách phân bón
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -71,19 +36,15 @@ export function ManageProduct({setSelectedItem}) {
     fetchData();
   }, []);
 
-  const handleEdit = (item) =>{
-    console.log(item)
-    setSelectedItem(item)
-    navigate("/admin/edit-product/"+item.idFertilizer)
-  }
-
-const handleDelete = async (item) => {
+  const handleDelete = async (Origins) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
+      Origins.delete = true ;
+      console.log("Xóa item với id:", Origins);
       try{
-        const response = await deleteFertilizer(item.idFertilizer)
-        console.log(response)
-        if(response){
-          alert("xóa thành công")
+        const response = await updateOriginFertilizer(Origins.idOrigin , Origins )
+        console.log("day la dư lieu", response )
+        if(response.data){
+          alert("ẩn thành công")
           window.location.reload()
         }
       }catch(error){
@@ -93,18 +54,24 @@ const handleDelete = async (item) => {
   };
 
 
+  const handleEdit = (item) =>{
+    setSelectedItem(item);
+    navigate(`/admin/edit-origin/${item.idOrigin}`);
+
+  };
+
 
   return (
     <Card className="m-10 ">
       <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className=" flex items-center justify-between gap-8">
+        <div className="flex items-center justify-between gap-8">
           <div>
             <Typography
               variant="h5"
               color="blue-gray"
               className="text-4xl mb-3"
             >
-              Quản lý sản phẩm
+              Quản lý Nguồn Gốc Xuất Xứ
             </Typography>
           </div>
         </div>
@@ -123,7 +90,7 @@ const handleDelete = async (item) => {
                     color="black"
                     className="flex items-center text-xl justify-between gap-2 font-bold leading-none"
                   >
-                    {head}{" "}
+                    {head}
                     {index !== TABLE_HEAD.length - 1 && (
                       <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
                     )}
@@ -133,14 +100,15 @@ const handleDelete = async (item) => {
             </tr>
           </thead>
           <tbody>
-            {fertilizers.map((item, index) => {
-              const isLast = index === TABLE_ROWS.length - 1;
+            {origins.map((item, index) => {
+              const isLast = index === origins.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={item.nameFertilizer}>
+                <tr key={item.idOrigin}>
+                  {/* id nguồn gốc */}
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
@@ -149,11 +117,13 @@ const handleDelete = async (item) => {
                           color=""
                           className="font-normal text-2xl text-black"
                         >
-                          {item.nameFertilizer}
+                          {item.idOrigin}
                         </Typography>
                       </div>
                     </div>
                   </td>
+
+                  {/* tên nguồn gốc */}
                   <td className={classes}>
                     <div className="flex flex-col">
                       <Typography
@@ -161,11 +131,12 @@ const handleDelete = async (item) => {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                      {/* giá  */}
-                        {item.price }
+                        {item.nameOrigin}
                       </Typography>
                     </div>
                   </td>
+
+                  {/* nguồn gốc xuất xứ */}
                   <td className={classes}>
                     <div className="flex flex-col">
                       <Typography
@@ -173,49 +144,24 @@ const handleDelete = async (item) => {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                      {/* nguồn gốc xuất xứ */}
-                        {item.originFer.nameOrigin}
+                        {item.delete.toString()}
                       </Typography>
                     </div>
                   </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="red"
-                      className="font-normal text-2xl text-red-700"
-                    >
-                      {item.brandName.nameBrand}
-                    </Typography>
-                  </td>
-
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="red"
-                      className="font-normal text-2xl text-red-700"
-                    >
-                      { item.delete ? "Tạm Ẩn":"Hiển thị"}
-                    </Typography>
-                  </td>
-
 
                   <td className={`${classes} flex gap-2`}>
-                    <button 
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    
-                    onClick={()=>handleEdit(item)}
+                    <button
+                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                      onClick={()=> handleEdit(item)}
                     >
                       Sửa
                     </button>
-
-                    <button 
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    
-                    onClick={()=> handleDelete(item)}
+                    <button
+                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                      onClick={() => handleDelete(item)}
                     >
                       Xóa
                     </button>
-                    
                   </td>
                 </tr>
               );
@@ -239,3 +185,5 @@ const handleDelete = async (item) => {
     </Card>
   );
 }
+
+export default ManageOrigin;
