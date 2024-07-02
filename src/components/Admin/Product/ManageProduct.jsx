@@ -8,10 +8,11 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-import { getAll } from "../../../api/Fertilizer"
+import { ListFerNotDelete , deleteFertilizer } from "../../../api/Fertilizer"
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
   
-const TABLE_HEAD = ["Tên loại", "Giá" , "nguồn gốc xuất xứ" ,"Thương hiệu", "Hành động"];
+const TABLE_HEAD = ["Tên loại", "Giá" , "nguồn gốc xuất xứ" ,"Thương hiệu","Hiển Thị" ,"Hành động"];
 
 const TABLE_ROWS = 
 [
@@ -52,14 +53,15 @@ const TABLE_ROWS =
   },
 ];
 
-export function ManageProduct() {
+export function ManageProduct({setSelectedItem}) {
 
   const [fertilizers, setFertilizers] = useState([]);
+  const navigate = useNavigate();
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getAll();
+        const response = await ListFerNotDelete();
         console.log("dữ liệu gọi đc " , response?.data)
         setFertilizers(response?.data ?? []); // Giả sử response.data chứa danh sách phân bón
       } catch (error) {
@@ -68,6 +70,29 @@ export function ManageProduct() {
     };
     fetchData();
   }, []);
+
+  const handleEdit = (item) =>{
+    console.log(item)
+    setSelectedItem(item)
+    navigate("/admin/edit-product/"+item.idFertilizer)
+  }
+
+const handleDelete = async (item) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
+      try{
+        const response = await deleteFertilizer(item.idFertilizer)
+        console.log(response)
+        if(response){
+          alert("xóa thành công")
+          window.location.reload()
+        }
+      }catch(error){
+        console.log(error.response)
+      }
+    }
+  };
+
+
 
   return (
     <Card className="m-10 ">
@@ -162,13 +187,35 @@ export function ManageProduct() {
                       {item.brandName.nameBrand}
                     </Typography>
                   </td>
+
+                  <td className={classes}>
+                    <Typography
+                      variant="small"
+                      color="red"
+                      className="font-normal text-2xl text-red-700"
+                    >
+                      { item.delete ? "Tạm Ẩn":"Hiển thị"}
+                    </Typography>
+                  </td>
+
+
                   <td className={`${classes} flex gap-2`}>
-                    <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                    <button 
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    
+                    onClick={()=>handleEdit(item)}
+                    >
                       Sửa
                     </button>
-                    <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+
+                    <button 
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    
+                    onClick={()=> handleDelete(item)}
+                    >
                       Xóa
                     </button>
+                    
                   </td>
                 </tr>
               );

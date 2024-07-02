@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { createOriginFertilizer } from "../../../api/OriginFertilizer";
 import { useNavigate } from "react-router-dom";
-const CreateOrigin = () => {
+import { createBrand } from "../../../api/Brand.js";
+
+const CreateBrand = () => {
   const [myformData, setMyFormData] = useState({
-    nameOrigin: "",
+    nameBrand: "",
     isDelete: "false", // Default value as a string
   });
 
   const navigate = useNavigate();
-
   const handleInputChange = (event) => {
     const { id, value } = event.target;
     setMyFormData({
@@ -21,12 +21,12 @@ const CreateOrigin = () => {
     event.preventDefault();
     console.log("Data to be sent:", myformData);
     try {
-      const response = await createOriginFertilizer(myformData);
-      if(response){
-        alert("tạo thành công");
-        navigate("/admin/manage-origin");
-      }
+      const response = await createBrand(myformData);
       console.log("Response:", response);
+      if(response){
+        alert("Tạo thành công");
+        navigate("/admin/manage-brand")
+      }
       // Handle successful response here
     } catch (error) {
       console.error("Error creating origin:", error);
@@ -36,7 +36,7 @@ const CreateOrigin = () => {
 
   return (
     <div className="flex flex-col align-items-center">
-      <h2 className="my-10 title font-bold text-3xl">Thêm Nguồn Gốc Xuất Xứ</h2>
+      <h2 className="my-10 title font-bold text-3xl">Thêm Thương Hiệu</h2>
       <form className="w-full max-w-screen-xl flex flex-col gap-3" onSubmit={handleSubmit}>
         <div className="flex flex-wrap -mx-3 mb-6">
           {/* Name */}
@@ -45,15 +45,15 @@ const CreateOrigin = () => {
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="nameOrigin"
             >
-              Tên Nguồn Gốc
+              Tên Thương Hiệu
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="nameOrigin"
-              name="nameOrigin"
+              id="nameBrand"
+              name="nameBrand"
               type="text"
-              placeholder="Enter origin name"
-              value={myformData.nameOrigin}
+              placeholder="Enter brand name"
+              value={myformData.nameBrand}
               onChange={handleInputChange}
             />
           </div>
@@ -70,7 +70,7 @@ const CreateOrigin = () => {
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="isDelete"
               name="isDelete"
-              value={myformData.isDelete}
+              value={myformData.idDelete}
               onChange={handleInputChange}
             >
               <option value="false">True</option>
@@ -87,4 +87,4 @@ const CreateOrigin = () => {
   );
 };
 
-export default CreateOrigin;
+export default CreateBrand;

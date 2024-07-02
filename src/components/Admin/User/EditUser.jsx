@@ -1,28 +1,47 @@
 import moment from "moment/moment";
-import { useState } from "react";
-import {createUser} from "../../../api/User"
+import { useState, useEffect } from "react";
+// import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-const CreateUser = () => {
- 
+// import SelectForm from "../Input/SelectForm";
 
-  const [myformData,setMyFormData] = useState({
+import {updateUser} from "../../../api/User.js"
+const EditUser = ({ item }) => {
+
+
+  const [myformData, setMyFormData] = useState({
+    idUser: "",
     username: "",
-    password: "",
     fullName: "",
     dob: "",
     email: "",
-  })
+    nameRoles: null,
+    banned: false,
+  });
 
   const navigate = useNavigate();
 
-  const handleInputChange = (event)=>{
+  useEffect(() => {
+    setMyFormData({
+       idUser: item.idUser || "",
+      username: item.username || "",
+      fullName: item.fullName || "",
+      dob: item.dob ? moment(item.dob, "DD/MM/YYYY").format("YYYY-MM-DD") : "",
+      email: item.email || "",
+      nameRoles: item.nameRoles || null,
+      banned: item.banned || false,
+    });
+  }, [item]);
+
+
+  const handleInputChange = (event) => {
     const { id, value } = event.target;
     setMyFormData({
       ...myformData,
       [id]: value,
+      nameRoles : null,
+      banned : false
     });
-  }
-
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,18 +55,18 @@ const CreateUser = () => {
     for (const key in formattedFormData) {
       formData.append(key, formattedFormData[key]);
     }
-  
+
     // Log FormData entries
-    console.log("day la formdata")
+    console.log("day la formdata");
     for (const [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
-    } 
+    }
 
     try {
-      const response = await createUser(formData); 
-      if(response){
+       const response = await updateUser(formData.idUser , formData);
+      if (response) {
         alert("tạo thành công");
-        navigate("/admin/manage-users")
+        navigate("/admin/manage-users");
       }
       console.log(response);
     } catch (error) {
@@ -57,7 +76,7 @@ const CreateUser = () => {
 
   return (
     <div className="flex flex-col align-items-center">
-      <h2 className="my-10 title font-bold text-3xl">Thêm người dùng</h2>
+      <h2 className="my-10 title font-bold text-3xl">Sửa Thông Tin người dùng</h2>
       <form className="w-full max-w-screen-xl flex flex-col gap-3" onSubmit={handleSubmit}>
         <div className="flex flex-wrap -mx-3 mb-6">
           {/* Tên */}
@@ -99,26 +118,7 @@ const CreateUser = () => {
           </div>
         </div>
 
-        {/* Mật khẩu */}
-        <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full px-3">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="password"
-            >
-              Mật Khẩu
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="password"
-              name="password"
-              type="password"
-              placeholder="mật khẩu"
-              value={myformData.password}
-              onChange={handleInputChange}
-            />
-          </div>
-        </div>
+        
 
         <div className="flex flex-wrap -mx-3 mb-6">
           {/* Ngày sinh */}
@@ -160,15 +160,37 @@ const CreateUser = () => {
               />
             </div>
           </div>
+
+            {/* rol */}
+
+
+
+            {/* <SelectForm
+              label={"Thương hiệu"}
+              register={register}
+              id={"brandName"}
+              fw
+              style={"mt-2 flex-auto"}
+              errors={errors}
+              options={roles?.map((item) => {
+                return {
+                  text: item.nameBrand,
+                  value: item.idBrand,
+                };
+              })}
+            /> */}
+
+
+
         </div>
 
         <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Thêm
+          Sửa
         </button>
+
       </form>
     </div>
   );
 };
 
-
-export default CreateUser;
+export default EditUser;

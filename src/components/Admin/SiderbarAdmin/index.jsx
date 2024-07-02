@@ -23,15 +23,28 @@ const SidebarAdmin = () => {
     setIsOpen2(!isOpen2);
   };
 
+  // nguồn gốc
   const [isOpen3, setIsOpen3] = useState(false);
 
   const toggleDropdown3 = () => {
     setIsOpen3(!isOpen3);
   };
 
+  // thương hiệu
 
+  const [isOpen4, setIsOpen4] = useState(false);
 
+  const toggleDropdown4 = () => {
+    setIsOpen4(!isOpen4);
+  };
 
+    // loại phân bón
+
+    const [isOpen5, setIsOpen5] = useState(false);
+
+    const toggleDropdown5 = () => {
+      setIsOpen5(!isOpen5);
+    };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -43,6 +56,8 @@ const SidebarAdmin = () => {
                 <img src={logo}></img>
               </Link>
             </li>
+
+            {/* dashboard */}
             <li>
               <span className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                 <svg
@@ -111,7 +126,7 @@ const SidebarAdmin = () => {
               )}
             </li>
 
-
+            {/* Người dùng */}
             <li className="flex flex-col gap-3">
               <span
                 onClick={toggleDropdown1}
@@ -153,32 +168,7 @@ const SidebarAdmin = () => {
               )}
             </li>
 
-
-
-            <li>
-              <a
-                href="#"
-                className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                <svg
-                  className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z"></path>
-                  <path d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path>
-                </svg>
-                <Link to={"/admin/manage-brand"}>
-                  <span className="ml-3 text-gray-600 font-bold text-xl">
-                    Thương hiệu
-                  </span>
-                </Link>
-              </a>
-            </li>
-
-
-              {/* quản lý nguồn gốc */}
+            {/* thương hiệu */}
             <li className="flex flex-col gap-3">
               <button
                 type="button"
@@ -199,14 +189,64 @@ const SidebarAdmin = () => {
                     clipRule="evenodd"
                   ></path>
                 </svg>
-                
+
+                <Link>
+                  <span className="ml-3 text-gray-600 font-bold text-xl">
+                    Thương Hiệu
+                  </span>
+                </Link>
+              </button>
+              {isOpen3 && (
+                <ul className="pl-10 mt-2 space-y-2">
+                  <li>
+                    <Link
+                      to="/admin/manage-brand"
+                      className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-xl"
+                    >
+                      Quản lý Thương Hiệu
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/add-brand"
+                      className="flex items-center p-2 text-xl text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    >
+                      Thêm Thương Hiệu
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
+            {/* quản lý nguồn gốc */}
+            <li className="flex flex-col gap-3">
+              <button
+                type="button"
+                className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                aria-controls="dropdown-example"
+                data-collapse-toggle="dropdown-example"
+                onClick={toggleDropdown4}
+              >
+                <svg
+                  className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+
                 <Link>
                   <span className="ml-3 text-gray-600 font-bold text-xl">
                     Nguồn Gốc Xuất Xứ
                   </span>
                 </Link>
               </button>
-              {isOpen3 && (
+              {isOpen4 && (
                 <ul className="pl-10 mt-2 space-y-2">
                   <li>
                     <Link
@@ -230,6 +270,57 @@ const SidebarAdmin = () => {
 
 
 
+
+
+            {/* quản lý loại phân bón */}
+            <li className="flex flex-col gap-3">
+              <button
+                type="button"
+                className="flex items-center w-full p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                aria-controls="dropdown-example"
+                data-collapse-toggle="dropdown-example"
+                onClick={toggleDropdown5}
+              >
+                <svg
+                  className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+
+                <Link>
+                  <span className="ml-3 text-gray-600 font-bold text-xl">
+                    Loại Phân Bón
+                  </span>
+                </Link>
+              </button>
+              {isOpen5 && (
+                <ul className="pl-10 mt-2 space-y-2">
+                  <li>
+                    <Link
+                      to="/admin/manage-typefertilizer"
+                      className="flex items-center p-2 text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 text-xl"
+                    >
+                      Quản lý Loại Phân Bón
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/admin/add-typefertilizer"
+                      className="flex items-center p-2 text-xl text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    >
+                      Thêm Loại Phân Bón
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
 
             <li className="flex flex-col gap-3">
               <span

@@ -2,30 +2,25 @@ import axios from "../../axios";
 
 
 
+const updateUser = (idUser,data) =>{
+  return axios.post(`/api/user/editUser/${idUser}`,data)
+}
 const getAllUsers = () => {
   return axios.get("/api/user/getListUsers");
 };
 
+const getListUsersNotBanned = () =>{
+  return axios.get("/api/user/getListUsersNotBanned")
+}
+
+const bannedUser = (idUser) =>{
+  return axios.delete(`/api/user/bannedUser/${idUser}`)
+}
 
 
 
 const createUser = (formData) => {
-  // const config = {
-  //   headers: {
-  //     "Content-Type": "multipart/form-data",
-  //   },
-  // };
-
-  // return axios.post("/api/user/addNew", formData, config);
-
-
-
-
-  return axios({
-    url: "/api/user/addNew",
-    method: "post",
-    formData,
-  });
+  return axios.post("/api/user/addNew",formData)
 
 };
 
@@ -60,4 +55,7 @@ export {
   apiLogin,
   deleteCartUser,
   getCartUser,
+  updateUser,
+  bannedUser,
+  getListUsersNotBanned
 };

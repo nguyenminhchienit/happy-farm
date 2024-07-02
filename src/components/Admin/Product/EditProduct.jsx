@@ -11,7 +11,7 @@ import { getAllOrigin } from "../../../api/OriginFertilizer";
 import { getAllTypeProduct } from "../../../api/TypeFertilizer";
 import { useNavigate } from "react-router-dom";
 
-const CreateProduct = () => {
+const EditProduct = ({item}) => {
   const navigate = useNavigate();
   const {
     register,
@@ -28,19 +28,6 @@ const CreateProduct = () => {
   const [brand, setBrand] = useState([]);
   const [origin, setOrigin] = useState([]);
   const [type, setType] = useState([]);
-
-  // const [payload, setPayload] = useState({
-  //   description: "",
-  // });
-
-  // const [inValidField, setInValidField] = useState([]);
-
-  // const handleChangeValue = useCallback(
-  //   (e) => {
-  //     setPayload(e);
-  //   },
-  //   [payload]
-  // );
 
   const handlePreviewThumb = async (file) => {
     const base64Thumb = await convertFileToBase64(file);
@@ -62,6 +49,9 @@ const CreateProduct = () => {
   };
 
   useEffect(() => {
+
+    console.log("du lieu nhan dc ",item)
+
     if (watch("thumb").length > 0) {
       handlePreviewThumb(watch("thumb")[0]);
     }
@@ -121,7 +111,7 @@ const CreateProduct = () => {
   return (
     <div className="mx-5">
       <h1 className="h-[75px] flex items-center justify-between text-3xl font-bold border-b pl-4 text-gray-600">
-        <span>Thêm phân bón</span>
+        <span>Sửa phân bón</span>
       </h1>
       <div className="p-4">
         <form
@@ -329,11 +319,11 @@ const CreateProduct = () => {
               })}
             </div>
           )}
-          <Button name={"Thêm sản phẩm"} type="submit" />
+          <Button name={"Sửa sản phẩm"} type="submit" />
         </form>
       </div>
     </div>
   );
 };
 
-export default CreateProduct;
+export default EditProduct;

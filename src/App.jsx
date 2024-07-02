@@ -1,3 +1,4 @@
+import {useState} from "react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./responsive.css";
@@ -26,10 +27,32 @@ import Topic from "./components/topic/Topic";
 import Checkout from "./pages/public/checkout";
 
 
+// Origin
 import CreateOrigin from "./components/Admin/Origin/CreateOrigin"
 import ManageOrigin from "./components/Admin/Origin/ManageOrigin"
+import EditOrigin from "./components/Admin/Origin/EditOrigin";
+
+
+// brand
+import  CreateBrand  from "./components/Admin/Brand/CreateBrand";
+import  ManageBrand  from "./components/Admin/Brand/ManageBrand";
+import EditBrand from "./components/Admin/Brand/EditBrand";
+
+// type fertilizer
+import CreateTypeFertilizer from "./components/Admin/TypeFertilizer/CreateTypeFertilizer";
+import ManageTypeFertilizer from "./components/Admin/TypeFertilizer/ManageTypeFertilizer";
+import EditTypeFertilizer from "./components/Admin/TypeFertilizer/EditTypeFertilizer";
+
+// product 
+import EditProduct from "./components/Admin/Product/EditProduct";
+
+//  user
+import EditUser from "./components/Admin/User/EditUser";
 
 function App() {
+
+  const [selectedItem, setSelectedItem] = useState({});
+
   return (
     <>
       <div>
@@ -68,18 +91,30 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route exact={true} path="dash" element={<Dashboard />} />
             <Route exact={true} path="manage-order" element={<ManageOrder />} />
+            
+            
+            {/* product  */}
             <Route
               exact={true}
               path="manage-product"
-              element={<ManageProduct />}
+              element={<ManageProduct setSelectedItem={setSelectedItem} />}
+            />
+
+            <Route
+              exact={true}
+              path="/admin/edit-product/:id"
+              element={ <EditProduct item={selectedItem} /> }
             />
             <Route
               exact={true}
               path="add-product"
               element={<CreateProduct />}
             />
-            <Route exact={true} path="manage-users" element={<ManageUser />} />
+
+            {/* user */}
+            <Route exact={true} path="manage-users" element={<ManageUser setSelectedItem={setSelectedItem} />} />
             <Route exact={true} path="add-user" element={<CreateUser />} />
+            <Route exact={true} path="/admin/edit-user/:id" element={ <EditUser item={selectedItem} />  } />
             <Route
               exact={true}
               path="manage-voucher"
@@ -91,7 +126,7 @@ function App() {
               element={<CreateVoucher />}
             />
 
-
+            {/*  nguồn gốc xuất xứ */}
             <Route
               exact={true}  
               path="add-origin"
@@ -101,11 +136,59 @@ function App() {
             <Route
               exact={true}
               path="manage-origin"
-              element={<ManageOrigin />}
+              element={<ManageOrigin setSelectedItem={setSelectedItem}  />}
             />
 
-          </Route>
+            <Route
+              exact={true}
+              path="edit-origin/:id"
+              element={<EditOrigin item={ selectedItem }  />}
+            />
 
+
+            {/* thương hiệu */}
+            <Route
+              exact={true}  
+              path="add-brand"
+              element={<CreateBrand />}
+            />
+
+            <Route
+              exact={true}
+              path="manage-brand"
+              element={<ManageBrand setSelectedItem={setSelectedItem} />}
+            />
+
+            <Route
+              exact={true}
+              path="edit-brand/:id"
+              element={<EditBrand item={ selectedItem } />}
+              // item là tên props 
+            />
+
+            {/* loại phân bón */}
+            <Route
+              exact={true}
+              path="add-typefertilizer"
+              element={<CreateTypeFertilizer />}
+            />
+
+            <Route
+              exact={true}
+              path="manage-typefertilizer"
+              element={<ManageTypeFertilizer setSelectedItem={setSelectedItem} />}
+            />
+               
+            <Route
+              exact={true}
+              path="edit-type-fertilizer/:id"
+              element={<EditTypeFertilizer item={ selectedItem } />}
+              // item là tên props 
+            />
+
+            
+            
+          </Route>
           {/* <Route exact={true} path="/admin/dash" element={<Dashboard />} /> */}
         </Routes>
       </div>

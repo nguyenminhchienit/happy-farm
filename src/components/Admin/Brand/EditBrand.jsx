@@ -1,13 +1,15 @@
-import { useState } from "react";
-import { createOriginFertilizer } from "../../../api/OriginFertilizer";
+import { useState , useEffect } from "react";
+import { updateBrand } from "../../../api/Brand";
 import { useNavigate } from "react-router-dom";
-const CreateOrigin = () => {
-  const [myformData, setMyFormData] = useState({
-    nameOrigin: "",
-    isDelete: "false", // Default value as a string
-  });
+
+const EditBrand = ({item}) => {
 
   const navigate = useNavigate();
+  const [myformData, setMyFormData] = useState({
+    idBrand:"",
+    nameBrand: "",
+    delete: "false", // Default value as a string
+  });
 
   const handleInputChange = (event) => {
     const { id, value } = event.target;
@@ -21,22 +23,36 @@ const CreateOrigin = () => {
     event.preventDefault();
     console.log("Data to be sent:", myformData);
     try {
-      const response = await createOriginFertilizer(myformData);
+      const response = await updateBrand(myformData.idBrand , myformData);
       if(response){
-        alert("tạo thành công");
-        navigate("/admin/manage-origin");
+        console.log(response)
+        alert("Sửa Thành Công")
+        navigate("/admin/manage-brand")
       }
-      console.log("Response:", response);
-      // Handle successful response here
     } catch (error) {
       console.error("Error creating origin:", error);
       // Handle error here
     }
   };
 
+
+
+  useEffect(() => {
+    if (item) {
+      const {idBrand , nameBrand , delete: isDeleted} = item
+      console.log("item nhan dc ", item )
+      setMyFormData({
+        idBrand , 
+        delete : isDeleted.toString() ,
+        nameBrand
+      })
+    }
+    console.log("đây là form data ", myformData)
+  }, [item]);
+
   return (
     <div className="flex flex-col align-items-center">
-      <h2 className="my-10 title font-bold text-3xl">Thêm Nguồn Gốc Xuất Xứ</h2>
+      <h2 className="my-10 title font-bold text-3xl">Sửa Tên Thương Hiệu</h2>
       <form className="w-full max-w-screen-xl flex flex-col gap-3" onSubmit={handleSubmit}>
         <div className="flex flex-wrap -mx-3 mb-6">
           {/* Name */}
@@ -45,15 +61,15 @@ const CreateOrigin = () => {
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="nameOrigin"
             >
-              Tên Nguồn Gốc
+              Tên Thương Hiệu
             </label>
             <input
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="nameOrigin"
-              name="nameOrigin"
+              id="nameBrand"
+              name="nameBrand"
               type="text"
-              placeholder="Enter origin name"
-              value={myformData.nameOrigin}
+              placeholder="Enter brand name"
+               value={myformData.nameBrand}
               onChange={handleInputChange}
             />
           </div>
@@ -62,29 +78,36 @@ const CreateOrigin = () => {
           <div className="w-full md:w-1/2 px-3">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="isDelete"
+              htmlFor="delete"
             >
               Hiển Thị
             </label>
             <select
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="isDelete"
-              name="isDelete"
-              value={myformData.isDelete}
+              id="delete"
+              name="delete"
+              value={myformData.delete}
               onChange={handleInputChange}
             >
-              <option value="false">True</option>
-              <option value="true">False</option>
+              <option value="false">False</option>
+              <option value="true">True</option>
             </select>
           </div>
+
+
         </div>
 
         <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">
-          Thêm
+          Sửa
         </button>
+
+        <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">
+          Trở Lại
+        </button>
+
       </form>
     </div>
   );
 };
 
-export default CreateOrigin;
+export default EditBrand;

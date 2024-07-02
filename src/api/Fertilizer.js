@@ -1,5 +1,9 @@
 import axios from "../../axios";
 
+const ListFerNotDelete = () =>{
+  return axios.get("/api/fertilizer/listallfer")
+}
+
 const getAll = async () => {
   return await axios.get("/api/fertilizer/listallfer");
 };
@@ -7,6 +11,10 @@ const getAll = async () => {
 const getById = (id_Fertilizer) => {
   return axios.get(`/api/fertilizer/getfertilizer/${id_Fertilizer}`);
 };
+
+const deleteFertilizer = (id) =>{
+  return axios.delete(`/api/fertilizer/deletefer/${id}`)
+}
 
 const addToCart = (idItems, quantity, idUser) => {
   return axios({
@@ -23,4 +31,6 @@ const apiCreateProduct = (data) => {
   });
 };
 
-export { getAll, getById, addToCart, apiCreateProduct };
+
+
+export { getAll, getById, addToCart, apiCreateProduct , ListFerNotDelete  , deleteFertilizer};
