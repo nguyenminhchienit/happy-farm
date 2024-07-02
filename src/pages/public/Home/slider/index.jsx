@@ -56,9 +56,10 @@
 // export default HomeSlider;
 
 import Slider from "react-slick";
-
-import Slide1 from "../../../../assets/images/slider-1.png";
 import Slide2 from "../../../../assets/images/slider-2.png";
+import { useEffect, useState } from "react";
+import { apiGetBanner } from "../../../../api/voucher";
+import { Link } from "react-router-dom";
 
 const HomeSlider = () => {
   var settings = {
@@ -76,36 +77,37 @@ const HomeSlider = () => {
     activeDotClassName: "bg-gray-600",
   };
 
+  const [banner, setBanner] = useState([]);
+
+  useEffect(() => {
+    apiGetBanner().then((response) => {
+      setBanner(response.data);
+    });
+  }, []);
+
   return (
     <section className="bg-gray-100 py-12 mt-[200px]">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <Slider {...settings} className="home_slider_Main">
-          <div className="item">
-            <img src={Slide1} className="w-full  object-cover" alt="" />
-            {/* <div className="info bg-white p-6 md:p-8 lg:p-10 shadow-md rounded-lg mt-6">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
-                Happy Farm
-                <br />
-                Phân bón tốt cho mọi nhà
-              </h2>
-              <p className="text-gray-600">
-                Đăng ký để nhận được ưu đãi tốt nhất
-              </p>
-            </div> */}
-          </div>
-          <div className="item">
-            <img src={Slide2} className="w-full object-cover" alt="" />
-            {/* <div className="info bg-white p-6 md:p-8 lg:p-10 shadow-md rounded-lg mt-6">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
-                Happy Farm
-                <br />
-                Phân bón tốt cho mọi nhà
-              </h2>
-              <p className="text-gray-600">
-                Đăng ký để nhận được ưu đãi tốt nhất
-              </p>
-            </div> */}
-          </div>
+          {banner.length !== 0 ? (
+            banner.map((item, index) => {
+              return (
+                <div className="item" key={index}>
+                  <Link to={item?.url}>
+                    <img
+                      src={item?.imageFile}
+                      className="w-full object-cover"
+                      alt=""
+                    />
+                  </Link>
+                </div>
+              );
+            })
+          ) : (
+            <div className="item">
+              <img src={Slide2} className="w-full object-cover" alt="" />
+            </div>
+          )}
         </Slider>
       </div>
     </section>

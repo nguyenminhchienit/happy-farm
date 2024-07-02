@@ -9,12 +9,15 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Button } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import PhoneAndroid from "@mui/icons-material/PhoneAndroid";
 
 import Product from "../../../components/product";
 import { addToCart, getAll, getById } from "../../../api/Fertilizer";
 import { formatPrice } from "../../../utils/formatPrice";
 import lh from "../../../assets/images/lh.png";
+
 import QuantityBox from "../../../components/quantityBox";
+import { apiAddRating, apiGetRating } from "../../../api/Rating";
 
 const DetailsPage = (props) => {
   const [activeSize, setActiveSize] = useState(0);
@@ -30,14 +33,17 @@ const DetailsPage = (props) => {
   const [reviewsArr, setReviewsArr] = useState([]);
 
   const [reviewFields, setReviewFields] = useState({
-    review: "",
-    userName: "",
-    rating: 0.0,
-    productId: 0,
+    comments: "",
+    idUser: "",
+    points: 0.0,
+    idFertilizer: 0,
     date: "",
   });
 
   const [quantity, setQuantity] = useState(1);
+  const [mainImage, setMainImage] = useState("");
+
+  const [update, setUpdate] = useState(false);
 
   let { id } = useParams();
 
@@ -67,20 +73,28 @@ const DetailsPage = (props) => {
     window.scrollTo(0, 0);
     getById(id).then((response) => {
       setCurrentProduct(response.data);
+      setMainImage(response?.data?.imageRepresent);
     });
     getAll().then((response) => {
       setRelatedProducts(response.data);
     });
-  }, [id]);
+
+    apiGetRating(id).then((res) => {
+      setReviewsArr(res.data);
+    });
+  }, [id, update]);
+
+  console.log(reviewsArr);
 
   const changeInput = (name, value) => {
-    if (name === "rating") {
+    if (name === "points") {
       setRating(value);
     }
     setReviewFields(() => ({
       ...reviewFields,
       [name]: value,
-      productId: id,
+      idFertilizer: id,
+      idUser: dataObject?.idUser,
       date: new Date().toLocaleString(),
     }));
   };
@@ -105,12 +119,25 @@ const DetailsPage = (props) => {
   const submitReview = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+
+    for (const key in reviewFields) {
+      formData.append(key, reviewFields[key]);
+    }
+
+    apiAddRating(formData).then((res) => {
+      console.log(res);
+      if (res.status) {
+        setUpdate(!update);
+      }
+    });
+
     try {
       setReviewFields(() => ({
-        review: "",
-        userName: "",
-        rating: 0.0,
-        productId: 0,
+        comments: "",
+        idUser: "",
+        points: 0.0,
+        idFertilizer: 0,
         date: "",
       }));
     } catch (error) {
@@ -118,6 +145,10 @@ const DetailsPage = (props) => {
     }
 
     console.log("review: ", reviewFields);
+  };
+
+  const handleChangeImage = (imgUrl) => {
+    setMainImage(imgUrl);
   };
 
   return (
@@ -146,7 +177,7 @@ const DetailsPage = (props) => {
               >
                 <img
                   alt=""
-                  src={currentProduct.imageRepresent}
+                  src={mainImage}
                   className=""
                   style={{ objectFit: "cover" }}
                 />
@@ -156,29 +187,31 @@ const DetailsPage = (props) => {
                 className="absolute top-[-100px] right-[-60px]"
                 style={{ height: "auto", objectFit: "cover" }}
               >
-                <img
-                  alt=""
-                  src={lh}
-                  className=""
-                  style={{ objectFit: "cover", height: "260px" }}
-                />
+                <a href="tel:0356781111">
+                  <img
+                    alt=""
+                    src={lh}
+                    className=""
+                    style={{ objectFit: "cover", height: "260px" }}
+                  />
+                </a>
               </div>
 
-              {/* <Slider {...settings} className="zoomSlider" ref={zoomSlider}>
+              <Slider {...settings} className="zoomSlider">
                 {currentProduct.imageOptional !== undefined &&
                   currentProduct.imageOptional.map((imgUrl, index) => {
                     return (
                       <div className="item" key={index}>
                         <img
                           alt=""
-                          src={`${imgUrl}?im=Resize=(${smlImageSize[0]},${smlImageSize[1]})`}
-                          className="w-100"
-                          onClick={() => goto(index)}
+                          src={`${imgUrl}`}
+                          className="w-[100px] h-[100px]"
+                          onClick={() => handleChangeImage(imgUrl)}
                         />
                       </div>
                     );
                   })}
-              </Slider> */}
+              </Slider>
             </div>
             {/* productZoom code ends here */}
 
@@ -288,7 +321,14 @@ const DetailsPage = (props) => {
                 )}
 
               <div className="d-flex align-items-center">
-                <div className="d-flex align-items-center gap-3">
+                <div className="flex items-center gap-3">
+                  <Button
+                    className={`btn-g btn-lg w-[600px] flex items-center justify-between addtocartbtn`}
+                    onClick={() => navigate("/lien-he")}
+                  >
+                    <PhoneAndroid />
+                    Đăng ký tư vấn
+                  </Button>
                   {true && (
                     <Button
                       className={`btn-g w-[200px] btn-lg addtocartbtn`}
@@ -316,7 +356,7 @@ const DetailsPage = (props) => {
                       setActiveTabs(0);
                     }}
                   >
-                    Description
+                    Mô tả
                   </Button>
                 </li>
                 <li className="list-inline-item">
@@ -326,7 +366,7 @@ const DetailsPage = (props) => {
                       setActiveTabs(1);
                     }}
                   >
-                    Additional info
+                    Thông tin thêm
                   </Button>
                 </li>
                 <li className="list-inline-item">
@@ -336,7 +376,7 @@ const DetailsPage = (props) => {
                       setActiveTabs(2);
                     }}
                   >
-                    Reviews (3)
+                    Đánh giá (3)
                   </Button>
                 </li>
               </ul>
@@ -448,12 +488,12 @@ const DetailsPage = (props) => {
                 <div className="tabContent">
                   <div className="row">
                     <div className="col-md-8">
-                      <h3>Customer questions & answers</h3>
+                      <h3>Câu hỏi và nhận xét của khánh hàng</h3>
                       <br />
 
-                      {reviewsArr.length !== 0 &&
+                      {reviewsArr?.length !== 0 &&
                         reviewsArr !== undefined &&
-                        reviewsArr.map((item, index) => {
+                        reviewsArr?.map((item, index) => {
                           return (
                             <div
                               className="card p-4 reviewsCard flex-row"
@@ -467,24 +507,24 @@ const DetailsPage = (props) => {
                                   />
                                 </div>
                                 <span className="text-g d-block text-center font-weight-bold">
-                                  {item.userName}
+                                  {item?.idUser?.username}
                                 </span>
                               </div>
 
                               <div className="info pl-5">
                                 <div className="d-flex align-items-center w-100">
-                                  <h5 className="text-light">{item.date}</h5>
+                                  <h5 className="text-light">{"1/7/2024"}</h5>
                                   <div className="ml-auto">
                                     <Rating
                                       name="half-rating-read"
-                                      value={parseFloat(item.rating)}
+                                      value={parseFloat(item.points)}
                                       precision={0.5}
                                       readOnly
                                     />
                                   </div>
                                 </div>
 
-                                <p>{item.review} </p>
+                                <p>{item.comments} </p>
                               </div>
                             </div>
                           );
@@ -495,13 +535,13 @@ const DetailsPage = (props) => {
                       <br className="res-hide" />
 
                       <form className="reviewForm" onSubmit={submitReview}>
-                        <h4>Add a review</h4> <br />
+                        <h4>Đánh giá</h4> <br />
                         <div className="form-group">
                           <textarea
                             className="form-control"
-                            placeholder="Write a Review"
-                            name="review"
-                            value={reviewFields.review}
+                            placeholder="Để lại nhận xét..."
+                            name="comments"
+                            value={reviewFields.comments}
                             onChange={(e) =>
                               changeInput(e.target.name, e.target.value)
                             }
@@ -510,23 +550,8 @@ const DetailsPage = (props) => {
                         <div className="row">
                           <div className="col-md-6">
                             <div className="form-group">
-                              <input
-                                type="text"
-                                value={reviewFields.userName}
-                                className="form-control"
-                                placeholder="Name"
-                                name="userName"
-                                onChange={(e) =>
-                                  changeInput(e.target.name, e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-
-                          <div className="col-md-6">
-                            <div className="form-group">
                               <Rating
-                                name="rating"
+                                name="points"
                                 value={rating}
                                 precision={0.5}
                                 onChange={(e) =>
@@ -539,7 +564,7 @@ const DetailsPage = (props) => {
                         <br />
                         <div className="form-group">
                           <Button type="submit" className="btn-g btn-lg">
-                            Submit Review
+                            Gửi
                           </Button>
                         </div>
                       </form>
@@ -643,7 +668,7 @@ const DetailsPage = (props) => {
 
           <br />
 
-          <div className="relatedProducts homeProductsRow2 pt-5 pb-4">
+          {/* <div className="relatedProducts homeProductsRow2 pt-5 pb-4">
             <h2 className="hd mb-0 mt-0">Related products</h2>
             <br className="res-hide" />
             <Slider {...settings} className="prodSlider w-full">
@@ -656,7 +681,7 @@ const DetailsPage = (props) => {
                   );
                 })}
             </Slider>
-          </div>
+          </div> */}
         </div>
       </section>
     </div>

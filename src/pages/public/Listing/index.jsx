@@ -238,6 +238,7 @@ import { Button } from "@mui/material";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import FilterListOutlinedIcon from "@mui/icons-material/FilterListOutlined";
 import { getAll } from "../../../api/Fertilizer";
+import { getAllBrand } from "../../../api/Brand";
 
 const Listing = (props) => {
   const [isOpenDropDown, setIsOpenDropDown] = useState(false);
@@ -246,7 +247,13 @@ const Listing = (props) => {
   const [data, setData] = useState([]);
 
   let { id } = useParams();
-  console.log("id: ", id);
+  const [brand, setBrand] = useState([]);
+
+  useEffect(() => {
+    getAllBrand().then((response) => {
+      setBrand(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -262,7 +269,7 @@ const Listing = (props) => {
   const filterByRating = (keyword) => {};
 
   return (
-    <div className="mt-24">
+    <div className="mt-[180px]">
       {false && (
         <>
           {false === false && (
@@ -314,9 +321,9 @@ const Listing = (props) => {
               <div className="w-full md:w-3/4 rightContent homeProducts pt-0">
                 <div className="topStrip flex items-center">
                   <p className="mb-0">
-                    We found{" "}
-                    <span className="text-green-500">{data.length}</span> items
-                    for you!
+                    Tìm thấy{" "}
+                    <span className="text-green-500">{data.length}</span> sản
+                    phẩm
                   </p>
                   <div className="ml-auto flex items-center">
                     <div className="relative tab_">
@@ -382,50 +389,26 @@ const Listing = (props) => {
                         className="btn_"
                         onClick={() => setIsOpenDropDown2(!isOpenDropDown2)}
                       >
-                        <FilterListOutlinedIcon /> Sort by: Featured
+                        <FilterListOutlinedIcon /> Danh mục
                       </Button>
                       {isOpenDropDown2 !== false && (
                         <ul className="dropdownMenu">
-                          <li>
-                            <Button
-                              className="align-items-center"
-                              onClick={() => setIsOpenDropDown2(false)}
-                            >
-                              Featured
-                            </Button>
-                          </li>
-                          <li>
-                            <Button
-                              className="align-items-center"
-                              onClick={() => setIsOpenDropDown2(false)}
-                            >
-                              Price: Low to High
-                            </Button>
-                          </li>
-                          <li>
-                            <Button
-                              className="align-items-center"
-                              onClick={() => setIsOpenDropDown2(false)}
-                            >
-                              Price: High to Low
-                            </Button>
-                          </li>
-                          <li>
-                            <Button
-                              className="align-items-center"
-                              onClick={() => setIsOpenDropDown2(false)}
-                            >
-                              Release Date
-                            </Button>
-                          </li>
-                          <li>
-                            <Button
-                              className="align-items-center"
-                              onClick={() => setIsOpenDropDown2(false)}
-                            >
-                              Avg. Rating
-                            </Button>
-                          </li>
+                          {brand?.length !== 0 &&
+                            brand?.map((item, index) => (
+                              <Link
+                                to={`/cat/${item?.nameBrand?.toLowerCase()}`}
+                                key={index}
+                              >
+                                <li>
+                                  <Button
+                                    className="align-items-center"
+                                    onClick={() => setIsOpenDropDown2(false)}
+                                  >
+                                    {item?.nameBrand}
+                                  </Button>
+                                </li>
+                              </Link>
+                            ))}
                         </ul>
                       )}
                     </div>

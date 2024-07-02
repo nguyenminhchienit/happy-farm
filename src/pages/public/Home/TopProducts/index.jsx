@@ -4,33 +4,22 @@ import "./style.css";
 
 import { Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
-import { useEffect, useState } from "react";
-import { getAll } from "../../../../api/Fertilizer";
 
 const TopProducts = (props) => {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    getAll()
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching all fertilizers:", error);
-      });
-  }, []);
-
   return (
     <>
       <div className="topSelling_box">
         <h3>{props.title}</h3>
 
-        {products?.slice(0, 3)?.map((item, index) => {
+        {props?.data?.slice(0, 3)?.map((item, index) => {
           return (
             <div className="items d-flex align-items-center" key={index}>
               <div className="img">
                 <Link to="">
-                  <img src={item?.imageRepresent} className="w-100" />
+                  <img
+                    src={item?.imageRepresent}
+                    className="w-[140px] h-[140px]"
+                  />
                 </Link>
               </div>
 

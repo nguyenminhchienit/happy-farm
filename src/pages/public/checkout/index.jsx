@@ -1,41 +1,51 @@
 /* eslint-disable no-unused-vars */
-import { Button } from "@mui/material";
+import { Button, MenuItem, Select } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
 import { useEffect, useState } from "react";
-import { getCartUser } from "../../../api/User";
+import { apiCheckOut, getCartUser } from "../../../api/User";
 import { formatPrice } from "../../../utils/formatPrice";
 import { apiCheckCode } from "../../../api/voucher";
+import { apiGetPaymentMethod } from "../../../api/Cart";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const [formFields, setformFields] = useState({
-    name: "",
     address: "",
     phoneNumber: "",
-    code: "",
+    code: {},
+    paymentMethod: "",
+    idUserOrder: "",
+    idVoucher: "",
   });
   const [discount, setDiscount] = useState(1);
+  const navigate = useNavigate();
 
   const placeOrder = () => {
     if (
-      formFields.name === "" ||
       formFields.address == "" ||
+      formFields.paymentMethod == "" ||
       formFields.phoneNumber == ""
     ) {
       alert("All fields Required");
       return false;
     }
 
-    const addressInfo = {
-      name: formFields.name,
-      phoneNumber: formFields.phoneNumber,
-      address: formFields.address,
-      date: new Date().toLocaleString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }),
-    };
+    if (dataObject?.idUser) {
+      formFields.idUserOrder = dataObject?.idUser;
+    }
+
+    const formData = new FormData();
+
+    for (const key in formFields) {
+      formData.append(key, formFields[key]);
+    }
+
+    apiCheckOut(dataObject?.idUser, formData).then((response) => {
+      if (response.status) {
+        navigate("/thanks");
+      }
+    });
   };
 
   const changeInput = (e) => {
@@ -48,6 +58,7 @@ const Checkout = () => {
   };
 
   const [cartItems, setCartItems] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState([]);
 
   const storedData = localStorage.getItem("user");
   const dataObject = storedData ? JSON.parse(storedData) : null;
@@ -56,23 +67,25 @@ const Checkout = () => {
     getCartUser(dataObject?.idUser).then((response) => {
       setCartItems(response.data);
     });
+    apiGetPaymentMethod().then((response) => {
+      setPaymentMethod(response.data);
+    });
   }, []);
 
   const handleSales = () => {
     apiCheckCode(formFields.code)
       .then((response) => {
         setDiscount(response?.data?.discountPercent);
+        formFields.idVoucher = response?.data?.idVoucher;
       })
       .catch((error) => {
         console.error("Error fetching all fertilizers:", error);
       });
   };
 
-  console.log("discount: ", discount);
-
   return (
     <section className="cartSection mb-5 checkoutPage mt-[200px]">
-      <div className="container">
+      <div className="mx-5">
         <form>
           <div className="row">
             <div className="col-md-8">
@@ -101,7 +114,7 @@ const Checkout = () => {
                     name="phoneNumber"
                   />
                 </div>
-                <div className="form-group">
+                <div className="form-group mb-3">
                   <TextField
                     id="outlined-basic"
                     label="Enter Full Address"
@@ -113,6 +126,25 @@ const Checkout = () => {
                     onChange={changeInput}
                     name="address"
                   />
+                </div>
+                <div className="form-group">
+                  <Select
+                    id="outlined-basic"
+                    value={formFields.paymentMethod}
+                    label="Phương thức thanh toán"
+                    onChange={changeInput}
+                    name="paymentMethod"
+                    variant="outlined"
+                    className="w-100"
+                  >
+                    {paymentMethod?.map((item, index) => {
+                      return (
+                        <MenuItem key={index} value={item?.idMethod}>
+                          {item?.nameMethod}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
                 </div>
               </div>
             </div>
@@ -156,9 +188,11 @@ const Checkout = () => {
                       name="code"
                     />
                   </div>
-                  <h5 className="btn btn-success" onClick={handleSales}>
-                    Tính lại
-                  </h5>
+                  <div className="btn btn-success h-[50px] flex justify-center items-center">
+                    <h5 className="font-bold" onClick={handleSales}>
+                      Áp mã khuyến mãi
+                    </h5>
+                  </div>
                 </div>
 
                 <div className="d-flex align-items-center mb-4">

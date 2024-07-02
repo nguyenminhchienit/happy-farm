@@ -7,4 +7,11 @@ const apiCheckCode = (code) => {
   });
 };
 
-export { apiCheckCode };
+const apiGetBanner = () => {
+  return axios({
+    url: `/api/banner/getall`,
+    method: "get",
+  });
+};
+
+export { apiCheckCode, apiGetBanner };

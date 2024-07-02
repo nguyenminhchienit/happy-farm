@@ -122,7 +122,7 @@ const Sidebar = (props) => {
   };
 
   return (
-    <div className="hidden md:block md:w-64 ">
+    <div className="hidden md:block md:w-64 fixed">
       <div className="card border-0 shadow res-hide p-8">
         <h3 className="text-lg font-semibold mb-4">Category</h3>
         <div className="catList">

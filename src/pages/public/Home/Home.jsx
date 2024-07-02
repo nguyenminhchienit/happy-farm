@@ -9,19 +9,37 @@ import Product from "../../../components/product";
 import TopProducts from "./TopProducts";
 
 // call api
-import { getAll, getById } from "../../../api/Fertilizer";
+import {
+  apiCheapPrice,
+  getAll,
+  apiExpensive,
+  apiMostBuy,
+  apiRecentAdd,
+} from "../../../api/Fertilizer";
 
 const Home = (props) => {
   const [prodData, setProdData] = useState(props.data);
+  const [newProduct, setNewProduct] = useState([]);
+  const [mostBuy, setMostBuy] = useState([]);
+  const [cheap, setCheap] = useState([]);
+  const [expensive, setExpensive] = useState([]);
 
   useEffect(() => {
-    getAll()
-      .then((response) => {
-        setProdData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching all fertilizers:", error);
-      });
+    getAll().then((response) => {
+      setProdData(response.data);
+    });
+    apiCheapPrice().then((res) => {
+      setCheap(res.data);
+    });
+    apiExpensive().then((res) => {
+      setExpensive(res.data);
+    });
+    apiMostBuy().then((res) => {
+      setMostBuy(res.data);
+    });
+    apiRecentAdd().then((res) => {
+      setNewProduct(res.data);
+    });
   }, []);
 
   return (
@@ -34,7 +52,7 @@ const Home = (props) => {
       <section className="homeProducts homeProductWrapper">
         <div className="container-fluid">
           <div className="d-flex align-items-center homeProductsTitleWrap">
-            <h2 className="hd mb-0 mt-0 res-full">Popular Products</h2>
+            <h2 className="hd mb-0 mt-0 res-full">Sản phẩm nổi bật</h2>
           </div>
 
           <div className={`productRow`}>
@@ -53,19 +71,19 @@ const Home = (props) => {
         <div className="container-fluid">
           <div className="row">
             <div className="col">
-              <TopProducts title="Top Selling" />
+              <TopProducts title="Mới nhất" data={newProduct} />
             </div>
 
             <div className="col">
-              <TopProducts title="Trending Products" />
+              <TopProducts title="Bán chạy" data={mostBuy} />
             </div>
 
             <div className="col">
-              <TopProducts title="Recently added" />
+              <TopProducts title="Chất lượng" data={expensive} />
             </div>
 
             <div className="col">
-              <TopProducts title="Top Rated" />
+              <TopProducts title="Rẻ nhất" data={cheap} />
             </div>
           </div>
         </div>

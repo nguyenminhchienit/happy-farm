@@ -1,7 +1,7 @@
 import axios from "../../axios";
 
 const getAll = async () => {
-  return await axios.get("/api/fertilizer/listallfer");
+  return await axios.get("/api/fertilizer/listfer");
 };
 
 const getById = (id_Fertilizer) => {
@@ -23,4 +23,41 @@ const apiCreateProduct = (data) => {
   });
 };
 
-export { getAll, getById, addToCart, apiCreateProduct };
+const apiMostBuy = () => {
+  return axios({
+    url: "/api/fertilizer/mostbuy",
+    method: "get",
+  });
+};
+
+const apiRecentAdd = () => {
+  return axios({
+    url: "/api/fertilizer/recentadd",
+    method: "get",
+  });
+};
+
+const apiCheapPrice = () => {
+  return axios({
+    url: "/api/fertilizer/cheaper",
+    method: "get",
+  });
+};
+
+const apiExpensive = () => {
+  return axios({
+    url: "/api/fertilizer/expensive",
+    method: "get",
+  });
+};
+
+export {
+  getAll,
+  getById,
+  addToCart,
+  apiCreateProduct,
+  apiCheapPrice,
+  apiMostBuy,
+  apiExpensive,
+  apiRecentAdd,
+};

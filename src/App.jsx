@@ -24,6 +24,7 @@ import { ManageOrder } from "./components/Admin/Order/ManageOrder";
 import Contact from "./components/contact/Contact";
 import Topic from "./components/topic/Topic";
 import Checkout from "./pages/public/checkout";
+import Thanks from "./pages/public/Thanks/Thanks";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
               path="/phan-bon"
               element={<Listing data={data.productData} single={false} />}
             />
+            <Route exact={true} path="/thanks" element={<Thanks />} />
             <Route exact={true} path="/gia-nong-san" element={<TablePrice />} />
             <Route exact={true} path="/lien-he" element={<Contact />} />
             <Route exact={true} path="/bai-viet" element={<Topic />} />

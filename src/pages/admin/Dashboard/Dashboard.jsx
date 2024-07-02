@@ -1,16 +1,25 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unknown-property */
-import { Editor } from "@tinymce/tinymce-react";
-import { useRef } from "react";
+// import { Editor } from "@tinymce/tinymce-react";
+import { useRef, useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Dashboard = () => {
-  const editorRef = useRef(null);
+  const [content, setContent] = useState("");
+  const [value, setValue] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const content = editorRef.current.getContent();
-    // Ở đây, bạn có thể xử lý nội dung và submit form
-    console.log(content);
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      const content = editor.root.innerHTML;
+      console.log("Nội dung từ ReactQuill:", content);
+      setContent(content);
+    }
   };
+
+  const quillRef = useRef(null);
   return (
     <>
       <div className="grid grid-cols-1 gap-4 px-4 mt-8 sm:grid-cols-4 sm:px-8">
@@ -104,28 +113,56 @@ const Dashboard = () => {
         </div>
       </div>
       <form className="px-6 mt-6" onSubmit={handleSubmit}>
-        <Editor
-          onInit={(evt, editor) => (editorRef.current = editor)}
-          apiKey="idta45arwktyo5gfqhc7oymbjjxefev4ep6bi4wfdqndz74j"
-          init={{
-            plugins:
-              "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown",
-            toolbar:
-              "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-            tinycomments_mode: "embedded",
-            tinycomments_author: "Author name",
-            mergetags_list: [
-              { value: "First.Name", title: "First Name" },
-              { value: "Email", title: "Email" },
-            ],
-            ai_request: (request, respondWith) =>
-              respondWith.string(() =>
-                Promise.reject("See docs to implement AI Assistant")
-              ),
+        <ReactQuill
+          ref={quillRef}
+          placeholder="Start writing..."
+          modules={{
+            toolbar: {
+              container: [
+                [{ header: "1" }, { header: "2" }, { font: [] }],
+                [{ size: [] }],
+                ["bold", "italic", "underline", "strike", "blockquote"],
+                [
+                  { list: "ordered" },
+                  { list: "bullet" },
+                  { indent: "-1" },
+                  { indent: "+1" },
+                ],
+                ["link", "image", "video"],
+                ["code-block"],
+                ["clean"],
+              ],
+            },
+            clipboard: {
+              matchVisual: false,
+            },
           }}
-          initialValue=""
+          formats={[
+            "header",
+            "font",
+            "size",
+            "bold",
+            "italic",
+            "underline",
+            "strike",
+            "blockquote",
+            "list",
+            "bullet",
+            "indent",
+            "link",
+            "image",
+            "video",
+            "code-block",
+          ]}
+          theme="snow"
+          value={value}
+          onChange={setValue}
         />
         <button type="submit">Submit</button>
+        <div
+          className="ql-editor"
+          dangerouslySetInnerHTML={{ __html: value }}
+        />
       </form>
     </>
   );

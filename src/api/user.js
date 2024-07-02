@@ -35,10 +35,19 @@ const deleteCartUser = (idUser, idProduct) => {
   });
 };
 
+const apiCheckOut = (idUser, data) => {
+  return axios({
+    url: `/api/checkout/getinfouser?idUser=${idUser}`,
+    method: "post",
+    data,
+  });
+};
+
 export {
   getAll as getAllUsers,
   createUser,
   apiLogin,
   deleteCartUser,
   getCartUser,
+  apiCheckOut,
 };

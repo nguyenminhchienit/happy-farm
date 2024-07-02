@@ -28,6 +28,8 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 import Select from "../selectDrop/select";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { getCartUser } from "../../api/User";
 
 const Header = (props) => {
   const [isOpenDropDown, setisOpenDropDown] = useState(false);
@@ -58,9 +60,13 @@ const Header = (props) => {
   ]);
 
   const countryList = [];
+  const [cart, setCart] = useState(0);
 
   useEffect(() => {
     getCountry("https://open.oapi.vn/location/provinces?page=0&size=30");
+    getCartUser(dataObject?.idUser).then((res) => {
+      setCart(res.data);
+    });
   }, []);
 
   const getCountry = async (url) => {
@@ -96,6 +102,18 @@ const Header = (props) => {
     window.location.reload();
   };
 
+  const [navMobile, setNavMobile] = useState(false);
+  const handleToggle = (e) => {
+    e.preventDefault();
+    setNavMobile(!navMobile);
+  };
+
+  const [open, setOpen] = useState(false);
+  const handleDropdown = (e) => {
+    e.preventDefault();
+    setOpen(!open);
+  };
+
   return (
     <>
       <div className="headerWrapper" ref={headerRef}>
@@ -107,25 +125,124 @@ const Header = (props) => {
                   <img src={Logo} className="logo" alt="" />
                 </Link>
                 {windowWidth < 992 && (
-                  <div className="ml-auto d-flex align-items-center">
-                    <div className="navbarToggle mr-0">
+                  <div className="ml-auto flex items-center">
+                    {/* <div className="navbarToggle mr-0">
                       <SearchIcon />
-                    </div>
+                    </div> */}
                     <ul className="list list-inline mb-0 headerTabs pl-0 mr-4">
                       <li className="list-inline-item">
                         <span>
-                          <a href={"/cart"}>
-                            {" "}
+                          <Link to={"/cart"}>
                             <img src={IconCart} alt="" />
                             <span className="badge bg-success rounded-circle">
-                              0
+                              {cart?.length}
                             </span>
-                          </a>
+                          </Link>
                         </span>
                       </li>
                     </ul>
-                    <div className="navbarToggle mr-2">
-                      <MenuIcon />
+                    <div className="navbarToggle mr-2 relative">
+                      <div>
+                        {navMobile ? (
+                          <ul className="absolute top-[10px] right-[-50px] w-[250px] text-5xl bg-white justify-end">
+                            <li>
+                              <Button>
+                                <Link to={"/"} className="text-gray-800">
+                                  Trang chủ
+                                </Link>
+                              </Button>
+                            </li>
+                            <li>
+                              <Button>
+                                <Link
+                                  to={"/phan-bon"}
+                                  className="text-gray-800"
+                                >
+                                  Phân bón
+                                </Link>
+                              </Button>
+                            </li>
+                            <li>
+                              <Button>
+                                <Link
+                                  to={"/bai-viet"}
+                                  className="text-gray-800"
+                                >
+                                  Bài viết
+                                </Link>
+                              </Button>
+                            </li>
+                            <li>
+                              <Button>
+                                <Link to={"/lien-he"} className="text-gray-800">
+                                  Liên hệ
+                                </Link>
+                              </Button>
+                            </li>
+                            <li>
+                              <Button>
+                                <Link
+                                  to={"/gia-nong-san"}
+                                  className="text-gray-800"
+                                >
+                                  Giá nông sản
+                                </Link>
+                              </Button>
+                            </li>
+                            <li className="text-gray-800 relative">
+                              <Button>
+                                <div
+                                  className="text-gray-800 flex items-center gap-1"
+                                  onClick={(e) => handleDropdown(e)}
+                                >
+                                  <span className="text-gray-800">
+                                    Hướng dẫn
+                                  </span>
+                                  <div>
+                                    <KeyboardArrowDownIcon
+                                      style={{ fill: "#0072ea" }}
+                                    />
+                                  </div>
+                                </div>
+                              </Button>
+                              {open && (
+                                <ul className="absolute bg-white min-w-52">
+                                  <li className="p-2">
+                                    <Button>
+                                      <Link to={"/"} className="text-gray-800">
+                                        Hình thức mua hàng
+                                      </Link>
+                                    </Button>
+                                  </li>
+                                  <li className="p-2">
+                                    <Button>
+                                      <Link to={"/"} className="text-gray-800">
+                                        Hình thức thanh toán
+                                      </Link>
+                                    </Button>
+                                  </li>
+                                  <li className="p-2">
+                                    <Button>
+                                      <Link to={"/"} className="text-gray-800">
+                                        Hướng dẫn mua hàng
+                                      </Link>
+                                    </Button>
+                                  </li>
+                                  <li className="p-2">
+                                    <Button>
+                                      <Link to={"/"} className="text-gray-800">
+                                        Quy trình vận chuyển
+                                      </Link>
+                                    </Button>
+                                  </li>
+                                </ul>
+                              )}
+                            </li>
+                          </ul>
+                        ) : (
+                          <MenuIcon onClick={(e) => handleToggle(e)} />
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -185,22 +302,14 @@ const Header = (props) => {
                           {/* So sánh */}
                         </span>
                       </li>
-                      <li className="list-inline-item">
-                        <span>
-                          <img src={IconHeart} alt="" />
-                          <span className="badge bg-success rounded-circle">
-                            3
-                          </span>
-                          {/* Yêu thích */}
-                        </span>
-                      </li>
+
                       <li className="list-inline-item">
                         <span>
                           <a href={"/cart"}>
                             {" "}
                             <img src={IconCart} alt="" />
                             <span className="badge bg-success rounded-circle">
-                              0
+                              {cart?.length}
                             </span>
                             {/* Giỏ hàng */}
                           </a>
@@ -228,16 +337,7 @@ const Header = (props) => {
                                   <LocationOnOutlinedIcon /> Đơn hàng
                                 </Button>
                               </li>
-                              <li>
-                                <Button>
-                                  <FavoriteBorderOutlinedIcon /> Yêu thích
-                                </Button>
-                              </li>
-                              <li>
-                                <Button>
-                                  <SettingsOutlinedIcon /> Cài đặt
-                                </Button>
-                              </li>
+
                               <li onClick={handleLogout}>
                                 <Button>
                                   <LogoutOutlinedIcon /> Đăng xuất

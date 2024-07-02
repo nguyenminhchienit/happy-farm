@@ -29,7 +29,7 @@ const ChatComponent = () => {
     };
   }, []);
 
-  return <div id="chat-container">Loading chat...</div>;
+  return <div id="chat-container"></div>;
 };
 
 export default ChatComponent;

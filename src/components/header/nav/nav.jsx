@@ -6,12 +6,18 @@ import Button from "@mui/material/Button";
 import GridViewIcon from "@mui/icons-material/GridView";
 import HeadphonesOutlinedIcon from "@mui/icons-material/HeadphonesOutlined";
 import { Link } from "react-router-dom";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const Nav = () => {
   const [navOpen, setNavOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const toggleNav = () => {
     setNavOpen(!navOpen);
+  };
+
+  const handleDropdown = () => {
+    setOpen(!open);
   };
 
   return (
@@ -60,6 +66,49 @@ const Nav = () => {
                     </Link>
                   </Button>
                 </li>
+                <li className="text-gray-800 relative">
+                  <Button
+                    onClick={handleDropdown}
+                    className="text-gray-800 flex items-center gap-1"
+                  >
+                    <span className="text-gray-800">Hướng dẫn</span>
+                    <div>
+                      <KeyboardArrowDownIcon style={{ fill: "#0072ea" }} />
+                    </div>
+                  </Button>
+                  {open && (
+                    <ul className="absolute bg-white min-w-52">
+                      <li className="p-2">
+                        <Button>
+                          <Link to={"/"} className="text-gray-800">
+                            Hình thức mua hàng
+                          </Link>
+                        </Button>
+                      </li>
+                      <li className="p-2">
+                        <Button>
+                          <Link to={"/"} className="text-gray-800">
+                            Hình thức thanh toán
+                          </Link>
+                        </Button>
+                      </li>
+                      <li className="p-2">
+                        <Button>
+                          <Link to={"/"} className="text-gray-800">
+                            Hướng dẫn mua hàng
+                          </Link>
+                        </Button>
+                      </li>
+                      <li className="p-2">
+                        <Button>
+                          <Link to={"/"} className="text-gray-800">
+                            Quy trình vận chuyển
+                          </Link>
+                        </Button>
+                      </li>
+                    </ul>
+                  )}
+                </li>
               </ul>
             </nav>
 
@@ -76,8 +125,10 @@ const Nav = () => {
                 <HeadphonesOutlinedIcon />
               </span>
               <div className="info">
-                <h3 className="text-green-500 mb-0">0392845906</h3>
-                <p className="mb-0 text-sm">24/7 Support Center</p>
+                <a href="tel:0356781111">
+                  <h3 className="text-green-500 mb-0">0356781111</h3>
+                  <p className="mb-0 text-sm">Hổ trợ 24/7</p>
+                </a>
               </div>
             </div>
           </div>
