@@ -122,30 +122,31 @@ const Sidebar = (props) => {
   };
 
   return (
-    <div className="hidden md:block md:w-64 fixed">
+    <div className="hidden md:block md:w-64 z-50">
       <div className="card border-0 shadow res-hide p-8">
-        <h3 className="text-lg font-semibold mb-4">Category</h3>
+        <h3 className="text-lg font-semibold mb-4">Danh mục</h3>
         <div className="catList">
           {brand?.length !== 0 &&
             brand?.map((item, index) => (
-              <Link to={`/cat/${item?.nameBrand?.toLowerCase()}`} key={index}>
-                <div className="catItem flex items-center mb-4">
-                  <span className="img">
-                    <img
-                      src="https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg"
-                      alt={item?.nameBrand}
-                      className="w-8"
-                    />
-                  </span>
-                  <h4 className="mb-0 ml-3 text-capitalize text-black">
-                    {item?.nameBrand}
-                  </h4>
-                </div>
-              </Link>
+              <div
+                className="catItem flex items-center mb-4 hover:cursor-pointer"
+                key={index}
+                onClick={() => filterByBrand(item?.nameBrand)}
+              >
+                <span className="img">
+                  <img
+                    src="https://wp.alithemes.com/html/nest/demo/assets/imgs/theme/icons/category-1.svg"
+                    alt={item?.nameBrand}
+                    className="w-8"
+                  />
+                </span>
+                <h4 className="mb-0 ml-3 text-capitalize text-black">
+                  {item?.nameBrand}
+                </h4>
+              </div>
             ))}
         </div>
       </div>
-      <img src={bannerImg} className="w-full mt-4" alt="Banner" />
     </div>
   );
 };

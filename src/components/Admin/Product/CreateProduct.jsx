@@ -97,9 +97,9 @@ const CreateProduct = () => {
     }
 
     apiCreateProduct(formData).then((response) => {
-      if(response){
-        alert("thêm thành công")
-        navigate("/admin/manage-product")
+      if (response) {
+        alert("thêm thành công");
+        navigate("/admin/manage-product");
       }
     });
   };

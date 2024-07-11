@@ -1,11 +1,25 @@
 import axios from "../../axios";
 
 const ListFerNotDelete = () => {
-  return axios.get("/api/fertilizer/listallfer");
+  return axios.get("/api/fertilizer/listallfer?numberOfPage=0&sizeOfPage=5");
 };
 
 const getAll = async () => {
-  return await axios.get("/api/fertilizer/listfer");
+  return await axios.get("/api/fertilizer/listfer?numberOfPage=0&sizeOfPage=5");
+};
+
+const getAllPagi = async (page = 0, limitP = 8) => {
+  return await axios({
+    url: `/api/fertilizer/listfer?numberOfPage=${+page}&sizeOfPage=${+limitP}`,
+    method: "get",
+  });
+};
+
+const apiFilterBrand = async (page = 0, limitP = 8, brand = "Không có") => {
+  return await axios({
+    url: `/api/fertilizer/filterbybrand?pageNumber=${page}&sizeOfPage=${limitP}&brand=${brand}`,
+    method: "get",
+  });
 };
 
 const getById = (id_Fertilizer) => {
@@ -70,4 +84,6 @@ export {
   apiRecentAdd,
   ListFerNotDelete,
   deleteFertilizer,
+  getAllPagi,
+  apiFilterBrand,
 };

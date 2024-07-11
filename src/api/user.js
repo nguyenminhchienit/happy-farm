@@ -48,7 +48,24 @@ const apiCheckOut = (idUser, data) => {
   });
 };
 
+const apiCreateBlog = (data) => {
+  return axios({
+    url: `/api/blog/addblog`,
+    method: "post",
+    data,
+  });
+};
+
+const apiGetBlog = (id) => {
+  return axios({
+    url: `/api/blog/getblog/${id}`,
+    method: "get",
+  });
+};
+
 export {
+  apiGetBlog,
+  apiCreateBlog,
   getAllUsers,
   createUser,
   apiLogin,

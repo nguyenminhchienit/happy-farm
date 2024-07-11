@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unknown-property */
 // import { Editor } from "@tinymce/tinymce-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { apiCreateBlog, apiGetBlog } from "../../../api/User";
 
 const Dashboard = () => {
   const [content, setContent] = useState("");
@@ -15,9 +16,27 @@ const Dashboard = () => {
       const editor = quillRef.current.getEditor();
       const content = editor.root.innerHTML;
       console.log("Nội dung từ ReactQuill:", content);
-      setContent(content);
+
+      const formData = new FormData();
+
+      formData.append("title", "Phan bon cho cay nhu the nao la tot");
+      formData.append("details", content);
+      formData.append("userCreate", dataObject.idUser);
+
+      apiCreateBlog(formData).then((res) => {
+        console.log(res);
+      });
     }
   };
+
+  const storedData = localStorage.getItem("user");
+  const dataObject = storedData ? JSON.parse(storedData) : null;
+
+  useEffect(() => {
+    apiGetBlog("420f420d-3d16-4518-8685-e3216f56f181").then((res) => {
+      setContent(res.data);
+    });
+  }, []);
 
   const quillRef = useRef(null);
   return (
@@ -161,7 +180,7 @@ const Dashboard = () => {
         <button type="submit">Submit</button>
         <div
           className="ql-editor"
-          dangerouslySetInnerHTML={{ __html: value }}
+          dangerouslySetInnerHTML={{ __html: content?.details }}
         />
       </form>
     </>

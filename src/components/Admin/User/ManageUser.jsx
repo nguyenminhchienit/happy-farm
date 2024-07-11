@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -8,12 +10,16 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { getListUsersNotBanned , updateUser , bannedUser } from "../../../api/User";
+import {
+  getListUsersNotBanned,
+  updateUser,
+  bannedUser,
+} from "../../../api/User";
 import { useNavigate } from "react-router-dom";
 
 const TABLE_HEAD = ["Tên", "Họ và Tên", "Email", "Quyền", "Hành động"];
 
-export function ManageUser({setSelectedItem}) {
+export function ManageUser({ setSelectedItem }) {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
@@ -32,28 +38,31 @@ export function ManageUser({setSelectedItem}) {
 
   const handleDelete = async (item) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
-      const { roles: { idRoles, ...rolesWithoutId }, ...userWithoutIdRoles } = item;
+      const {
+        roles: { idRoles, ...rolesWithoutId },
+        ...userWithoutIdRoles
+      } = item;
       const user = {
         ...userWithoutIdRoles,
-        nameRoles: rolesWithoutId.nameRoles
+        nameRoles: rolesWithoutId.nameRoles,
       };
       console.log("User without idRoles:", user);
       // Handle deletion logic here
 
-      const response = await bannedUser(user.idUser)
-      if(response){
-        alert("xóa thành công")
+      const response = await bannedUser(user.idUser);
+      if (response) {
+        alert("xóa thành công");
         window.location.reload();
       }
-      console.log(response)
+      console.log(response);
     }
   };
 
-  const handleEidt = (item) =>{
-    console.log(item)
-    setSelectedItem(item)
-    navigate("/admin/edit-user/"+item.idUser)
-  }
+  const handleEidt = (item) => {
+    console.log(item);
+    setSelectedItem(item);
+    navigate("/admin/edit-user/" + item.idUser);
+  };
 
   return (
     <Card className="m-10">
@@ -143,12 +152,10 @@ export function ManageUser({setSelectedItem}) {
                     </Typography>
                   </td>
                   <td className={`${classes} flex gap-2`}>
-                    <button 
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    onClick={()=>handleEidt(item)}
-                    
+                    <button
+                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                      onClick={() => handleEidt(item)}
                     >
-                     
                       Sửa
                     </button>
                     <button

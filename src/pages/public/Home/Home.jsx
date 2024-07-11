@@ -15,6 +15,7 @@ import {
   apiExpensive,
   apiMostBuy,
   apiRecentAdd,
+  ListFerNotDelete,
 } from "../../../api/Fertilizer";
 
 const Home = (props) => {
@@ -25,7 +26,7 @@ const Home = (props) => {
   const [expensive, setExpensive] = useState([]);
 
   useEffect(() => {
-    getAll().then((response) => {
+    ListFerNotDelete().then((response) => {
       setProdData(response.data);
     });
     apiCheapPrice().then((res) => {

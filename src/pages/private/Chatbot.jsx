@@ -18,7 +18,7 @@ const ChatComponent = () => {
           bot_id: "7385055358118674440",
         },
         componentProps: {
-          title: "Coze",
+          title: "Happy farm",
         },
       });
     };

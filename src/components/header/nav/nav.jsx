@@ -80,28 +80,37 @@ const Nav = () => {
                     <ul className="absolute bg-white min-w-52">
                       <li className="p-2">
                         <Button>
-                          <Link to={"/"} className="text-gray-800">
+                          <Link
+                            to={"/hinh-thuc-mua-hang"}
+                            className="text-gray-800"
+                          >
                             Hình thức mua hàng
                           </Link>
                         </Button>
                       </li>
                       <li className="p-2">
                         <Button>
-                          <Link to={"/"} className="text-gray-800">
+                          <Link to={"/hinh-thuc-thanh-toan"} className="text-gray-800">
                             Hình thức thanh toán
                           </Link>
                         </Button>
                       </li>
                       <li className="p-2">
                         <Button>
-                          <Link to={"/"} className="text-gray-800">
+                          <Link
+                            to={"/huong-dan-mua-hang"}
+                            className="text-gray-800"
+                          >
                             Hướng dẫn mua hàng
                           </Link>
                         </Button>
                       </li>
                       <li className="p-2">
                         <Button>
-                          <Link to={"/"} className="text-gray-800">
+                          <Link
+                            to={"/quy-trinh-van-chuyen"}
+                            className="text-gray-800"
+                          >
                             Quy trình vận chuyển
                           </Link>
                         </Button>
