@@ -17,10 +17,10 @@ const SelectForm = ({
     <div className={clsx("flex flex-col gap-1 w-full my-4", style)}>
       {label && <label htmlFor={id}>{label}</label>}
       <select
-        defaultValue={defaultValue}
         id={id}
         {...register(id, validate)}
         className={clsx("form-select", fw && "w-full")}
+        defaultValue={defaultValue}
       >
         <option value="">Choose</option>
         {options?.map((item, index) => {

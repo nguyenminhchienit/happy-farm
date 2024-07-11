@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -7,21 +9,25 @@ import {
   CardBody,
   CardFooter,
 } from "@material-tailwind/react";
-import { getAllTypeFertilizerNotDelete , editTypeFertilizer } from "../../../api/TypeFertilizer";
+import {
+  getAllTypeFertilizerNotDelete,
+  editTypeFertilizer,
+  getAllTypeFertilizer,
+} from "../../../api/TypeFertilizer";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const TABLE_HEAD = ["Id", "Tên Thương Hiệu", "Trạng Thái Ẩn Hiện", "Hành Động"];
 
-const ManageTypeFertilizer = ( {setSelectedItem} ) => {
+const ManageTypeFertilizer = ({ setSelectedItem }) => {
   const [TypeFertilizers, setTypeFertilizers] = useState([]);
- 
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getAllTypeFertilizerNotDelete();
+        const response = await getAllTypeFertilizer();
         console.log("dữ liệu gọi đc ", response.data);
         setTypeFertilizers(response.data); // Giả sử response.data chứa danh sách phân bón
       } catch (error) {
@@ -31,34 +37,28 @@ const ManageTypeFertilizer = ( {setSelectedItem} ) => {
     fetchData();
   }, []);
 
-
-
-  const handleEdit = (item) =>{
-    console.log("day la item ",item)
+  const handleEdit = (item) => {
+    console.log("day la item ", item);
     setSelectedItem(item);
     navigate(`/admin/edit-type-fertilizer/${item.idTypeFertilizer}`);
-
   };
 
-
-  const handleDelete = async (item) =>{
-    if(window.confirm("bạn có muốn xóa ")){
-      console.log("đây là giá trị  muốn xoă " , item)
-      item.delete = true ;
-      try{
-        const response = await editTypeFertilizer(item.idTypeFertilizer , item)
-        console.log("dữ liệu nhận đc ", response)
-        if(response.data) alert("xóa thành công") 
+  const handleDelete = async (item) => {
+    if (window.confirm("bạn có muốn xóa ")) {
+      console.log("đây là giá trị  muốn xoă ", item);
+      item.delete = true;
+      try {
+        const response = await editTypeFertilizer(item.idTypeFertilizer, item);
+        console.log("dữ liệu nhận đc ", response);
+        if (response.data) alert("xóa thành công");
         window.location.reload();
-      }catch(error){
-        console.log(error.response)
+      } catch (error) {
+        console.log(error.response);
       }
-    }else{
-      console.log("đây" , item)
+    } else {
+      console.log("đây", item);
     }
   };
-
-
 
   return (
     <div>
@@ -66,7 +66,11 @@ const ManageTypeFertilizer = ( {setSelectedItem} ) => {
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="flex items-center justify-between gap-8">
             <div>
-              <Typography variant="h5" color="blue-gray" className="text-4xl mb-3">
+              <Typography
+                variant="h5"
+                color="blue-gray"
+                className="text-4xl mb-3"
+              >
                 Quản lý Loại Phân Bón
               </Typography>
             </div>
@@ -88,7 +92,10 @@ const ManageTypeFertilizer = ( {setSelectedItem} ) => {
                     >
                       {head}{" "}
                       {index !== TABLE_HEAD.length - 1 && (
-                        <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
+                        <ChevronUpDownIcon
+                          strokeWidth={2}
+                          className="h-4 w-4"
+                        />
                       )}
                     </Typography>
                   </th>
@@ -98,7 +105,9 @@ const ManageTypeFertilizer = ( {setSelectedItem} ) => {
             <tbody>
               {TypeFertilizers.map((item, index) => {
                 const isLast = index === TypeFertilizers.length - 1;
-                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+                const classes = isLast
+                  ? "p-4"
+                  : "p-4 border-b border-blue-gray-50";
 
                 return (
                   <tr key={item.idTypeFertilizer}>
@@ -147,10 +156,9 @@ const ManageTypeFertilizer = ( {setSelectedItem} ) => {
                       >
                         Sửa
                       </button>
-                      <button 
-                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                      <button
+                        className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                         onClick={() => handleDelete(item)}
-                      
                       >
                         Xóa
                       </button>
@@ -175,8 +183,6 @@ const ManageTypeFertilizer = ( {setSelectedItem} ) => {
           </div>
         </CardFooter>
       </Card>
-
-
     </div>
   );
 };

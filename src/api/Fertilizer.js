@@ -1,9 +1,5 @@
 import axios from "../../axios";
 
-const ListFerNotDelete = () => {
-  return axios.get("/api/fertilizer/listallfer?numberOfPage=0&sizeOfPage=5");
-};
-
 const getAll = async () => {
   return await axios.get("/api/fertilizer/listfer?numberOfPage=0&sizeOfPage=5");
 };
@@ -21,6 +17,15 @@ const apiFilterBrand = async (page = 0, limitP = 8, brand = "Không có") => {
     method: "get",
   });
 };
+const ListFerNotDelete = (numberOfPage, sizeOfPage) => {
+  return axios.get(
+    `/api/fertilizer/listallfer?numberOfPage=${numberOfPage}&sizeOfPage=${sizeOfPage}`
+  );
+};
+
+// const getAll = async (numberOfPage , sizeOfPage) => {
+//   return await axios.get(`/api/fertilizer/listallfer?numberOfPage=${numberOfPage}&sizeOfPage=${sizeOfPage}`);
+// };
 
 const getById = (id_Fertilizer) => {
   return axios.get(`/api/fertilizer/getfertilizer/${id_Fertilizer}`);
@@ -28,6 +33,10 @@ const getById = (id_Fertilizer) => {
 
 const deleteFertilizer = (id) => {
   return axios.delete(`/api/fertilizer/deletefer/${id}`);
+};
+
+const editfertilizer = (id, data) => {
+  return axios.put(`/api/fertilizer/editfertilizer/${id}`, data);
 };
 
 const addToCart = (idItems, quantity, idUser) => {
@@ -77,6 +86,7 @@ export {
   getAll,
   getById,
   addToCart,
+  editfertilizer,
   apiCreateProduct,
   apiCheapPrice,
   apiMostBuy,

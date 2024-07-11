@@ -7,33 +7,24 @@ import {
   CardBody,
   CardFooter,
 } from "@material-tailwind/react";
-
-import { getlistvouchernotdelete, deleteVoucher } from "../../../api/Voucher";
 import { useEffect, useState } from "react";
+import { getAllUsers  , bannedUser } from "../../../api/User";
 import { useNavigate } from "react-router-dom";
 
-const TABLE_HEAD = [
-  "Tên Mã Giảm Giá",
-  "Phần Trăm Giảm Giá",
-  "Ngày Bắt Đầu",
-  "Ngày Kết Thúc",
-  "Bị Ẩn",
-  "Hành Động",
-];
+const TABLE_HEAD = ["Tên", "Họ và Tên", "Email", "Quyền","Bị Khóa", "Hành động"];
 
-const ManageVoucher = ({ setSelectedItem }) => {
+const ManageUserBanned = ({setSelectedItem}) => {
   const navigate = useNavigate();
-
-  const [Vouchers, setVouchers] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getlistvouchernotdelete();
-        console.log("dữ liệu gọi đc ", response.data);
-        setVouchers(response.data); // Giả sử response.data chứa danh sách phân bón
+        const response = await getAllUsers();
+        console.log("Fetched data:", response);
+        setUsers(response.data);
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchData();
@@ -41,27 +32,31 @@ const ManageVoucher = ({ setSelectedItem }) => {
 
   const handleDelete = async (item) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
-      console.log("Xóa item với :", item);
-      try {
-        const response = await deleteVoucher(item.idVoucher);
-        console.log("day la dư lieu", response);
-        if (response) {
-          alert("xóa thành công");
-          window.location.reload();
-        }
-      } catch (error) {
-        console.log(error.response);
+      const { roles: { idRoles, ...rolesWithoutId }, ...userWithoutIdRoles } = item;
+      const user = {
+        ...userWithoutIdRoles,
+        nameRoles: rolesWithoutId.nameRoles
+      };
+      console.log("User without idRoles:", user);
+      // Handle deletion logic here
+
+      const response = await bannedUser(user.idUser)
+      if(response){
+        alert("xóa thành công")
+        window.location.reload();
       }
+      console.log(response)
     }
   };
 
-  const handleEdit = (item) => {
-    setSelectedItem(item);
-    navigate(`/admin/edit-Voucher/${item.idVoucher}`);
-  };
+  const handleEidt = (item) =>{
+    console.log(item)
+    setSelectedItem(item)
+    navigate("/admin/edit-user/"+item.idUser)
+  }
 
   return (
-    <Card className="m-10 ">
+    <Card className="m-10">
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="flex items-center justify-between gap-8">
           <div>
@@ -70,7 +65,7 @@ const ManageVoucher = ({ setSelectedItem }) => {
               color="blue-gray"
               className="text-4xl mb-3"
             >
-              Quản lý Phương Thức Thanh Toán
+              Quản lý người dùng bị khóa
             </Typography>
           </div>
         </div>
@@ -99,100 +94,79 @@ const ManageVoucher = ({ setSelectedItem }) => {
             </tr>
           </thead>
           <tbody>
-            {Vouchers.map((item, index) => {
-              const isLast = index === Vouchers.length - 1;
+            {users.map((item, index) => {
+              const isLast = index === users.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={item.codeVoucher}>
-
-
-
-                  {/* Tên Mã Giảm Giá */}
+                <tr key={item.username}>
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
                         <Typography
                           variant="small"
-                          color=""
                           className="font-normal text-2xl text-black"
                         >
-                          {item.codeVoucher}
+                          {item.username}
                         </Typography>
                       </div>
                     </div>
                   </td>
-
-
-
-                  {/* Phần Trăm Giảm Giá */}
                   <td className={classes}>
                     <div className="flex flex-col">
                       <Typography
                         variant="small"
-                        color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {item.discountPercent + " %"}
+                        {item.fullName}
+                      </Typography>
+                    </div>
+                  </td>
+                  <td className={classes}>
+                    <div className="flex flex-col">
+                      <Typography
+                        variant="small"
+                        className="font-normal text-2xl text-black"
+                      >
+                        {item.email}
                       </Typography>
                     </div>
                   </td>
 
 
 
-
-                  {/* Ngày Bắt Đầu */}
                   <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.startDate}
-                      </Typography>
-                    </div>
+                    <Typography
+                      variant="small"
+                      className="font-normal text-2xl text-red-700"
+                    >
+                      {item.roles.nameRoles}
+                    </Typography>
                   </td>
 
 
 
-                  {/*Ngày Kết Thúc*/}
+                  {/* banned */}
                   <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.endDate}
-                      </Typography>
-                    </div>
-                  </td>
-
-
-
-                  {/* Bị Ẩn */}
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.delete.toString()}
-                      </Typography>
-                    </div>
-                  </td>
+                    <Typography
+                      variant="small"
+                      className="font-normal text-2xl text-red-700"
+                    >
+                      {(item.banned).toString() }
+                    </Typography>
+                  </td> 
 
 
 
                   <td className={`${classes} flex gap-2`}>
-                    <button
-                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                      onClick={() => handleEdit(item)}
+                    <button 
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    onClick={()=>handleEidt(item)}
+                    
                     >
+                     
                       Sửa
                     </button>
                     <button
@@ -223,6 +197,6 @@ const ManageVoucher = ({ setSelectedItem }) => {
       </CardFooter>
     </Card>
   );
-};
+}
 
-export default ManageVoucher;
+export default ManageUserBanned;

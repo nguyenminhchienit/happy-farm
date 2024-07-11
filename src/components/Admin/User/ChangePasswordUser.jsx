@@ -1,51 +1,27 @@
-/* eslint-disable react/prop-types */
 import moment from "moment/moment";
-import { useState, useEffect } from "react";
-// import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { createUser } from "../../../api/User";
 import { useNavigate } from "react-router-dom";
-// import SelectForm from "../Input/SelectForm";
-import { getListUserRoles } from "../../../api/UserRoles.js";
-import { updateUser } from "../../../api/User.js";
-const EditUser = ({ item }) => {
-  const [roles, setRoles] = useState([]);
+import {getListUserRoles} from "../../../api/UserRoles"
 
+const ChangePasswordUser = () => {
+  const [roles , setRoles] = useState([])
   const [myformData, setMyFormData] = useState({
-    idUser: "",
     username: "",
+    password: "",
     fullName: "",
     dob: "",
     email: "",
-    roles: "",
-    banned: false,
+    roleName: "",
   });
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    async function loaddata() {
-      const response = await getListUserRoles();
-      setRoles(response.data);
-      console.log(response);
-    }
-    setMyFormData({
-      idUser: item.idUser || "",
-      username: item.username || "",
-      fullName: item.fullName || "",
-      dob: item.dob ? moment(item.dob, "DD/MM/YYYY").format("YYYY-MM-DD") : "",
-      email: item.email || "",
-      roles: item.roles?.idRoles || "",
-      banned: item.banned || false,
-    });
-    loaddata();
-  }, [item]);
-  
   const handleInputChange = (event) => {
     const { id, value } = event.target;
     setMyFormData({
       ...myformData,
       [id]: value,
-      // nameRoles: null,
-      // banned: false,
     });
   };
 
@@ -53,8 +29,7 @@ const EditUser = ({ item }) => {
     event.preventDefault();
     const formattedFormData = {
       ...myformData,
-      dob: moment(myformData.dob).format("DD/MM/YYYY").toString(),
-      //banned: myformData.banned === "true" ? true : myformData.banned === "false" ? false : myformData.banned, // Chuyển đổi thành boolean
+      dob: moment(myformData.dob).format("DD/MM/YYYY"),
     };
     console.log("Form Data Submitted:", formattedFormData);
 
@@ -69,14 +44,11 @@ const EditUser = ({ item }) => {
       console.log(`${key}: ${value}`);
     }
 
-    console.log(typeof formData.get("banned")) // hàm này kiểm tra xem giá trị banned là kiểu dữ liệu gì , boolean ....
-
     try {
-      // console.log(formData.get('idUser'))
-      const response = await updateUser(formData.get("idUser"), formData);
+      const response = await createUser(formData); 
       if (response) {
-        alert("sửa thành công");
-        navigate("/admin/manage-users-NotBanned");
+        alert("tạo thành công");
+        navigate("/admin/manage-users");
       }
       console.log(response);
     } catch (error) {
@@ -84,16 +56,23 @@ const EditUser = ({ item }) => {
     }
   };
 
+  useEffect(()=>{
+    getListUserRoles()
+    .then( response =>{
+      setRoles(response.data)
+    })
+  },[])
+
   return (
     <div className="flex flex-col align-items-center">
-      <h2 className="my-10 title font-bold text-3xl">
-        Sửa Thông Tin người dùng
-      </h2>
+      <h2 className="my-10 title font-bold text-3xl">Thêm người dùng</h2>
       <form
         className="w-full max-w-screen-xl flex flex-col gap-3"
         onSubmit={handleSubmit}
       >
         <div className="flex flex-wrap -mx-3 mb-6">
+         
+         
           {/* Tên */}
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
@@ -131,6 +110,61 @@ const EditUser = ({ item }) => {
               onChange={handleInputChange}
             />
           </div>
+        </div>
+
+        {/* Mật khẩu */}
+        <div className="flex flex-wrap -mx-3 mb-6">
+
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              htmlFor="password"
+            >
+              Mật Khẩu
+            </label>
+            <input
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              id="password"
+              name="password"
+              type="password"
+              placeholder="mật khẩu"
+              value={myformData.password}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          {/* roles  */}
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              htmlFor="roleName"
+            >
+              Quyền
+            </label>
+            <div className="relative">
+
+            <select
+             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="roleName"
+                name="roleName"
+                type="roleName"
+                placeholder="Albuquerque"
+                value={myformData.roleName}
+                onChange={handleInputChange}
+            >
+              {
+                roles.map((item)=>(
+                  <option key={item.idRoles} value={item.nameRoles} >
+                    {item.nameRoles}
+                  </option>
+                ))
+              }
+
+            </select>
+            
+            </div>
+          </div>
+
         </div>
 
         <div className="flex flex-wrap -mx-3 mb-6">
@@ -175,70 +209,12 @@ const EditUser = ({ item }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap -mx-3 mb-6">
-          {/* quyền */}
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="roles"
-            >
-              quyền
-            </label>
-            <select
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="roles"
-              name="roles"
-              type="input"
-              placeholder="role"
-              value={myformData.roles}
-              onChange={handleInputChange}
-            >
-              {roles.map((item) => (
-                <option key={item.idRoles} value={item.idRoles}>
-                  {item.nameRoles}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* bị khóa  */}
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label
-              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="banned"
-            >
-              Bị Khóa
-            </label>
-            <select
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              id="banned"
-              name="banned"
-              type="input"
-              value={myformData.banned}
-              onChange={handleInputChange}
-            >
-              <option value={true} >true</option>
-              <option value={false} >false</option>
-            </select>
-          </div>
-
-
-        </div>
-
         <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Sửa
+          Thêm
         </button>
-        
-        <button className="bg-blue-500 mt-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          type="button" 
-          onClick={() =>  navigate("/admin/manage-users")}
-        >
-          tro lai
-        </button>
-     
       </form>
     </div>
   );
 };
 
-export default EditUser;
+export default ChangePasswordUser;

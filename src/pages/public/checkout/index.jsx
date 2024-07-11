@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import { apiCheckOut, getCartUser } from "../../../api/User";
 import { formatPrice } from "../../../utils/formatPrice";
-import { apiCheckCode } from "../../../api/voucher";
+import { apiCheckCode } from "../../../api/Voucher";
 import { apiGetPaymentMethod } from "../../../api/Cart";
 import { useNavigate } from "react-router-dom";
 

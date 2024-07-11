@@ -26,7 +26,7 @@ const Home = (props) => {
   const [expensive, setExpensive] = useState([]);
 
   useEffect(() => {
-    ListFerNotDelete().then((response) => {
+    ListFerNotDelete(0, 5).then((response) => {
       setProdData(response.data);
     });
     apiCheapPrice().then((res) => {

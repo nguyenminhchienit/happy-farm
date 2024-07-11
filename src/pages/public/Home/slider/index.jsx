@@ -58,7 +58,7 @@
 import Slider from "react-slick";
 import Slide2 from "../../../../assets/images/slider-2.png";
 import { useEffect, useState } from "react";
-import { apiGetBanner } from "../../../../api/voucher";
+import { apiGetBanner } from "../../../../api/Voucher";
 import { Link } from "react-router-dom";
 
 const HomeSlider = () => {

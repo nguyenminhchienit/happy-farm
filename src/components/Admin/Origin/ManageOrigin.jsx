@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -8,26 +10,29 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-import { getAllOriginNotDelete , updateOriginFertilizer } from "../../../api/OriginFertilizer"
+import {
+  getAllOriginNotDelete,
+  updateOriginFertilizer,
+} from "../../../api/OriginFertilizer";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TABLE_HEAD = ["Id", "Tên Nguồn Gốc", "Trạng Thái Ẩn Hiện", "Hành Động"];
 
-const ManageOrigin = ({setSelectedItem}) => {
+const ManageOrigin = ({ setSelectedItem }) => {
   const navigate = useNavigate();
   const [origins, setOrigins] = useState([]);
-  const [originUpdate , setOriginUpdate] = useState({
+  const [originUpdate, setOriginUpdate] = useState({
     idOrigin: "",
     nameOrigin: "",
-    delete : "",
-  })
+    delete: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getAllOriginNotDelete();
-        console.log("dữ liệu gọi đc ", response.data)
+        console.log("dữ liệu gọi đc ", response.data);
         setOrigins(response.data); // Giả sử response.data chứa danh sách phân bón
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -38,28 +43,28 @@ const ManageOrigin = ({setSelectedItem}) => {
 
   const handleDelete = async (Origins) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
-      Origins.delete = true ;
+      Origins.delete = true;
       console.log("Xóa item với id:", Origins);
-      try{
-        const response = await updateOriginFertilizer(Origins.idOrigin , Origins )
-        console.log("day la dư lieu", response )
-        if(response.data){
-          alert("ẩn thành công")
-          window.location.reload()
+      try {
+        const response = await updateOriginFertilizer(
+          Origins.idOrigin,
+          Origins
+        );
+        console.log("day la dư lieu", response);
+        if (response.data) {
+          alert("ẩn thành công");
+          window.location.reload();
         }
-      }catch(error){
-        console.log(error.response)
+      } catch (error) {
+        console.log(error.response);
       }
     }
   };
 
-
-  const handleEdit = (item) =>{
+  const handleEdit = (item) => {
     setSelectedItem(item);
     navigate(`/admin/edit-origin/${item.idOrigin}`);
-
   };
-
 
   return (
     <Card className="m-10 ">
@@ -152,7 +157,7 @@ const ManageOrigin = ({setSelectedItem}) => {
                   <td className={`${classes} flex gap-2`}>
                     <button
                       className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                      onClick={()=> handleEdit(item)}
+                      onClick={() => handleEdit(item)}
                     >
                       Sửa
                     </button>
@@ -184,6 +189,6 @@ const ManageOrigin = ({setSelectedItem}) => {
       </CardFooter>
     </Card>
   );
-}
+};
 
 export default ManageOrigin;

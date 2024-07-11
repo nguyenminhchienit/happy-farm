@@ -1,28 +1,29 @@
 import moment from "moment/moment";
-import { useState } from "react";
-import {createUser} from "../../../api/User"
+import { useEffect, useState } from "react";
+import { createUser } from "../../../api/User";
 import { useNavigate } from "react-router-dom";
-const CreateUser = () => {
- 
+import {getListUserRoles} from "../../../api/UserRoles"
 
-  const [myformData,setMyFormData] = useState({
+const CreateUser = () => {
+  const [roles , setRoles] = useState([])
+  const [myformData, setMyFormData] = useState({
     username: "",
     password: "",
     fullName: "",
     dob: "",
     email: "",
-  })
+    roleName: "",
+  });
 
   const navigate = useNavigate();
 
-  const handleInputChange = (event)=>{
+  const handleInputChange = (event) => {
     const { id, value } = event.target;
     setMyFormData({
       ...myformData,
       [id]: value,
     });
-  }
-
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,18 +37,18 @@ const CreateUser = () => {
     for (const key in formattedFormData) {
       formData.append(key, formattedFormData[key]);
     }
-  
+
     // Log FormData entries
-    console.log("day la formdata")
+    console.log("day la formdata");
     for (const [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
-    } 
+    }
 
     try {
       const response = await createUser(formData); 
-      if(response){
+      if (response) {
         alert("tạo thành công");
-        navigate("/admin/manage-users")
+        navigate("/admin/manage-users-NotBanned");
       }
       console.log(response);
     } catch (error) {
@@ -55,11 +56,23 @@ const CreateUser = () => {
     }
   };
 
+  useEffect(()=>{
+    getListUserRoles()
+    .then( response =>{
+      setRoles(response.data)
+    })
+  },[])
+
   return (
     <div className="flex flex-col align-items-center">
       <h2 className="my-10 title font-bold text-3xl">Thêm người dùng</h2>
-      <form className="w-full max-w-screen-xl flex flex-col gap-3" onSubmit={handleSubmit}>
+      <form
+        className="w-full max-w-screen-xl flex flex-col gap-3"
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-wrap -mx-3 mb-6">
+         
+         
           {/* Tên */}
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
@@ -101,7 +114,8 @@ const CreateUser = () => {
 
         {/* Mật khẩu */}
         <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full px-3">
+
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
               htmlFor="password"
@@ -118,6 +132,39 @@ const CreateUser = () => {
               onChange={handleInputChange}
             />
           </div>
+
+          {/* roles  */}
+          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label
+              className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+              htmlFor="roleName"
+            >
+              Quyền
+            </label>
+            <div className="relative">
+
+            <select
+             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="roleName"
+                name="roleName"
+                type="roleName"
+                placeholder="Albuquerque"
+                value={myformData.roleName}
+                onChange={handleInputChange}
+            >
+              {
+                roles.map((item)=>(
+                  <option key={item.idRoles} value={item.nameRoles} >
+                    {item.nameRoles}
+                  </option>
+                ))
+              }
+
+            </select>
+            
+            </div>
+          </div>
+
         </div>
 
         <div className="flex flex-wrap -mx-3 mb-6">
@@ -169,6 +216,5 @@ const CreateUser = () => {
     </div>
   );
 };
-
 
 export default CreateUser;

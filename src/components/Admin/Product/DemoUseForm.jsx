@@ -1,26 +1,19 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputForm from "../Input/InputForm";
 import SelectForm from "../Input/SelectForm";
 
-import Button from "../../Admin/Product/Button";
+import Button from "./Button";
 import { convertFileToBase64 } from "../../../utils/helpers";
-import { editfertilizer } from "../../../api/Fertilizer";
+import { apiCreateProduct } from "../../../api/Fertilizer";
 import { getAllBrand } from "../../../api/Brand";
 import { getAllOrigin } from "../../../api/OriginFertilizer";
 import { getAllTypeProduct } from "../../../api/TypeFertilizer";
 import { useNavigate } from "react-router-dom";
 
-const EditProduct = ({ item }) => {
+const DemoUseForm = () => {
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setValue,
-  } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch,} = useForm();
 
   const [preview, setPreview] = useState({
     thumb: "",
@@ -31,52 +24,39 @@ const EditProduct = ({ item }) => {
   const [origin, setOrigin] = useState([]);
   const [type, setType] = useState([]);
 
+  // const [payload, setPayload] = useState({
+  //   description: "",
+  // });
+
+  // const [inValidField, setInValidField] = useState([]);
+
+  // const handleChangeValue = useCallback(
+  //   (e) => {
+  //     setPayload(e);
+  //   },
+  //   [payload]
+  // );
+
   const handlePreviewThumb = async (file) => {
     const base64Thumb = await convertFileToBase64(file);
     setPreview((prev) => ({ ...prev, thumb: base64Thumb }));
   };
 
   const handlePreviewImages = async (files) => {
-    const newImages = [...preview.images]; // Giữ lại các hình ảnh hiện có
+    const images = [];
+    console.log(files);
     for (let file of files) {
       const base64 = await convertFileToBase64(file);
-      newImages.push(base64);
+      images.push(base64);
     }
-    setPreview((prev) => ({ ...prev, images: newImages }));
+    setPreview((prev) => ({ ...prev, images: images }));
   };
 
   useEffect(() => {
-    console.log("du lieu nhan dc ", item);
-
     if (watch("thumb").length > 0) {
       handlePreviewThumb(watch("thumb")[0]);
     }
   }, [watch("thumb")]);
-
-  useEffect(() => {
-    if (item) {
-      setPreview({
-        thumb: item.imageRepresent || "",
-        images: item.imageOptional || [],
-      });
-    }
-  }, [item]);
-
-  useEffect(() => {
-    if (item) {
-      setValue("idFertilizer", item.idFertilizer);
-      setValue("nameFertilizer", item.nameFertilizer);
-      setValue("price", item.price);
-      setValue("nums", item.nums);
-      setValue("description", item.description);
-      setValue("details", item.details);
-      setValue("originFer", item.originFer?.idOrigin);
-      setValue("type", item.type?.idTypeFertilizer);
-      setValue("brandName", item.brandName?.idBrand);
-      setValue("donViTinh",item.donViTinh),
-      setValue("thanhPhan",item.thanhPhan)
-    }
-  }, [item, setValue]);
 
   useEffect(() => {
     if (watch("image").length > 0) {
@@ -86,7 +66,7 @@ const EditProduct = ({ item }) => {
 
   const handleAddProduct = async (data) => {
     const finalPayload = { ...data };
-    console.log("data to send ", finalPayload);
+    console.log(finalPayload);
     const formData = new FormData();
     for (let i of Object.entries(finalPayload)) {
       formData.append(i[0], i[1]);
@@ -103,14 +83,15 @@ const EditProduct = ({ item }) => {
     for (const p of formData) {
       const name = p[0];
       const value = p[1];
+
       console.log(name, value);
     }
 
-     editfertilizer(formData.get("idFertilizer"), formData)
-    .then((response) => {
-      if (response) {
-        alert("thêm thành công");
-        navigate("/admin/manage-product");
+    apiCreateProduct(formData).then((response) => {
+      console.log("them san pham")
+      if(response){
+        alert("thêm thành công")
+        navigate("/admin/manage-product")
       }
     });
   };
@@ -127,15 +108,12 @@ const EditProduct = ({ item }) => {
     });
   }, []);
 
-
-  const handlDeleteImage = (item) =>{
-    console.log(item)
-  }
+  console.log(brand, origin, type);
 
   return (
     <div className="mx-5">
       <h1 className="h-[75px] flex items-center justify-between text-3xl font-bold border-b pl-4 text-gray-600">
-        <span>Sửa phân bón</span>
+        <span>Thêm phân bón demo useform</span>
       </h1>
       <div className="p-4">
         <form
@@ -151,7 +129,7 @@ const EditProduct = ({ item }) => {
             errors={errors}
             validate={{ required: "Require" }}
           />
-
+          
           <div className="flex gap-3">
             <InputForm
               label={"Giá"}
@@ -163,6 +141,7 @@ const EditProduct = ({ item }) => {
               errors={errors}
               validate={{ required: "Require" }}
             />
+
             <InputForm
               label={"Số lượng"}
               register={register}
@@ -174,33 +153,6 @@ const EditProduct = ({ item }) => {
               validate={{ required: "Require" }}
             />
           </div>
-
-          <div className="flex gap-3">
-            <InputForm
-              label={"Đơn Vị tính"}
-              register={register}
-              id={"donViTinh"}
-              fw
-              style={"mt-2 flex-auto"}
-              placeholder={"Đơn Vị Tính"}
-              errors={errors}
-              validate={{ required: "khong de rong du lieu" }}
-            />
-            <InputForm
-              label={"Thành Phần"}
-              register={register}
-              id={"thanhPhan"}
-              fw
-              style={"mt-2 flex-auto"}
-              placeholder={"Thành Phần"}
-              errors={errors}
-              validate={{ required: "khong de rong du lieu" }}
-            />
-          </div>
-
-
-
-          
 
           <InputForm
             label={"Mô tả"}
@@ -223,8 +175,6 @@ const EditProduct = ({ item }) => {
             validate={{ required: "Require" }}
           />
 
-
-
           <div className="flex gap-3">
             <SelectForm
               label={"Nguồn gốc"}
@@ -233,11 +183,10 @@ const EditProduct = ({ item }) => {
               fw
               style={"mt-2 flex-auto"}
               errors={errors}
-              defaultValue={item.originFer?.idOrigin}
-              options={origin?.map((originItem) => {
+              options={origin?.map((item) => {
                 return {
-                  text: originItem.nameOrigin,
-                  value: originItem.idOrigin,
+                  text: item.nameOrigin,
+                  value: item.idOrigin,
                 };
               })}
             />
@@ -249,7 +198,6 @@ const EditProduct = ({ item }) => {
               fw
               style={"mt-2 flex-auto"}
               errors={errors}
-              defaultValue={item.type?.nameTypeFertilizer}
               options={type?.map((item) => {
                 return {
                   text: item.nameTypeFertilizer,
@@ -327,7 +275,7 @@ const EditProduct = ({ item }) => {
               type="file"
               accept="image/*"
               id="thumb"
-              {...register("thumb", { required: true })}
+              {...register("thumb", { required: "Require" })}
             />
             {errors["thumb"] && (
               <small className="text-red-500 pt-1">
@@ -336,18 +284,14 @@ const EditProduct = ({ item }) => {
             )}
           </div>
           {preview.thumb && (
-            <div className="">
+            <div>
               <img
                 src={preview.thumb}
                 alt="thumb"
-                className="my-4 w-[500px] object-cover"
+                className="my-4 w-[100px] object-cover"
               />
-              <button>xoa</button>
-              <button>sua</button>
             </div>
           )}
-
-
 
           <div className="flex flex-col gap-1">
             <label htmlFor="thumb">Tải hình ảnh sản phẩm</label>
@@ -355,7 +299,7 @@ const EditProduct = ({ item }) => {
               type="file"
               accept="image/*"
               id="image"
-              {...register("image", { required: true })}
+              {...register("image", { required: "Require" })}
               multiple
             />
             {errors["image"] && (
@@ -364,39 +308,25 @@ const EditProduct = ({ item }) => {
               </small>
             )}
           </div>
-
-
           {preview.images.length > 0 && (
-            <div className="flex flex-wrap gap-20">
+            <div className="flex flex-wrap gap-2">
               {preview.images.map((item, index) => {
                 return (
-                  <div key={item.idBrand} className="w-[500] ">
                   <img
                     key={index}
                     src={item}
                     alt="images"
-                    className="object-cover w-96"
+                    className="my-4 w-[100px] object-cover"
                   />
-                  <button 
-                  type="button"
-                  onClick={() => handlDeleteImage(item)} 
-                  >
-                  xoa
-                  </button>
-
-                  <button>sua</button>
-                  </div>
                 );
               })}
             </div>
           )}
-
-
-          <Button name={"Sửa sản phẩm"} type="submit" />
+          <Button name={"Thêm sản phẩm"} type="submit" />
         </form>
       </div>
     </div>
   );
 };
 
-export default EditProduct;
+export default DemoUseForm;

@@ -8,30 +8,27 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-import { getlistvouchernotdelete, deleteVoucher } from "../../../api/Voucher";
+import { GetListPaymentNotDelete , DeletePaymentMethod} from "../../../api/PaymentMethod"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const TABLE_HEAD = [
-  "Tên Mã Giảm Giá",
-  "Phần Trăm Giảm Giá",
-  "Ngày Bắt Đầu",
-  "Ngày Kết Thúc",
-  "Bị Ẩn",
-  "Hành Động",
-];
+const TABLE_HEAD = ["Id", "Tên Phương Thức Thanh Toán", "Trạng Thái Ẩn Hiện", "Hành Động"];
 
-const ManageVoucher = ({ setSelectedItem }) => {
+const ManagePaymentMethod = ({setSelectedItem}) => {
   const navigate = useNavigate();
-
-  const [Vouchers, setVouchers] = useState([]);
+  const [PaymentMethod, setPaymentMethod] = useState([]);
+  const [PaymentMethodUpdate , setPaymentMethodUpdate] = useState({
+    idMethod: "",
+    nameMethod: "",
+    delete : "",
+  })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getlistvouchernotdelete();
-        console.log("dữ liệu gọi đc ", response.data);
-        setVouchers(response.data); // Giả sử response.data chứa danh sách phân bón
+        const response = await GetListPaymentNotDelete();
+        console.log("dữ liệu gọi đc ", response.data)
+        setPaymentMethod(response.data); // Giả sử response.data chứa danh sách phân bón
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -39,26 +36,30 @@ const ManageVoucher = ({ setSelectedItem }) => {
     fetchData();
   }, []);
 
+
+
   const handleDelete = async (item) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
       console.log("Xóa item với :", item);
-      try {
-        const response = await deleteVoucher(item.idVoucher);
-        console.log("day la dư lieu", response);
-        if (response) {
-          alert("xóa thành công");
-          window.location.reload();
+      try{
+        const response = await DeletePaymentMethod(item.idMethod )
+        console.log("day la dư lieu", response )
+        if(response){
+          alert("xóa thành công")
+          window.location.reload()
         }
-      } catch (error) {
-        console.log(error.response);
+      }catch(error){
+        console.log(error.response)
       }
     }
   };
 
-  const handleEdit = (item) => {
+
+  const handleEdit = (item) =>{
     setSelectedItem(item);
-    navigate(`/admin/edit-Voucher/${item.idVoucher}`);
+    navigate(`/admin/edit-PaymentMethod/${item.idMethod}`);
   };
+
 
   return (
     <Card className="m-10 ">
@@ -99,18 +100,15 @@ const ManageVoucher = ({ setSelectedItem }) => {
             </tr>
           </thead>
           <tbody>
-            {Vouchers.map((item, index) => {
-              const isLast = index === Vouchers.length - 1;
+            {PaymentMethod.map((item, index) => {
+              const isLast = index === PaymentMethod.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={item.codeVoucher}>
-
-
-
-                  {/* Tên Mã Giảm Giá */}
+                <tr key={item.idMethod}>
+                  {/* id nguồn gốc */}
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
@@ -119,15 +117,13 @@ const ManageVoucher = ({ setSelectedItem }) => {
                           color=""
                           className="font-normal text-2xl text-black"
                         >
-                          {item.codeVoucher}
+                          {item.idMethod}
                         </Typography>
                       </div>
                     </div>
                   </td>
 
-
-
-                  {/* Phần Trăm Giảm Giá */}
+                  {/* tên nguồn gốc */}
                   <td className={classes}>
                     <div className="flex flex-col">
                       <Typography
@@ -135,45 +131,12 @@ const ManageVoucher = ({ setSelectedItem }) => {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                        {item.discountPercent + " %"}
+                        {item.nameMethod}
                       </Typography>
                     </div>
                   </td>
 
-
-
-
-                  {/* Ngày Bắt Đầu */}
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.startDate}
-                      </Typography>
-                    </div>
-                  </td>
-
-
-
-                  {/*Ngày Kết Thúc*/}
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.endDate}
-                      </Typography>
-                    </div>
-                  </td>
-
-
-
-                  {/* Bị Ẩn */}
+                  {/* nguồn gốc xuất xứ */}
                   <td className={classes}>
                     <div className="flex flex-col">
                       <Typography
@@ -186,12 +149,10 @@ const ManageVoucher = ({ setSelectedItem }) => {
                     </div>
                   </td>
 
-
-
                   <td className={`${classes} flex gap-2`}>
                     <button
                       className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                      onClick={() => handleEdit(item)}
+                      onClick={()=> handleEdit(item)}
                     >
                       Sửa
                     </button>
@@ -223,6 +184,6 @@ const ManageVoucher = ({ setSelectedItem }) => {
       </CardFooter>
     </Card>
   );
-};
+}
 
-export default ManageVoucher;
+export default ManagePaymentMethod;

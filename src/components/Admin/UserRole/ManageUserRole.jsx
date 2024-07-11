@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -8,29 +9,25 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-import { getlistvouchernotdelete, deleteVoucher } from "../../../api/Voucher";
+import { getListUserRoles , DeleteUserRole } from "../../../api/UserRoles"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const TABLE_HEAD = [
-  "Tên Mã Giảm Giá",
-  "Phần Trăm Giảm Giá",
-  "Ngày Bắt Đầu",
-  "Ngày Kết Thúc",
-  "Bị Ẩn",
-  "Hành Động",
-];
+const TABLE_HEAD = [ "Tên Quyền Người Dùng", "Bị Ẩn","Hành Động"];
 
-const ManageVoucher = ({ setSelectedItem }) => {
+const ManageUserRole = ({setSelectedItem}) => {
+  
   const navigate = useNavigate();
+  
 
-  const [Vouchers, setVouchers] = useState([]);
+  const [Vouchers , setVouchers] = useState([])
 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getlistvouchernotdelete();
-        console.log("dữ liệu gọi đc ", response.data);
+        const response = await getListUserRoles();
+        console.log("dữ liệu gọi đc ", response.data)
         setVouchers(response.data); // Giả sử response.data chứa danh sách phân bón
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -39,26 +36,30 @@ const ManageVoucher = ({ setSelectedItem }) => {
     fetchData();
   }, []);
 
+
+
   const handleDelete = async (item) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
       console.log("Xóa item với :", item);
-      try {
-        const response = await deleteVoucher(item.idVoucher);
-        console.log("day la dư lieu", response);
-        if (response) {
-          alert("xóa thành công");
-          window.location.reload();
+      try{
+        const response = await DeleteUserRole(item.idRoles)
+        console.log("day la dư lieu", response )
+        if(response){
+          alert("xóa thành công")
+          window.location.reload()
         }
-      } catch (error) {
-        console.log(error.response);
+      }catch(error){
+        console.log(error.response)
       }
     }
   };
 
-  const handleEdit = (item) => {
+
+  const handleEdit = (item) =>{
     setSelectedItem(item);
-    navigate(`/admin/edit-Voucher/${item.idVoucher}`);
+    navigate(`/admin/edit-UserRole/${item.idRoles}`);
   };
+
 
   return (
     <Card className="m-10 ">
@@ -70,7 +71,7 @@ const ManageVoucher = ({ setSelectedItem }) => {
               color="blue-gray"
               className="text-4xl mb-3"
             >
-              Quản lý Phương Thức Thanh Toán
+              Quản lý Quyền Người Dùng
             </Typography>
           </div>
         </div>
@@ -106,11 +107,9 @@ const ManageVoucher = ({ setSelectedItem }) => {
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={item.codeVoucher}>
-
-
-
-                  {/* Tên Mã Giảm Giá */}
+                <tr key={item.idRoles}>
+                
+                  {/* tên quyền hạn */}
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
@@ -119,79 +118,33 @@ const ManageVoucher = ({ setSelectedItem }) => {
                           color=""
                           className="font-normal text-2xl text-black"
                         >
-                          {item.codeVoucher}
+                          {item.nameRoles}
                         </Typography>
                       </div>
                     </div>
                   </td>
 
-
-
-                  {/* Phần Trăm Giảm Giá */}
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.discountPercent + " %"}
-                      </Typography>
+                     {/* trạng thái ẩn hiện */}
+                     <td className={classes}>
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col">
+                        <Typography
+                          variant="small"
+                          color=""
+                          className="font-normal text-2xl text-black"
+                        >
+                          {(item.delete).toString() }
+                        </Typography>
+                      </div>
                     </div>
                   </td>
 
-
-
-
-                  {/* Ngày Bắt Đầu */}
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.startDate}
-                      </Typography>
-                    </div>
-                  </td>
-
-
-
-                  {/*Ngày Kết Thúc*/}
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.endDate}
-                      </Typography>
-                    </div>
-                  </td>
-
-
-
-                  {/* Bị Ẩn */}
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color=""
-                        className="font-normal text-2xl text-black"
-                      >
-                        {item.delete.toString()}
-                      </Typography>
-                    </div>
-                  </td>
-
-
+                 
 
                   <td className={`${classes} flex gap-2`}>
                     <button
                       className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                      onClick={() => handleEdit(item)}
+                      onClick={()=> handleEdit(item)}
                     >
                       Sửa
                     </button>
@@ -223,6 +176,6 @@ const ManageVoucher = ({ setSelectedItem }) => {
       </CardFooter>
     </Card>
   );
-};
+}
 
-export default ManageVoucher;
+export default ManageUserRole;

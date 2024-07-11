@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -8,18 +10,28 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-import { ListFerNotDelete , deleteFertilizer } from "../../../api/Fertilizer"
+import {
+  ListFerNotDelete,
+  deleteFertilizer,
+  getAll,
+} from "../../../api/Fertilizer";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-  
-const TABLE_HEAD = ["Tên loại", "Giá" , "nguồn gốc xuất xứ" ,"Thương hiệu","Hiển Thị" ,"Hành động"];
 
-const TABLE_ROWS = 
-[
+const TABLE_HEAD = [
+  "Tên loại",
+  "Giá",
+  "nguồn gốc xuất xứ",
+  "Thương hiệu",
+  "Hiển Thị",
+  "Hành động",
+];
+
+const TABLE_ROWS = [
   {
     name: "Cà phê",
     job: "Gia Lai",
-    online: 112000, 
+    online: 112000,
     date: "Carbon",
     actions: "Sell, Export",
   },
@@ -53,47 +65,59 @@ const TABLE_ROWS =
   },
 ];
 
-export function ManageProduct({setSelectedItem}) {
-
+export function ManageProduct({ setSelectedItem }) {
   const [fertilizers, setFertilizers] = useState([]);
   const navigate = useNavigate();
-  
+  const [page, setPage] = useState(1);
+  const [sizeOfPage, setSizeOfPage] = useState(2); // default items on one page
+  const [totalPages, setTotalPages] = useState(10);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ListFerNotDelete();
-        console.log("dữ liệu gọi đc " , response?.data)
-        setFertilizers(response?.data ?? []); // Giả sử response.data chứa danh sách phân bón
+        const response = await getAll(page, sizeOfPage);
+        setFertilizers(response?.data ?? []);
+        setTotalPages(response.numberOfPages);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
     fetchData();
-  }, []);
+  }, [page, sizeOfPage]);
 
-  const handleEdit = (item) =>{
-    console.log(item)
-    setSelectedItem(item)
-    navigate("/admin/edit-product/"+item.idFertilizer)
-  }
+  const handleEdit = (item) => {
+    console.log(item);
+    setSelectedItem(item);
+    navigate("/admin/edit-product/" + item.idFertilizer);
+  };
 
-const handleDelete = async (item) => {
+  const handleDelete = async (item) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa không?")) {
-      try{
-        const response = await deleteFertilizer(item.idFertilizer)
-        console.log(response)
-        if(response){
-          alert("xóa thành công")
-          window.location.reload()
+      try {
+        const response = await deleteFertilizer(item.idFertilizer);
+        console.log(response);
+        if (response) {
+          alert("xóa thành công");
+          window.location.reload();
         }
-      }catch(error){
-        console.log(error.response)
+      } catch (error) {
+        console.log(error.response);
       }
     }
   };
 
-
-
+  const handleNextPage = () => {
+    if (page < totalPages - 1) {
+      setPage(page + 1);
+    }
+    console.log("next ", page);
+  };
+  const handlePreviousPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+  console.log("root   ", page);
   return (
     <Card className="m-10 ">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -161,8 +185,8 @@ const handleDelete = async (item) => {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                      {/* giá  */}
-                        {item.price }
+                        {/* giá  */}
+                        {item.price}
                       </Typography>
                     </div>
                   </td>
@@ -173,8 +197,8 @@ const handleDelete = async (item) => {
                         color=""
                         className="font-normal text-2xl text-black"
                       >
-                      {/* nguồn gốc xuất xứ */}
-                        {item.originFer.nameOrigin}
+                        {/* nguồn gốc xuất xứ */}
+                        {item.originFer?.nameOrigin}
                       </Typography>
                     </div>
                   </td>
@@ -184,7 +208,7 @@ const handleDelete = async (item) => {
                       color="red"
                       className="font-normal text-2xl text-red-700"
                     >
-                      {item.brandName.nameBrand}
+                      {item.brandName?.nameBrand}
                     </Typography>
                   </td>
 
@@ -194,28 +218,26 @@ const handleDelete = async (item) => {
                       color="red"
                       className="font-normal text-2xl text-red-700"
                     >
-                      { item.delete ? "Tạm Ẩn":"Hiển thị"}
+                      {item.delete ? "Tạm Ẩn" : "Hiển thị"}
                     </Typography>
                   </td>
 
-
                   <td className={`${classes} flex gap-2`}>
-                    <button 
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    
-                    onClick={()=>handleEdit(item)}
+                    <button
+                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                      onClick={() => handleEdit(item)}
+                      disabled={page === 0}
                     >
                       Sửa
                     </button>
 
-                    <button 
-                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    
-                    onClick={()=> handleDelete(item)}
+                    <button
+                      className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-red-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                      onClick={() => handleDelete(item)}
+                      disabled={page === totalPages - 1}
                     >
                       Xóa
                     </button>
-                    
                   </td>
                 </tr>
               );
@@ -225,13 +247,13 @@ const handleDelete = async (item) => {
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Page 1 of 10
+          Page {page + 1} of {totalPages}
         </Typography>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Previous
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Next
           </Button>
         </div>

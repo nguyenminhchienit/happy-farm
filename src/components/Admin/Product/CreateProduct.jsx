@@ -51,10 +51,6 @@ const CreateProduct = () => {
     const images = [];
     console.log(files);
     for (let file of files) {
-      // if (file.type !== "image/png" && file.type !== "image/jpg") {
-      //   toast.warning("File not supported");
-      //   return;
-      // }
       const base64 = await convertFileToBase64(file);
       images.push(base64);
     }
@@ -97,9 +93,10 @@ const CreateProduct = () => {
     }
 
     apiCreateProduct(formData).then((response) => {
-      if (response) {
-        alert("thêm thành công");
-        navigate("/admin/manage-product");
+      console.log("them san pham")
+      if(response){
+        alert("thêm thành công")
+        navigate("/admin/manage-product")
       }
     });
   };
@@ -137,6 +134,7 @@ const CreateProduct = () => {
             errors={errors}
             validate={{ required: "Require" }}
           />
+          
           <div className="flex gap-3">
             <InputForm
               label={"Giá"}
@@ -158,6 +156,30 @@ const CreateProduct = () => {
               placeholder={"Số lượng"}
               errors={errors}
               validate={{ required: "Require" }}
+            />
+          </div>
+
+
+          <div className="flex gap-3">
+            <InputForm
+              label={"Đơn Vị tính"}
+              register={register}
+              id={"donViTinh"}
+              fw
+              style={"mt-2 flex-auto"}
+              placeholder={"Đơn Vị Tính"}
+              errors={errors}
+              validate={{ required: "khong de rong du lieu" }}
+            />
+            <InputForm
+              label={"Thành Phần"}
+              register={register}
+              id={"thanhPhan"}
+              fw
+              style={"mt-2 flex-auto"}
+              placeholder={"Thành Phần"}
+              errors={errors}
+              validate={{ required: "khong de rong du lieu" }}
             />
           </div>
 

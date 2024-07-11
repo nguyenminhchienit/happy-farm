@@ -3,8 +3,6 @@ import axios from "../../axios";
 const getAllTypeProduct = () => {
   return axios.get("/api/typefertilizer/getListType");
 };
-
-
 const CreateTypefertilizer = (data) =>{
   return axios.post("/api/typefertilizer/addnew",data)
 }

@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 
-import { getAllBrandNotDetele , updateBrand } from "../../../api/Brand.js"
+import { getAllBrandNotDetele , updateBrand , getAllBrand} from "../../../api/Brand.js"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
   
@@ -60,7 +60,7 @@ const ManageBrand= ({setSelectedItem}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getAllBrandNotDetele();
+        const response = await getAllBrand();
         console.log("dữ liệu gọi đc " , response.data)
         setbrands(response.data); 
       } catch (error) {
@@ -193,7 +193,7 @@ const ManageBrand= ({setSelectedItem}) => {
                   <td className={`${classes} flex gap-2`}>
                     <button 
                     className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-orange-600 py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    onClick={()=>handleEdit(item)}
+                    onClick={() =>handleEdit(item)}
                     >
                       Sửa
                     </button>
