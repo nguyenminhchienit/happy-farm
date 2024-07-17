@@ -78,7 +78,16 @@ import CreateUserRole from "./components/Admin/UserRole/CreateUserRole";
 import EditUserRole from "./components/Admin/UserRole/EditUserRole";
 import ManageUserRole from "./components/Admin/UserRole/ManageUserRole";
 
+// banner
+import CreateBanner from "./components/Admin/Banner/CreateBanner";
+import EditBanner from "./components/Admin/Banner/EditBanner";
+import ManageBanner from "./components/Admin/Banner/ManageBanner";
 
+
+// banner
+import CreateBlog from "./components/Admin/Blog/CreateBlog";
+import EditBlog from "./components/Admin/Blog/EditBlog";
+import ManageBlog from "./components/Admin/Blog/ManageBlog";
 
 function App() {
 
@@ -250,7 +259,7 @@ function App() {
 
               element={<ManageTypeFertilizer setSelectedItem={setSelectedItem} />}
             />
-               
+
             <Route
               exact={true}
               path="edit-type-fertilizer/:id"
@@ -300,6 +309,47 @@ function App() {
               exact={true}
               path="/admin/edit-UserRole/:id"
               element={< EditUserRole item={selectedItem} />}
+            />
+
+              {/* quan ly banner */}
+              <Route
+              exact={true}
+              path="/admin/manage-Banner"
+              element={< ManageBanner setSelectedItem={ setSelectedItem } />}
+              // item là tên props 
+            />
+
+            <Route
+              exact={true}
+              path="/admin/add-Banner"
+              element={< CreateBanner />}
+            />
+
+            <Route
+              exact={true}
+              path="/admin/edit-Banner/:id"
+              element={< EditBanner item={selectedItem} />}
+            />
+
+            
+              {/* quan ly blog */}
+              <Route
+              exact={true}
+              path="/admin/manage-Blog"
+              element={< ManageBlog setSelectedItem={ setSelectedItem } />}
+              // item là tên props 
+            />
+
+            <Route
+              exact={true}
+              path="/admin/add-Blog"
+              element={< CreateBlog />}
+            />
+
+            <Route
+              exact={true}
+              path="/admin/edit-Blog/:id"
+              element={< EditBlog item={selectedItem} />}
             />
 
         
