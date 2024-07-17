@@ -33,7 +33,7 @@ const Dashboard = () => {
   const dataObject = storedData ? JSON.parse(storedData) : null;
 
   useEffect(() => {
-    apiGetBlog("420f420d-3d16-4518-8685-e3216f56f181").then((res) => {
+    apiGetBlog("607fa98f-7db8-49b7-ba75-d66c8cdda133").then((res) => {
       setContent(res.data);
     });
   }, []);

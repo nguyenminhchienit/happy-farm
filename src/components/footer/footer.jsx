@@ -66,7 +66,7 @@ const Footer = () => {
                   </span>
                   <div className="info">
                     <h4>Chính sách hoàn trả</h4>
-                    <p>Dễ dàng tiện lợi cho khách hàng</p>
+                    <p>Dễ dàng tiện lợi </p>
                   </div>
                 </div>
               </div>

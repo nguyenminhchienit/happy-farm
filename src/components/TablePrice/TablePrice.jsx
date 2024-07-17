@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 // import {
 //   Card,
@@ -208,7 +209,7 @@ import { useEffect, useState } from "react";
 
 const TABLE_HEAD = ["Thị trường", "Trung bình", "Thay đổi"];
 
-export function TablePrice() {
+export function TablePrice({ side }) {
   const [dataT, setDataT] = useState([]);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
@@ -246,7 +247,9 @@ export function TablePrice() {
   ];
 
   return (
-    <div className="mt-[250px] mx-4 sm:mx-10">
+    <div
+      className={side === true ? ` mx-4 sm:mx-10` : `mt-[250px] mx-4 sm:mx-10`}
+    >
       <div className="flex space-x-3 border-b">
         {tabsData.map((tab, idx) => (
           <button

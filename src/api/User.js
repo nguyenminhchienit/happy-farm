@@ -63,7 +63,32 @@ const apiGetBlog = (id) => {
   });
 };
 
+const apiGetListBlog = () => {
+  return axios({
+    url: `/api/blog/getlist`,
+    method: "get",
+  });
+};
+
+const apiDeleteBlog = (id) => {
+  return axios({
+    url: `/api/blog/delete/${id}`,
+    method: "delete",
+  });
+};
+
+const apiEditBlog = (data) => {
+  return axios({
+    url: `/api/blog/edit`,
+    method: "put",
+    data,
+  });
+};
+
 export {
+  apiEditBlog,
+  apiDeleteBlog,
+  apiGetListBlog,
   getAllUsers,
   createUser,
   apiLogin,

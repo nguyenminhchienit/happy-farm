@@ -1,5 +1,4 @@
-
-import {useState} from "react"
+import { useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -22,33 +21,30 @@ import CreateProduct from "./components/Admin/Product/CreateProduct";
 import { ManageUser } from "./components/Admin/User/ManageUser";
 import CreateUser from "./components/Admin/User/CreateUser";
 
-import  ManageVoucher  from "./components/Admin/Voucher/ManageVoucher";
+import ManageVoucher from "./components/Admin/Voucher/ManageVoucher";
 
 import CreateVoucher from "./components/Admin/Voucher/CreateVoucher";
 import { ManageOrder } from "./components/Admin/Order/ManageOrder";
 import Contact from "./components/contact/Contact";
 import Topic from "./components/topic/Topic";
 import Checkout from "./pages/public/checkout";
+import { Blog } from "./pages/public/Blog/Blog";
 import Thanks from "./pages/public/Thanks/Thanks";
 
-
-
 // Origin
-import CreateOrigin from "./components/Admin/Origin/CreateOrigin"
-import ManageOrigin from "./components/Admin/Origin/ManageOrigin"
+import CreateOrigin from "./components/Admin/Origin/CreateOrigin";
+import ManageOrigin from "./components/Admin/Origin/ManageOrigin";
 import EditOrigin from "./components/Admin/Origin/EditOrigin";
 
-
 // brand
-import  CreateBrand  from "./components/Admin/Brand/CreateBrand";
-import  ManageBrand  from "./components/Admin/Brand/ManageBrand";
+import CreateBrand from "./components/Admin/Brand/CreateBrand";
+import ManageBrand from "./components/Admin/Brand/ManageBrand";
 import EditBrand from "./components/Admin/Brand/EditBrand";
 
 // type fertilizer
 import CreateTypeFertilizer from "./components/Admin/TypeFertilizer/CreateTypeFertilizer";
 import ManageTypeFertilizer from "./components/Admin/TypeFertilizer/ManageTypeFertilizer";
 import EditTypeFertilizer from "./components/Admin/TypeFertilizer/EditTypeFertilizer";
-
 
 import EditProduct from "./components/Admin/Product/EditProduct";
 
@@ -60,29 +56,26 @@ import QuyTrinhVanChuyen from "./pages/private/QuyTrinhVanChuyen";
 import HinhThucMuaHang from "./pages/private/HinhThucMuaHang";
 import HinhThucThanhToan from "./pages/private/HinhThucThanhToan";
 
-
-import  ManageUserBanned  from "./components/Admin/User/ManageUserBanned";
+import ManageUserBanned from "./components/Admin/User/ManageUserBanned";
 
 // PaymentMethod
 import ManagePaymentMethod from "./components/Admin/PaymentMethod/ManagePaymentMethod";
 import CreatePaymentMethod from "./components/Admin/PaymentMethod/CreatePaymentMethod";
 import EditPaymentMethod from "./components/Admin/PaymentMethod/EditPaymentMethod";
 
-
 // voucher
 import EditVoucher from "./components/Admin/Voucher/EditVoucher";
-
 
 // role
 import CreateUserRole from "./components/Admin/UserRole/CreateUserRole";
 import EditUserRole from "./components/Admin/UserRole/EditUserRole";
 import ManageUserRole from "./components/Admin/UserRole/ManageUserRole";
-
-
+import BlogAdmin from "./components/Admin/Blog/BlogAdmin";
+import DetailBlog from "./pages/public/Blog/DetailBlog";
+import ManageBlog from "./components/Admin/Blog/ManageBlog";
+import EditBlog from "./components/Admin/Blog/EditBlog";
 
 function App() {
-
-
   const [selectedItem, setSelectedItem] = useState({});
 
   return (
@@ -95,6 +88,8 @@ function App() {
               path=""
               element={<Home data={data.productData} />}
             />
+            <Route exact={true} path="/bai-viet" element={<Blog />} />
+            <Route exact={true} path="/bai-viet/:id" element={<DetailBlog />} />
             <Route
               exact={true}
               path="/product/:id"
@@ -147,6 +142,15 @@ function App() {
             <Route exact={true} path="dash" element={<Dashboard />} />
             <Route exact={true} path="manage-order" element={<ManageOrder />} />
 
+            <Route exact={true} path="create-blog" element={<BlogAdmin />} />
+            <Route exact={true} path="manage-blog" element={<ManageBlog />} />
+
+            <Route
+              exact={true}
+              path="/admin/edit-blog/:id"
+              element={<EditBlog />}
+            />
+
             <Route
               exact={true}
               path="manage-product"
@@ -156,7 +160,7 @@ function App() {
             <Route
               exact={true}
               path="/admin/edit-product/:id"
-              element={ <EditProduct item={selectedItem} /> }
+              element={<EditProduct item={selectedItem} />}
             />
             <Route
               exact={true}
@@ -166,16 +170,23 @@ function App() {
 
             {/* user */}
 
-            <Route 
+            <Route
               exact={true}
               path="/admin/manage-users"
-              element={<ManageUserBanned   setSelectedItem={setSelectedItem} /> }
-            
+              element={<ManageUserBanned setSelectedItem={setSelectedItem} />}
             />
-            <Route exact={true} path="manage-users-NotBanned" element={<ManageUser setSelectedItem={setSelectedItem} />} />
+            <Route
+              exact={true}
+              path="manage-users-NotBanned"
+              element={<ManageUser setSelectedItem={setSelectedItem} />}
+            />
             <Route exact={true} path="add-user" element={<CreateUser />} />
-            <Route exact={true} path="/admin/edit-user/:id" element={ <EditUser item={selectedItem} />  } />
-            
+            <Route
+              exact={true}
+              path="/admin/edit-user/:id"
+              element={<EditUser item={selectedItem} />}
+            />
+
             {/* mã giảm giá */}
             <Route
               exact={true}
@@ -188,41 +199,28 @@ function App() {
               element={<CreateVoucher />}
             />
 
-
             <Route
               exact={true}
               path="edit-voucher/:id"
-              element={<EditVoucher item={ selectedItem }  />}
+              element={<EditVoucher item={selectedItem} />}
             />
 
             {/*  nguồn gốc xuất xứ */}
-            <Route
-              exact={true}  
-              path="add-origin"
-              element={<CreateOrigin />}
-            />
+            <Route exact={true} path="add-origin" element={<CreateOrigin />} />
             <Route
               exact={true}
               path="manage-origin"
-
-              element={<ManageOrigin setSelectedItem={setSelectedItem}  />}
-
+              element={<ManageOrigin setSelectedItem={setSelectedItem} />}
             />
 
             <Route
               exact={true}
               path="edit-origin/:id"
-              element={<EditOrigin item={ selectedItem }  />}
+              element={<EditOrigin item={selectedItem} />}
             />
-
 
             {/* thương hiệu */}
-            <Route
-              exact={true}  
-              path="add-brand"
-              element={<CreateBrand />}
-            />
-
+            <Route exact={true} path="add-brand" element={<CreateBrand />} />
 
             <Route
               exact={true}
@@ -233,8 +231,7 @@ function App() {
             <Route
               exact={true}
               path="edit-brand/:id"
-
-              element={<EditBrand item={ selectedItem } />}
+              element={<EditBrand item={selectedItem} />}
             />
 
             {/* loại phân bón */}
@@ -247,62 +244,61 @@ function App() {
             <Route
               exact={true}
               path="manage-typefertilizer"
-
-              element={<ManageTypeFertilizer setSelectedItem={setSelectedItem} />}
+              element={
+                <ManageTypeFertilizer setSelectedItem={setSelectedItem} />
+              }
             />
-               
+
             <Route
               exact={true}
               path="edit-type-fertilizer/:id"
-              element={<EditTypeFertilizer item={ selectedItem } />}
-              // item là tên props 
+              element={<EditTypeFertilizer item={selectedItem} />}
+              // item là tên props
             />
 
             {/* phương thức thanh toán */}
             <Route
               exact={true}
               path="manage-PaymentMethod"
-              element={< ManagePaymentMethod setSelectedItem={ setSelectedItem } />}
-              // item là tên props 
+              element={
+                <ManagePaymentMethod setSelectedItem={setSelectedItem} />
+              }
+              // item là tên props
             />
 
             <Route
               exact={true}
-
               path="add-PaymentMethod"
-              element={< CreatePaymentMethod />}
-              // item là tên props 
+              element={<CreatePaymentMethod />}
+              // item là tên props
             />
 
             <Route
               exact={true}
               path="edit-PaymentMethod/:id"
-              element={< EditPaymentMethod item={selectedItem} />}
-              // item là tên props 
+              element={<EditPaymentMethod item={selectedItem} />}
+              // item là tên props
             />
 
-
-              {/* quyền người dùng */}
-              <Route
+            {/* quyền người dùng */}
+            <Route
               exact={true}
               path="/admin/manage-userRoles"
-              element={< ManageUserRole setSelectedItem={ setSelectedItem } />}
-              // item là tên props 
+              element={<ManageUserRole setSelectedItem={setSelectedItem} />}
+              // item là tên props
             />
 
             <Route
               exact={true}
               path="/admin/add-UserRole"
-              element={< CreateUserRole />}
+              element={<CreateUserRole />}
             />
 
             <Route
               exact={true}
               path="/admin/edit-UserRole/:id"
-              element={< EditUserRole item={selectedItem} />}
+              element={<EditUserRole item={selectedItem} />}
             />
-
-        
           </Route>
           {/* <Route exact={true} path="/admin/dash" element={<Dashboard />} /> */}
         </Routes>

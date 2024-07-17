@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
 import TextField from "@mui/material/TextField";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
@@ -9,6 +9,7 @@ import { useState } from "react";
 
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import { createUser } from "../../../api/User";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,8 +25,26 @@ const SignUp = () => {
     dob: "",
   });
 
+  const navigate = useNavigate();
+
   const signUp = () => {
     console.log("data: ", formFields);
+    formFields.dob = formatDate(formFields.dob);
+    const formData = new FormData();
+    for (const key in formFields) {
+      formData.append(key, formFields[key]);
+    }
+
+    createUser(formData).then((res) => {
+      console.log(res);
+      if (res?.status) {
+        navigate("/signIn");
+      }
+    });
+
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
   };
 
   const formatDate = (date) => {

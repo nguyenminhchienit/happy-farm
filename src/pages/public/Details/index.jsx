@@ -108,6 +108,7 @@ const DetailsPage = (props) => {
         quantity,
         dataObject?.idUser
       );
+      console.log(res);
       if (res.status) {
         window.location.reload();
       }

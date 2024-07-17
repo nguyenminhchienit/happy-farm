@@ -42,9 +42,7 @@ const Checkout = () => {
     }
 
     apiCheckOut(dataObject?.idUser, formData).then((response) => {
-      if (response.status) {
-        navigate("/thanks");
-      }
+      navigate("/thanks");
     });
   };
 
