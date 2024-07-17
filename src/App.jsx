@@ -70,10 +70,16 @@ import EditVoucher from "./components/Admin/Voucher/EditVoucher";
 import CreateUserRole from "./components/Admin/UserRole/CreateUserRole";
 import EditUserRole from "./components/Admin/UserRole/EditUserRole";
 import ManageUserRole from "./components/Admin/UserRole/ManageUserRole";
+
 import BlogAdmin from "./components/Admin/Blog/BlogAdmin";
 import DetailBlog from "./pages/public/Blog/DetailBlog";
 import ManageBlog from "./components/Admin/Blog/ManageBlog";
 import EditBlog from "./components/Admin/Blog/EditBlog";
+
+// banner
+import CreateBanner from "./components/Admin/Banner/CreateBanner";
+import EditBanner from "./components/Admin/Banner/EditBanner";
+import ManageBanner from "./components/Admin/Banner/ManageBanner";
 
 function App() {
   const [selectedItem, setSelectedItem] = useState({});
@@ -298,6 +304,25 @@ function App() {
               exact={true}
               path="/admin/edit-UserRole/:id"
               element={<EditUserRole item={selectedItem} />}
+            />
+            {/* quan ly banner */}
+            <Route
+              exact={true}
+              path="/admin/manage-Banner"
+              element={<ManageBanner setSelectedItem={setSelectedItem} />}
+              // item là tên props
+            />
+
+            <Route
+              exact={true}
+              path="/admin/add-Banner"
+              element={<CreateBanner />}
+            />
+
+            <Route
+              exact={true}
+              path="/admin/edit-Banner/:id"
+              element={<EditBanner item={selectedItem} />}
             />
           </Route>
           {/* <Route exact={true} path="/admin/dash" element={<Dashboard />} /> */}

@@ -131,7 +131,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <form className="px-6 mt-6" onSubmit={handleSubmit}>
+      {/* <form className="px-6 mt-6" onSubmit={handleSubmit}>
         <ReactQuill
           ref={quillRef}
           placeholder="Start writing..."
@@ -182,7 +182,7 @@ const Dashboard = () => {
           className="ql-editor"
           dangerouslySetInnerHTML={{ __html: content?.details }}
         />
-      </form>
+      </form> */}
     </>
   );
 };

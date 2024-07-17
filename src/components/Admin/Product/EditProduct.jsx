@@ -85,6 +85,7 @@ const EditProduct = ({ item }) => {
   }, [watch("image")]);
 
   const handleAddProduct = async (data) => {
+    console.log("edit product ")
     const finalPayload = { ...data };
     console.log("data to send ", finalPayload);
     const formData = new FormData();
@@ -233,7 +234,7 @@ const EditProduct = ({ item }) => {
               fw
               style={"mt-2 flex-auto"}
               errors={errors}
-              defaultValue={item.originFer?.idOrigin}
+              defaultValue={item.originFer?.nameOrigin}
               options={origin?.map((originItem) => {
                 return {
                   text: originItem.nameOrigin,

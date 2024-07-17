@@ -22,12 +22,13 @@ import { ClickAwayListener } from "@mui/base/ClickAwayListener";
 
 import Nav from "./nav/nav";
 import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import Select from "../selectDrop/select";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { getCartUser } from "../../api/User";
 
@@ -102,10 +103,13 @@ const Header = (props) => {
     window.location.reload();
   };
 
+  const navigate = useNavigate();
+
   const [navMobile, setNavMobile] = useState(false);
-  const handleToggle = (e) => {
+  const handleToggle = (e, url) => {
     e.preventDefault();
     setNavMobile(!navMobile);
+    navigate(url);
   };
 
   const [open, setOpen] = useState(false);
@@ -144,10 +148,17 @@ const Header = (props) => {
                     <div className="navbarToggle mr-2 relative">
                       <div>
                         {navMobile ? (
-                          <ul className="absolute top-[10px] right-[-50px] w-[250px] text-5xl bg-white justify-end">
+                          <ul className="absolute top-[20px] right-[-50px] w-[250px] text-5xl bg-white justify-end">
+                            <li className="flex justify-center items-center">
+                              <CloseIcon onClick={(e) => handleToggle(e)} />
+                            </li>
                             <li>
                               <Button>
-                                <Link to={"/"} className="text-gray-800">
+                                <Link
+                                  to={"/"}
+                                  onClick={(e) => handleToggle(e, "/")}
+                                  className="text-gray-800"
+                                >
                                   Trang chủ
                                 </Link>
                               </Button>
@@ -156,6 +167,7 @@ const Header = (props) => {
                               <Button>
                                 <Link
                                   to={"/phan-bon"}
+                                  onClick={(e) => handleToggle(e, "/phan-bon")}
                                   className="text-gray-800"
                                 >
                                   Phân bón
@@ -166,6 +178,7 @@ const Header = (props) => {
                               <Button>
                                 <Link
                                   to={"/bai-viet"}
+                                  onClick={(e) => handleToggle(e, "/bai-viet")}
                                   className="text-gray-800"
                                 >
                                   Bài viết
@@ -174,7 +187,11 @@ const Header = (props) => {
                             </li>
                             <li>
                               <Button>
-                                <Link to={"/lien-he"} className="text-gray-800">
+                                <Link
+                                  to={"/lien-he"}
+                                  className="text-gray-800"
+                                  onClick={(e) => handleToggle(e, "/lien-he")}
+                                >
                                   Liên hệ
                                 </Link>
                               </Button>
@@ -183,6 +200,9 @@ const Header = (props) => {
                               <Button>
                                 <Link
                                   to={"/gia-nong-san"}
+                                  onClick={(e) =>
+                                    handleToggle(e, "/gia-nong-san")
+                                  }
                                   className="text-gray-800"
                                 >
                                   Giá nông sản
@@ -209,28 +229,58 @@ const Header = (props) => {
                                 <ul className="absolute bg-white min-w-52">
                                   <li className="p-2">
                                     <Button>
-                                      <Link to={"/"} className="text-gray-800">
+                                      <Link
+                                        to={"/"}
+                                        className="text-gray-800"
+                                        onClick={(e) =>
+                                          handleToggle(e, "/hinh-thuc-mua-hang")
+                                        }
+                                      >
                                         Hình thức mua hàng
                                       </Link>
                                     </Button>
                                   </li>
                                   <li className="p-2">
                                     <Button>
-                                      <Link to={"/"} className="text-gray-800">
+                                      <Link
+                                        to={"/"}
+                                        className="text-gray-800"
+                                        onClick={(e) =>
+                                          handleToggle(
+                                            e,
+                                            "/hinh-thuc-thanh-toan"
+                                          )
+                                        }
+                                      >
                                         Hình thức thanh toán
                                       </Link>
                                     </Button>
                                   </li>
                                   <li className="p-2">
                                     <Button>
-                                      <Link to={"/"} className="text-gray-800">
+                                      <Link
+                                        to={"/"}
+                                        className="text-gray-800"
+                                        onClick={(e) =>
+                                          handleToggle(e, "/huong-dan-mua-hang")
+                                        }
+                                      >
                                         Hướng dẫn mua hàng
                                       </Link>
                                     </Button>
                                   </li>
                                   <li className="p-2">
                                     <Button>
-                                      <Link to={"/"} className="text-gray-800">
+                                      <Link
+                                        to={"/"}
+                                        className="text-gray-800"
+                                        onClick={(e) =>
+                                          handleToggle(
+                                            e,
+                                            "/quy-trinh-van-chuyen"
+                                          )
+                                        }
+                                      >
                                         Quy trình vận chuyển
                                       </Link>
                                     </Button>
