@@ -84,11 +84,6 @@ import EditBanner from "./components/Admin/Banner/EditBanner";
 import ManageBanner from "./components/Admin/Banner/ManageBanner";
 
 
-// banner
-import CreateBlog from "./components/Admin/Blog/CreateBlog";
-import EditBlog from "./components/Admin/Blog/EditBlog";
-import ManageBlog from "./components/Admin/Blog/ManageBlog";
-
 function App() {
 
 
@@ -331,28 +326,6 @@ function App() {
               element={< EditBanner item={selectedItem} />}
             />
 
-            
-              {/* quan ly blog */}
-              <Route
-              exact={true}
-              path="/admin/manage-Blog"
-              element={< ManageBlog setSelectedItem={ setSelectedItem } />}
-              // item là tên props 
-            />
-
-            <Route
-              exact={true}
-              path="/admin/add-Blog"
-              element={< CreateBlog />}
-            />
-
-            <Route
-              exact={true}
-              path="/admin/edit-Blog/:id"
-              element={< EditBlog item={selectedItem} />}
-            />
-
-        
           </Route>
           {/* <Route exact={true} path="/admin/dash" element={<Dashboard />} /> */}
         </Routes>

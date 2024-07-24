@@ -33,12 +33,7 @@ const EditVoucher = ({ item }) => {
       alert("ngay bat dau < ngay ket thuc")
       return ;
     }
-
     console.log("Data to be sent:", myformData);
-
-
-
-
     try {
       const response = await UpdateVoucher(myformData);
       if (response) {
