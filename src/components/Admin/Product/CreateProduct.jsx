@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputForm from "../Input/InputForm";
 import SelectForm from "../Input/SelectForm";
-
 import Button from "../../Admin/Product/Button";
 import { convertFileToBase64 } from "../../../utils/helpers";
 import { apiCreateProduct } from "../../../api/Fertilizer";
@@ -29,19 +28,6 @@ const CreateProduct = () => {
   const [origin, setOrigin] = useState([]);
   const [type, setType] = useState([]);
 
-  // const [payload, setPayload] = useState({
-  //   description: "",
-  // });
-
-  // const [inValidField, setInValidField] = useState([]);
-
-  // const handleChangeValue = useCallback(
-  //   (e) => {
-  //     setPayload(e);
-  //   },
-  //   [payload]
-  // );
-
   const handlePreviewThumb = async (file) => {
     const base64Thumb = await convertFileToBase64(file);
     setPreview((prev) => ({ ...prev, thumb: base64Thumb }));
@@ -49,7 +35,6 @@ const CreateProduct = () => {
 
   const handlePreviewImages = async (files) => {
     const images = [];
-    console.log(files);
     for (let file of files) {
       const base64 = await convertFileToBase64(file);
       images.push(base64);
@@ -58,49 +43,64 @@ const CreateProduct = () => {
   };
 
   useEffect(() => {
-    if (watch("thumb").length > 0) {
-      handlePreviewThumb(watch("thumb")[0]);
+    const thumb = watch("thumb");
+    if (thumb && thumb.length > 0) {
+      handlePreviewThumb(thumb[0]);
     }
   }, [watch("thumb")]);
 
   useEffect(() => {
-    if (watch("image").length > 0) {
-      handlePreviewImages(watch("image"));
+    const images = watch("image");
+    if (images && images.length > 0) {
+      handlePreviewImages(images);
     }
   }, [watch("image")]);
 
   const handleAddProduct = async (data) => {
-    const finalPayload = { ...data };
-    console.log(finalPayload);
     const formData = new FormData();
-    for (let i of Object.entries(finalPayload)) {
-      formData.append(i[0], i[1]);
+  
+    formData.append("nameFertilizer", data.nameFertilizer);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("details", data.details);
+    formData.append("originFer", data.originFer);
+    formData.append("type", data.type);
+    formData.append("brandName", data.brandName);
+    formData.append("nums", data.nums);
+    formData.append("donViTinh", data.donViTinh);
+    formData.append("thanhPhan", data.thanhPhan);
+  
+    if (data.thumb && data.thumb.length > 0) {
+      formData.append("fileImageRepresent", data.thumb[0]);
     }
-    if (finalPayload.thumb) {
-      formData.append("fileImageRepresent", finalPayload.thumb[0]);
-    }
-    if (finalPayload.image) {
-      for (let item of finalPayload.image) {
-        formData.append("fileImageOptional", item);
+  
+    if (data.image && data.image.length > 0) {
+      for (let file of data.image) {
+        formData.append("fileImageOptional", file);
       }
     }
+  
+  // Duyệt qua FormData và ghi log tất cả các mục (key và value)
+for (const [key, value] of formData.entries()) {
+  console.log(key, value);
+}
 
-    for (const p of formData) {
-      const name = p[0];
-      const value = p[1];
-
-      console.log(name, value);
-    }
-
-    apiCreateProduct(formData).then((response) => {
-      console.log("them san pham")
-      if(response){
-        alert("thêm thành công")
-        navigate("/admin/manage-product")
+  
+    try {
+      const response = await apiCreateProduct(formData);
+      console.log(response);
+      if (response) {
+        alert("Thêm thành công");
+        navigate("/admin/manage-product");
       }
-    });
+    } catch (error) {
+      console.error(error);
+      alert("Có lỗi xảy ra");
+    }
+    
+
   };
-
+  
   useEffect(() => {
     getAllBrand().then((response) => {
       setBrand(response.data);
@@ -112,8 +112,6 @@ const CreateProduct = () => {
       setType(res.data);
     });
   }, []);
-
-  console.log(brand, origin, type);
 
   return (
     <div className="mx-5">
@@ -134,7 +132,6 @@ const CreateProduct = () => {
             errors={errors}
             validate={{ required: "Require" }}
           />
-          
           <div className="flex gap-3">
             <InputForm
               label={"Giá"}
@@ -146,7 +143,6 @@ const CreateProduct = () => {
               errors={errors}
               validate={{ required: "Require" }}
             />
-
             <InputForm
               label={"Số lượng"}
               register={register}
@@ -158,8 +154,6 @@ const CreateProduct = () => {
               validate={{ required: "Require" }}
             />
           </div>
-
-
           <div className="flex gap-3">
             <InputForm
               label={"Đơn Vị tính"}
@@ -182,7 +176,6 @@ const CreateProduct = () => {
               validate={{ required: "khong de rong du lieu" }}
             />
           </div>
-
           <InputForm
             label={"Mô tả"}
             register={register}
@@ -193,7 +186,6 @@ const CreateProduct = () => {
             errors={errors}
             validate={{ required: "Require" }}
           />
-
           <InputForm
             label={"Chi tiết"}
             register={register}
@@ -203,7 +195,6 @@ const CreateProduct = () => {
             errors={errors}
             validate={{ required: "Require" }}
           />
-
           <div className="flex gap-3">
             <SelectForm
               label={"Nguồn gốc"}
@@ -219,7 +210,6 @@ const CreateProduct = () => {
                 };
               })}
             />
-
             <SelectForm
               label={"Loại phân bón"}
               register={register}
@@ -234,7 +224,6 @@ const CreateProduct = () => {
                 };
               })}
             />
-
             <SelectForm
               label={"Thương hiệu"}
               register={register}
@@ -250,54 +239,6 @@ const CreateProduct = () => {
               })}
             />
           </div>
-
-          {/* <div className="flex gap-3">
-           
-            <InputForm
-              label={"Quantity"}
-              register={register}
-              id={"quantity"}
-              fw
-              style={"mt-2 flex-auto"}
-              placeholder={"Quantity of new product"}
-              errors={errors}
-              validate={{ required: "Require" }}
-            />
-
-          </div>
-          <div className="flex gap-3">
-            <SelectForm
-              label={"Category"}
-              register={register}
-              id={"category"}
-              fw
-              style={"flex-auto"}
-              errors={errors}
-              options={categories?.map((item) => {
-                return {
-                  text: item.title,
-                  value: item._id,
-                };
-              })}
-            />
-            <SelectForm
-              label={"Brand"}
-              register={register}
-              id={"brand"}
-              fw
-              style={"flex-auto"}
-              errors={errors}
-              options={categories
-                ?.find((cate) => cate._id === watch("category"))
-                ?.brand?.map((item) => {
-                  return {
-                    text: item,
-                    value: item,
-                  };
-                })}
-            />
-          </div>
-          */}
           <div className="flex gap-1 flex-col">
             <label htmlFor="thumb">Tải hình ảnh đại diện của sản phẩm</label>
             <input
@@ -321,7 +262,6 @@ const CreateProduct = () => {
               />
             </div>
           )}
-
           <div className="flex flex-col gap-1">
             <label htmlFor="thumb">Tải hình ảnh sản phẩm</label>
             <input
@@ -341,17 +281,20 @@ const CreateProduct = () => {
             <div className="flex flex-wrap gap-2">
               {preview.images.map((item, index) => {
                 return (
-                  <img
-                    key={index}
-                    src={item}
-                    alt="images"
-                    className="my-4 w-[100px] object-cover"
-                  />
+                  <div key={index}>
+                    <img
+                      src={item}
+                      alt="images"
+                      className="my-4 w-[100px] object-cover"
+                    />
+                  </div>
                 );
               })}
             </div>
           )}
-          <Button name={"Thêm sản phẩm"} type="submit" />
+          <Button type="submit" fw>
+            Thêm sản phẩm
+          </Button>
         </form>
       </div>
     </div>

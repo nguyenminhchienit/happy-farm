@@ -1,7 +1,11 @@
 import axios from "../../axios";
 
 const updateUser = (idUser, data) => {
-  return axios.put(`/api/user/editUser/${idUser}`, data);
+  return axios.put(`/api/user/editUser/${idUser}`, data,{
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 };
 const getAllUsers = () => {
   return axios.get("/api/user/getListUsers");

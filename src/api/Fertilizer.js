@@ -36,8 +36,20 @@ const deleteFertilizer = (id) => {
 };
 
 const editfertilizer = (id, data) => {
-  return axios.put(`/api/fertilizer/editfertilizer/${id}`, data);
+  return axios.put(`/api/fertilizer/editfertilizer/${id}`, data,{
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 };
+
+const apiCreateProduct = (data) => {
+  return axios.post("/api/fertilizer/addnew", data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}
 
 const addToCart = (idItems, quantity, idUser) => {
   return axios({
@@ -46,13 +58,13 @@ const addToCart = (idItems, quantity, idUser) => {
   });
 };
 
-const apiCreateProduct = (data) => {
-  return axios({
-    url: "/api/fertilizer/addnew",
-    method: "post",
-    data,
-  });
-};
+// const apiCreateProduct = (data) => {
+//   return axios({
+//     url: "/api/fertilizer/addnew",
+//     method: "post",
+//     data,
+//   });
+// };
 
 const apiMostBuy = () => {
   return axios({

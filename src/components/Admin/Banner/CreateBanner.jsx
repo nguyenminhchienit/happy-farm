@@ -43,6 +43,7 @@ const CreateBanner = () => {
     formData.append("expireDate", myformData.expireDate); // Thêm các trường thông tin khác
     formData.append("url", myformData.url);
 
+
     try {
       const response = await Addbanner(formData); // Gửi FormData lên server
       console.log("Response:", response);

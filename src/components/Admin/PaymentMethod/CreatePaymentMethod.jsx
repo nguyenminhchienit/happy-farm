@@ -8,6 +8,7 @@ const CreatePaymentMethod = () => {
   });
 
   const navigate = useNavigate();
+
   const handleInputChange = (event) => {
     const { id, value } = event.target;
     setMyFormData({
@@ -18,20 +19,22 @@ const CreatePaymentMethod = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Data to be sent:", myformData);
+    const dataToSend = {
+      nameMethod: myformData.nameMethod
+    };
+  
     try {
-      const response = await AddPaymentMethod(myformData);
+      const response = await AddPaymentMethod(dataToSend);
       console.log("Response:", response);
-      if(response){
+      if (response) {
         alert("Tạo thành công");
-        navigate("/admin/manage-PaymentMethod")
+        navigate("/admin/manage-PaymentMethod");
       }
-      // Handle successful response here
     } catch (error) {
-      console.error("Error creating origin:", error);
-      // Handle error here
+      console.error("Error creating payment method:", error);
     }
   };
+  
 
   return (
     <div className="flex flex-col align-items-center">
@@ -42,7 +45,7 @@ const CreatePaymentMethod = () => {
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              htmlFor="nameOrigin"
+              htmlFor="nameMethod"
             >
               Tên Phương Thức Thanh Toán
             </label>
@@ -69,7 +72,7 @@ const CreatePaymentMethod = () => {
               className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="isDelete"
               name="isDelete"
-              value={myformData.idDelete}
+              value={myformData.isDelete || "false"}
               onChange={handleInputChange}
             >
               <option value="false">True</option>
